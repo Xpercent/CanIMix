@@ -129,8 +129,10 @@ export const Iphone = (props: IphoneProps) => {
           y="8"
         />
       </svg>
+      {/* 屏幕内缩（默认 inset-x 4.9539% / inset-y 2.2109%，圆角 14.0665%/6.5243%）：
+          这里比默认略窄一点，圆角百分比随之同步调整，才能和机身内缘贴合 */}
       <div
-        className="absolute inset-x-[4.9539%] inset-y-[2.2109%] isolate overflow-hidden rounded-[14.0665%/6.5243%] bg-muted"
+        className="absolute inset-x-[4%] inset-y-[1.85%] isolate overflow-hidden rounded-[14.4%/6.77%] bg-muted"
         data-slot="iphone-screen"
       >
         {/* The image and the video sit below the screen's own layer, so

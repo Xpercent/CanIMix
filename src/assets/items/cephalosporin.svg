@@ -1,0 +1,25 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 120 86">
+  <defs>
+    <linearGradient id="foil" x2="1" y2="1" gradientUnits="objectBoundingBox"><stop stop-color="#fffef8"/><stop offset="1" stop-color="#a0c9bc"/></linearGradient>
+    <linearGradient id="bubble" x2="0" y2="1" gradientUnits="objectBoundingBox"><stop stop-color="#fbfffd"/><stop offset="1" stop-color="#9dcfc1"/></linearGradient>
+  </defs>
+        <ellipse cx="61" cy="77" rx="43" ry="5.5" fill="#326f5f" opacity=".12"/>
+        <g transform="translate(56 42) rotate(-17)">
+          <rect x="-28" y="-32" width="54" height="68" rx="8" fill="#7da99d" stroke="#52857a"/>
+          <rect x="-28" y="-34" width="54" height="67" rx="8" fill="url(#foil)" stroke="#538e80"/>
+          <path d="M-20-26h38m-38 51h38" stroke="#73aa9b" stroke-width="1" stroke-dasharray="2 2"/>
+          <path d="M-1-23v45" stroke="#83aea4" stroke-dasharray="1 2"/>
+          <g fill="url(#bubble)" stroke="#82b3a6" stroke-width=".8">
+            <rect x="-20" y="-20" width="15" height="11" rx="5.5"/><rect x="3" y="-20" width="15" height="11" rx="5.5"/>
+            <rect x="-20" y="-6" width="15" height="11" rx="5.5"/><rect x="3" y="-6" width="15" height="11" rx="5.5"/>
+            <rect x="-20" y="8" width="15" height="11" rx="5.5"/><rect x="3" y="8" width="15" height="11" rx="5.5"/>
+          </g>
+        </g>
+        <g transform="translate(87 63) rotate(-36)">
+          <rect x="-15" y="-6.5" width="31" height="14" rx="7" fill="#407d68" stroke="#326f5f"/>
+          <path d="M0-6.5h-8a7 7 0 0 0 0 14h8Z" fill="#fff9e9" stroke="#326f5f"/>
+          <path d="M-9-3h19" stroke="#fff" opacity=".65" stroke-linecap="round"/>
+        </g>
+        <path d="M96 24h8m-4-4v8M19 54h7m-3.5-3.5v7" fill="none" stroke="#619788" stroke-width="1.3" stroke-linecap="round"/>
+      
+</svg>
