@@ -1,0 +1,43 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="128" height="128" viewBox="0 0 128 128">
+  <defs>
+    <linearGradient id="iso-gel" x2="0" y2="1" gradientUnits="objectBoundingBox">
+      <stop stop-color="#f28c5e"/>
+      <stop offset=".55" stop-color="#c44b25"/>
+      <stop offset="1" stop-color="#87270e"/>
+    </linearGradient>
+    <linearGradient id="iso-gel-back" x2="0" y2="1" gradientUnits="objectBoundingBox">
+      <stop stop-color="#eb7d4d"/>
+      <stop offset="1" stop-color="#9c3214"/>
+    </linearGradient>
+    <linearGradient id="iso-badge" x2="0" y2="1" gradientUnits="objectBoundingBox">
+      <stop stop-color="#4cc29e"/>
+      <stop offset="1" stop-color="#1d8264"/>
+    </linearGradient>
+  </defs>
+  <ellipse cx="62" cy="110" rx="44" ry="6" fill="#7d250d" opacity=".14"/>
+  <!-- 后方软胶囊 -->
+  <g transform="translate(65 44) rotate(16)">
+    <rect x="-21" y="-11" width="42" height="22" rx="11" fill="url(#iso-gel-back)" stroke="#7a220b" stroke-width="1.4"/>
+    <ellipse cx="0" cy="1" rx="13" ry="5" fill="#ffd9c4" opacity=".28"/>
+    <path d="M-13-5.8h18" fill="none" stroke="#ffe8db" stroke-width="2" stroke-linecap="round" opacity=".78"/>
+  </g>
+  <!-- 前方棕红软胶囊 -->
+  <g transform="translate(47 68) rotate(-22)">
+    <rect x="-27" y="-13.5" width="54" height="27" rx="13.5" fill="url(#iso-gel)" stroke="#752009" stroke-width="1.5"/>
+    <ellipse cx="0" cy="1.2" rx="17" ry="6.5" fill="#ffdcc7" opacity=".32"/>
+    <path d="M-17-7.2h26" fill="none" stroke="#fff0e6" stroke-width="2.6" stroke-linecap="round" opacity=".84"/>
+    <circle cx="14" cy="-7.2" r="1.4" fill="#fff0e6" opacity=".84"/>
+  </g>
+  <!-- 右下角净颜战痘角标 -->
+  <g transform="translate(88 82)">
+    <circle cx="0" cy="3" r="21" fill="#17664e" opacity=".15"/>
+    <circle cx="0" cy="0" r="22" fill="#ffffff"/>
+    <circle cx="0" cy="0" r="19.5" fill="url(#iso-badge)" stroke="#1a6e54" stroke-width="1.5"/>
+    <!-- 洁净平滑脸庞轮廓 -->
+    <path d="M-.5-9.2c4.8 0 7.6 3.5 7.6 8.2 0 5.6-3.4 10-7.6 10.6-4.2-.6-7.6-5-7.6-10.6 0-4.7 2.8-8.2 7.6-8.2Z" fill="#ffffff" stroke="#186b51" stroke-width=".9"/>
+    <path d="M-3.4-1.5a.9.9 0 1 1 0 .1M2.4-1.5a.9.9 0 1 1 0 .1" stroke="#1d8264" stroke-width="1.8" stroke-linecap="round"/>
+    <path d="M-2.8 3.2q2.3 1.8 4.6 0" fill="none" stroke="#1d8264" stroke-width="1.6" stroke-linecap="round"/>
+    <!-- 焕颜净肤星芒 -->
+    <path d="M7.5-10.5l1 3 3 1-3 1-1 3-1-3-3-1 3-1Z" fill="#ffe878" stroke="#1d8264" stroke-width=".8" stroke-linejoin="round"/>
+  </g>
+</svg>

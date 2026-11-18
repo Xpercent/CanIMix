@@ -1,0 +1,41 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="128" height="128" viewBox="0 0 128 128">
+  <defs>
+    <linearGradient id="mel-pill" x2="1" y2="1" gradientUnits="objectBoundingBox">
+      <stop stop-color="#fdfcff"/>
+      <stop offset=".6" stop-color="#eee8fa"/>
+      <stop offset="1" stop-color="#dad0f0"/>
+    </linearGradient>
+    <linearGradient id="mel-badge" x2="0" y2="1" gradientUnits="objectBoundingBox">
+      <stop stop-color="#6e5eb8"/>
+      <stop offset="1" stop-color="#3f3082"/>
+    </linearGradient>
+    <linearGradient id="mel-moon" x2="0" y2="1" gradientUnits="objectBoundingBox">
+      <stop stop-color="#ffe68c"/>
+      <stop offset="1" stop-color="#f2b233"/>
+    </linearGradient>
+  </defs>
+  <ellipse cx="62" cy="110" rx="44" ry="6" fill="#463785" opacity=".15"/>
+  <g transform="translate(68 42) rotate(12)">
+    <ellipse cx="0" cy="4.2" rx="17" ry="11" fill="#cec3e8" stroke="#8675bd" stroke-width="1.3"/>
+    <ellipse cx="0" cy="0" rx="17" ry="11" fill="url(#mel-pill)" stroke="#8b7ac2" stroke-width="1.3"/>
+    <path d="M-11-4.6a14 8 0 0 1 11-3.4" fill="none" stroke="#fff" stroke-width="1.4" stroke-linecap="round" opacity=".9"/>
+  </g>
+  <g transform="translate(47 69) rotate(-17)">
+    <ellipse cx="0" cy="5.2" rx="27" ry="18" fill="#cabee6" stroke="#7d6cb5" stroke-width="1.5"/>
+    <ellipse cx="0" cy="0" rx="27" ry="18" fill="url(#mel-pill)" stroke="#8372ba" stroke-width="1.5"/>
+    <ellipse cx="0" cy="0" rx="21.5" ry="13.2" fill="none" stroke="#dfd6f5" stroke-width="1"/>
+    <path d="M-21 0h42" stroke="#8e7ec4" stroke-width="1.5" stroke-linecap="round"/>
+    <path d="M-20 1.4h40" stroke="#fff" stroke-width="1" stroke-linecap="round" opacity=".85"/>
+    <path d="M-16-10a22 13 0 0 1 16-4.5" fill="none" stroke="#fff" stroke-width="1.8" stroke-linecap="round" opacity=".92"/>
+  </g>
+  <g transform="translate(88 82)">
+    <circle cx="0" cy="3" r="21" fill="#2d2163" opacity=".16"/>
+    <circle cx="0" cy="0" r="22" fill="#ffffff"/>
+    <circle cx="0" cy="0" r="19.5" fill="url(#mel-badge)" stroke="#312469" stroke-width="1.5"/>
+    <g transform="translate(-2 1) rotate(-18)">
+      <path d="M6.2-9.1A11 11 0 1 0 6.2 9.1A9.6 9.6 0 0 1 6.2-9.1Z" fill="url(#mel-moon)" stroke="#c78314" stroke-width="1" stroke-linejoin="round"/>
+    </g>
+    <path d="M7.5-9.5Q7.5-5.5 11.5-5.5Q7.5-5.5 7.5-1.5Q7.5-5.5 3.5-5.5Q7.5-5.5 7.5-9.5Z" fill="#ffe68c"/>
+    <circle cx="8.5" cy="4.5" r="1.3" fill="#ffe68c" opacity=".9"/>
+  </g>
+</svg>

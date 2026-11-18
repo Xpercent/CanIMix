@@ -1,0 +1,40 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="128" height="128" viewBox="0 0 128 128">
+  <defs>
+    <linearGradient id="azi-pill" x2="1" y2="1" gradientUnits="objectBoundingBox">
+      <stop stop-color="#fff7f9"/>
+      <stop offset=".6" stop-color="#fce1e8"/>
+      <stop offset="1" stop-color="#f0bcc8"/>
+    </linearGradient>
+    <linearGradient id="azi-badge" x2="0" y2="1" gradientUnits="objectBoundingBox">
+      <stop stop-color="#42b8c7"/>
+      <stop offset="1" stop-color="#1e7e8c"/>
+    </linearGradient>
+  </defs>
+  <ellipse cx="62" cy="110" rx="44" ry="6" fill="#1c6b78" opacity=".14"/>
+  <!-- 后方药片 -->
+  <g transform="translate(66 43) rotate(14)">
+    <rect x="-20" y="-6" width="40" height="20" rx="10" fill="#deb0bc" stroke="#ab7482" stroke-width="1.3"/>
+    <rect x="-20" y="-10" width="40" height="20" rx="10" fill="url(#azi-pill)" stroke="#b07987" stroke-width="1.3"/>
+    <path d="M-12-5.5h18" fill="none" stroke="#ffffff" stroke-width="1.6" stroke-linecap="round" opacity=".9"/>
+  </g>
+  <!-- 前方粉白椭圆片 -->
+  <g transform="translate(47 68) rotate(-22)">
+    <rect x="-26" y="-8.5" width="52" height="26" rx="13" fill="#dbaab7" stroke="#a66f7d" stroke-width="1.5"/>
+    <rect x="-26" y="-13" width="52" height="26" rx="13" fill="url(#azi-pill)" stroke="#ab7482" stroke-width="1.5"/>
+    <path d="M0-10v20" stroke="#bd8896" stroke-width="1.5" stroke-linecap="round"/>
+    <path d="M1.4-9v18" stroke="#ffffff" stroke-width="1" stroke-linecap="round" opacity=".9"/>
+    <path d="M-16-8h24" fill="none" stroke="#ffffff" stroke-width="2" stroke-linecap="round" opacity=".92"/>
+  </g>
+  <!-- 右下角抗菌角标 -->
+  <g transform="translate(88 82)">
+    <circle cx="0" cy="3" r="21" fill="#17616e" opacity=".15"/>
+    <circle cx="0" cy="0" r="22" fill="#ffffff"/>
+    <circle cx="0" cy="0" r="19.5" fill="url(#azi-badge)" stroke="#1b6b78" stroke-width="1.5"/>
+    <g transform="rotate(-35)">
+      <rect x="-6.8" y="-3.3" width="13.6" height="6.6" rx="3.3" fill="#ffffff"/>
+      <path d="M-3.5-3.3v-2.4M0-3.3v-2.6M3.5-3.3v-2.4M-2.5 3.3v2.4M2.5 3.3v2.4" stroke="#ffffff" stroke-width="1.3" stroke-linecap="round"/>
+    </g>
+    <path d="M-8.5 8.5L8.5-8.5" stroke="#2d9ba9" stroke-width="4.2" stroke-linecap="round"/>
+    <path d="M-8.5 8.5L8.5-8.5" stroke="#ffffff" stroke-width="2.4" stroke-linecap="round"/>
+  </g>
+</svg>

@@ -1,0 +1,37 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="128" height="128" viewBox="0 0 128 128">
+  <defs>
+    <linearGradient id="fsh-gel" x2="0" y2="1" gradientUnits="objectBoundingBox">
+      <stop stop-color="#ffe77a"/>
+      <stop offset=".55" stop-color="#f2a61d"/>
+      <stop offset="1" stop-color="#c9740a"/>
+    </linearGradient>
+    <linearGradient id="fsh-gel-back" x2="0" y2="1" gradientUnits="objectBoundingBox">
+      <stop stop-color="#ffde6b"/>
+      <stop offset="1" stop-color="#d48311"/>
+    </linearGradient>
+    <linearGradient id="fsh-badge" x2="0" y2="1" gradientUnits="objectBoundingBox">
+      <stop stop-color="#54a8db"/>
+      <stop offset="1" stop-color="#2974a6"/>
+    </linearGradient>
+  </defs>
+  <ellipse cx="62" cy="110" rx="44" ry="6" fill="#2e6b8f" opacity=".14"/>
+  <g transform="translate(65 44) rotate(16)">
+    <rect x="-22" y="-10.5" width="44" height="21" rx="10.5" fill="url(#fsh-gel-back)" stroke="#a86208" stroke-width="1.4"/>
+    <ellipse cx="0" cy="1" rx="14" ry="4.8" fill="#fff7c4" opacity=".38"/>
+    <path d="M-14-5.5h20" fill="none" stroke="#ffffff" stroke-width="2" stroke-linecap="round" opacity=".78"/>
+  </g>
+  <g transform="translate(47 68) rotate(-22)">
+    <rect x="-29" y="-12.5" width="58" height="25" rx="12.5" fill="url(#fsh-gel)" stroke="#a35d06" stroke-width="1.5"/>
+    <ellipse cx="0" cy="1" rx="19" ry="6" fill="#fff8cf" opacity=".42"/>
+    <path d="M-19-6.6h29" fill="none" stroke="#ffffff" stroke-width="2.6" stroke-linecap="round" opacity=".84"/>
+    <circle cx="15" cy="-6.6" r="1.4" fill="#ffffff" opacity=".84"/>
+  </g>
+  <g transform="translate(88 82)">
+    <circle cx="0" cy="3" r="21" fill="#1e5880" opacity=".15"/>
+    <circle cx="0" cy="0" r="22" fill="#ffffff"/>
+    <circle cx="0" cy="0" r="19.5" fill="url(#fsh-badge)" stroke="#1f5c87" stroke-width="1.5"/>
+    <path d="M-10.5 0C-7-6 1-6.5 5.5 0L10.5-4.8C11.2-2 11.2 2 10.5 4.8L5.5 0C1 6.5-7 6-10.5 0Z" fill="#ffffff" stroke="#1b537a" stroke-width="1.1" stroke-linejoin="round"/>
+    <circle cx="-5.8" cy="-1.1" r="1.25" fill="#2974a6"/>
+    <path d="M-2.2-2.3a3.8 3.8 0 0 1 0 4.6" fill="none" stroke="#85c4eb" stroke-width="1.1" stroke-linecap="round"/>
+  </g>
+</svg>

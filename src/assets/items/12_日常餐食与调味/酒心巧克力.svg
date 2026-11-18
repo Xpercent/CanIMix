@@ -1,0 +1,44 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="128" height="128" viewBox="0 0 128 128">
+  <defs>
+    <linearGradient id="choc-dark" x2="1" y2="1" gradientUnits="objectBoundingBox">
+      <stop stop-color="#7c4632"/>
+      <stop offset=".55" stop-color="#52291c"/>
+      <stop offset="1" stop-color="#36180f"/>
+    </linearGradient>
+    <linearGradient id="choc-cut" x2="0" y2="1" gradientUnits="objectBoundingBox">
+      <stop stop-color="#9e6247"/>
+      <stop offset="1" stop-color="#693825"/>
+    </linearGradient>
+    <linearGradient id="choc-liquor" x2="0" y2="1" gradientUnits="objectBoundingBox">
+      <stop stop-color="#f29238"/>
+      <stop offset=".45" stop-color="#c93b2b"/>
+      <stop offset="1" stop-color="#731314"/>
+    </linearGradient>
+    <linearGradient id="choc-foil" x2="1" y2="0" gradientUnits="objectBoundingBox">
+      <stop stop-color="#cf8d34"/>
+      <stop offset=".45" stop-color="#f7d27e"/>
+      <stop offset="1" stop-color="#bf7d28"/>
+    </linearGradient>
+  </defs>
+  <ellipse cx="64" cy="107" rx="44" ry="6" fill="#4a2618" opacity=".15"/>
+  <!-- 后方完整酒心巧克力与金箔底托 -->
+  <g transform="translate(76 54) rotate(11)">
+    <path d="M-21 4l2.5 11a4 4 0 0 0 4 3h29a4 4 0 0 0 4-3L21 4Z" fill="url(#choc-foil)" stroke="#9e641b" stroke-width="1.2" stroke-linejoin="round"/>
+    <path d="M-15 6l1.5 9M-7.5 6.5l.8 8.5M0 6.5v8.5M7.5 6.5l-.8 8.5M15 6l-1.5 9" stroke="#a86d1f" stroke-width=".9" opacity=".6"/>
+    <path d="M-21 4c-1-12 5-23 21-23S22-8 21 4c-6 3-36 3-42 0Z" fill="url(#choc-dark)" stroke="#33170e" stroke-width="1.3"/>
+    <path d="M-11-11c4-3 10-4 15-2M-14-3c6-2 13-1 19 2" fill="none" stroke="#e8b86b" stroke-width="1.5" stroke-linecap="round" opacity=".85"/>
+    <path d="M-14-9a14 10 0 0 1 11-6" fill="none" stroke="#ffffff" stroke-width="1.8" stroke-linecap="round" opacity=".45"/>
+  </g>
+  <!-- 前方切开流心巧克力 -->
+  <g transform="translate(49 74) rotate(-10)">
+    <path d="M-26 10c0-15 6-29 26-29s26 14 26 29c0 5-10 8-26 8s-26-3-26-8Z" fill="url(#choc-dark)" stroke="#33170e" stroke-width="1.4"/>
+    <path d="M-20 7c0-12 5-22 20-22s20 10 20 22c0 3.5-8 5.5-20 5.5S-20 10.5-20 7Z" fill="url(#choc-cut)" stroke="#4f2619" stroke-width="1.1"/>
+    <!-- 琥珀酒红酒心 -->
+    <path d="M-14 5.5c0-9 4-15.5 14-15.5s14 6.5 14 15.5c0 2.8-6 4-14 4s-14-1.2-14-4Z" fill="url(#choc-liquor)" stroke="#611212" stroke-width="1"/>
+    <path d="M-9-1.5a9 7 0 0 1 8-5" fill="none" stroke="#ffd89c" stroke-width="1.8" stroke-linecap="round" opacity=".85"/>
+    <!-- 溢出酒滴 -->
+    <path d="M-4 8.5c2 0 5 1 6 3.5.8 2-.5 4.2-2.2 4.2s-2.6-1.8-2.2-3.5c.3-1.4-1.5-2.6-2.5-3.2Z" fill="#d9462f" stroke="#7a1616" stroke-width=".8"/>
+    <circle cx="-0.2" cy="13.8" r=".9" fill="#ffd9a0" opacity=".9"/>
+    <path d="M-19-8a18 13 0 0 1 11-7" fill="none" stroke="#ffffff" stroke-width="1.8" stroke-linecap="round" opacity=".42"/>
+  </g>
+</svg>

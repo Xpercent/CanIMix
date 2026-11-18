@@ -1,0 +1,40 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="128" height="128" viewBox="0 0 128 128">
+  <defs>
+    <linearGradient id="all-pill" x2="1" y2="1" gradientUnits="objectBoundingBox">
+      <stop stop-color="#ffffff"/>
+      <stop offset=".6" stop-color="#f2f6fa"/>
+      <stop offset="1" stop-color="#dce4ee"/>
+    </linearGradient>
+    <linearGradient id="all-badge" x2="0" y2="1" gradientUnits="objectBoundingBox">
+      <stop stop-color="#4aa3cc"/>
+      <stop offset="1" stop-color="#216b8f"/>
+    </linearGradient>
+  </defs>
+  <ellipse cx="62" cy="110" rx="44" ry="6" fill="#1b5875" opacity=".14"/>
+  <!-- 后方药片 -->
+  <g transform="translate(65 42) rotate(13)">
+    <ellipse cx="0" cy="4.2" rx="21.5" ry="11.8" fill="#cfd8e3" stroke="#8998ab" stroke-width="1.3"/>
+    <ellipse cx="0" cy="0" rx="21.5" ry="11.8" fill="url(#all-pill)" stroke="#8d9cb0" stroke-width="1.3"/>
+    <path d="M-13-5.8a16 8.2 0 0 1 11-2.4" fill="none" stroke="#ffffff" stroke-width="1.5" stroke-linecap="round" opacity=".9"/>
+  </g>
+  <!-- 前方白色刻痕圆片 -->
+  <g transform="translate(47 69) rotate(-18)">
+    <ellipse cx="0" cy="5.5" rx="26.5" ry="14.2" fill="#ccd6e0" stroke="#8292a6" stroke-width="1.5"/>
+    <ellipse cx="0" cy="0" rx="26.5" ry="14.2" fill="url(#all-pill)" stroke="#8797ab" stroke-width="1.5"/>
+    <ellipse cx="0" cy="0" rx="21" ry="10" fill="none" stroke="#e1e8f0" stroke-width="1"/>
+    <path d="M0-11v22" stroke="#9aa8ba" stroke-width="1.5" stroke-linecap="round"/>
+    <path d="M1.4-10v20" stroke="#ffffff" stroke-width="1" stroke-linecap="round" opacity=".9"/>
+    <path d="M-17-7.5a20 9.8 0 0 1 13-2.8" fill="none" stroke="#ffffff" stroke-width="1.8" stroke-linecap="round" opacity=".94"/>
+  </g>
+  <!-- 右下角降尿酸结晶角标 -->
+  <g transform="translate(88 82)">
+    <circle cx="0" cy="3" r="21" fill="#18526e" opacity=".15"/>
+    <circle cx="0" cy="0" r="22" fill="#ffffff"/>
+    <circle cx="0" cy="0" r="19.5" fill="url(#all-badge)" stroke="#1b5978" stroke-width="1.5"/>
+    <!-- 尿酸结晶 -->
+    <polygon points="-4,-8 0.5,-2 -1.5,7.5 -6.5,7.5 -8.5,-2" fill="#ffffff" stroke="#1b5978" stroke-width=".9" stroke-linejoin="round"/>
+    <path d="M-4-8v15.5M-8.5-2h9" stroke="#3180a6" stroke-width="1"/>
+    <!-- 下降箭头 ↓ -->
+    <path d="M6.2-6.5v13M2.8 3l3.4 3.5L9.6 3" fill="none" stroke="#ffffff" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round"/>
+  </g>
+</svg>

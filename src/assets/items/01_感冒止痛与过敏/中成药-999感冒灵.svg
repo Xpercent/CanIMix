@@ -1,0 +1,43 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="128" height="128" viewBox="0 0 128 128">
+  <defs>
+    <linearGradient id="g999-bag" x2="0" y2="1" gradientUnits="objectBoundingBox">
+      <stop stop-color="#87c98f"/>
+      <stop offset="1" stop-color="#488c52"/>
+    </linearGradient>
+    <linearGradient id="g999-badge" x2="0" y2="1" gradientUnits="objectBoundingBox">
+      <stop stop-color="#5bb36f"/>
+      <stop offset="1" stop-color="#2c753d"/>
+    </linearGradient>
+  </defs>
+  <ellipse cx="62" cy="110" rx="44" ry="6" fill="#2b6337" opacity=".14"/>
+  <!-- 倾斜冲剂颗粒小袋 -->
+  <g transform="translate(50 61) rotate(-10)">
+    <path d="M-22-30l2 3 2-3 2 3 2-3 2 3 2-3 2 3 2-3 2 3 2-3 2 3 2-3 2 3 2-3 2 3 2-3 2 3 2-3 2 3 2-3 2 3 2-3V23a7 7 0 0 1-7 7h-30a7 7 0 0 1-7-7Z" fill="url(#g999-bag)" stroke="#387342" stroke-width="1.3" stroke-linejoin="round"/>
+    <!-- 顶部撕口虚线 -->
+    <path d="M-21-24h42" stroke="#2d6336" stroke-width="1" stroke-dasharray="3 2.3" opacity=".82"/>
+    <path d="M22-25.5l-3.8 2 3.8 2" fill="none" stroke="#2d6336" stroke-width="1.1" stroke-linejoin="round"/>
+    <!-- 白色标签与棕褐感冒灵颗粒 -->
+    <rect x="-16" y="-14" width="32" height="35" rx="4" fill="#fffdf5" stroke="#478750" stroke-width="1"/>
+    <rect x="-12" y="-9.5" width="24" height="5" rx="2" fill="#e65a49"/>
+    <g fill="#8c532b">
+      <circle cx="-7" cy="5" r="1.8"/>
+      <circle cx="-2" cy="3.5" r="1.5"/>
+      <circle cx="3" cy="5.5" r="1.9"/>
+      <circle cx="7.5" cy="4" r="1.5"/>
+      <circle cx="-4.5" cy="9.5" r="1.7"/>
+      <circle cx="0.5" cy="10" r="1.5"/>
+      <circle cx="5.5" cy="9.5" r="1.7"/>
+    </g>
+    <path d="M-10 15.5h20" stroke="#cde3cf" stroke-width="1.4" stroke-linecap="round"/>
+    <path d="M-18-24v46" stroke="#ffffff" stroke-width="1.6" stroke-linecap="round" opacity=".32"/>
+  </g>
+  <!-- 右下角中成药草本角标 -->
+  <g transform="translate(88 82)">
+    <circle cx="0" cy="3" r="21" fill="#21572e" opacity=".15"/>
+    <circle cx="0" cy="0" r="22" fill="#ffffff"/>
+    <circle cx="0" cy="0" r="19.5" fill="url(#g999-badge)" stroke="#246133" stroke-width="1.5"/>
+    <path d="M-9 7C-10-2-4-8 5-8c1 9-4 15-14 15Z" fill="#ffffff" stroke="#246133" stroke-width=".9" stroke-linejoin="round"/>
+    <path d="M-6.5 4.5C-3.5.5-.5-2.5 3-5.5" fill="none" stroke="#3c8a4d" stroke-width="1.3" stroke-linecap="round"/>
+    <path d="M4-7.5h6M7-10.5v6" stroke="#ffffff" stroke-width="2.2" stroke-linecap="round"/>
+  </g>
+</svg>

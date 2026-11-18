@@ -1,0 +1,37 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="128" height="128" viewBox="0 0 128 128">
+  <defs>
+    <linearGradient id="dom-pill" x2="1" y2="1" gradientUnits="objectBoundingBox">
+      <stop stop-color="#ffffff"/>
+      <stop offset=".6" stop-color="#f4f6fa"/>
+      <stop offset="1" stop-color="#dfe5f0"/>
+    </linearGradient>
+    <linearGradient id="dom-badge" x2="0" y2="1" gradientUnits="objectBoundingBox">
+      <stop stop-color="#f29b4b"/>
+      <stop offset="1" stop-color="#c46516"/>
+    </linearGradient>
+  </defs>
+  <ellipse cx="62" cy="110" rx="44" ry="6" fill="#995114" opacity=".14"/>
+  <!-- 后方光滑小圆片 -->
+  <g transform="translate(66 43) rotate(12)">
+    <ellipse cx="0" cy="3.8" rx="18.5" ry="10.5" fill="#d3dae6" stroke="#8e9aad" stroke-width="1.3"/>
+    <ellipse cx="0" cy="0" rx="18.5" ry="10.5" fill="url(#dom-pill)" stroke="#919db0" stroke-width="1.3"/>
+    <path d="M-11-5a14 7.5 0 0 1 10-2.3" fill="none" stroke="#ffffff" stroke-width="1.5" stroke-linecap="round" opacity=".92"/>
+  </g>
+  <!-- 前方光滑双凸圆片 -->
+  <g transform="translate(47 69) rotate(-18)">
+    <ellipse cx="0" cy="4.8" rx="23.5" ry="13.2" fill="#d1d8e3" stroke="#8894a8" stroke-width="1.5"/>
+    <ellipse cx="0" cy="0" rx="23.5" ry="13.2" fill="url(#dom-pill)" stroke="#8c98ab" stroke-width="1.5"/>
+    <ellipse cx="0" cy="-1" rx="15" ry="7" fill="#ffffff" opacity=".32"/>
+    <path d="M-15-7a18 9 0 0 1 13-2.8" fill="none" stroke="#ffffff" stroke-width="2" stroke-linecap="round" opacity=".94"/>
+  </g>
+  <!-- 右下角促胃动力角标 -->
+  <g transform="translate(88 82)">
+    <circle cx="0" cy="3" r="21" fill="#8c450b" opacity=".15"/>
+    <circle cx="0" cy="0" r="22" fill="#ffffff"/>
+    <circle cx="0" cy="0" r="19.5" fill="url(#dom-badge)" stroke="#a3510d" stroke-width="1.5"/>
+    <path d="M-3.5-10.5H0V-6c2-2.5 7.5-2.5 9.5 2.5C11.5 2 8.5 9.5 1.5 10.5c-5 .7-9-2-12.5-4-.5-1.7 0-3.3 1.2-3.7 2.3 1 4.8-.3 6-3.3.6-2 .3-4.5.3-10Z" fill="#ffffff" stroke="#a1500c" stroke-width=".9" stroke-linejoin="round"/>
+    <!-- 顺向蠕动排空箭头 -->
+    <path d="M5.5-1c0 5.5-5 8-10.5 6" fill="none" stroke="#d16c17" stroke-width="1.7" stroke-linecap="round"/>
+    <path d="M-3.2 3L-5.6 5l2.1 2.3" fill="none" stroke="#d16c17" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/>
+  </g>
+</svg>

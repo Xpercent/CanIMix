@@ -1,0 +1,35 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="128" height="128" viewBox="0 0 128 128">
+  <defs>
+    <linearGradient id="zn-pill" x2="1" y2="1" gradientUnits="objectBoundingBox">
+      <stop stop-color="#ffffff"/>
+      <stop offset=".6" stop-color="#eff5fa"/>
+      <stop offset="1" stop-color="#d2e0ed"/>
+    </linearGradient>
+    <linearGradient id="zn-badge" x2="0" y2="1" gradientUnits="objectBoundingBox">
+      <stop stop-color="#539fd9"/>
+      <stop offset="1" stop-color="#296aa1"/>
+    </linearGradient>
+  </defs>
+  <ellipse cx="62" cy="110" rx="44" ry="6" fill="#215582" opacity=".14"/>
+  <!-- 后方药片 -->
+  <g transform="translate(65 42) rotate(13)">
+    <ellipse cx="0" cy="4.2" rx="21" ry="11.5" fill="#c3d3e3" stroke="#7d96ad" stroke-width="1.3"/>
+    <ellipse cx="0" cy="0" rx="21" ry="11.5" fill="url(#zn-pill)" stroke="#829ab0" stroke-width="1.3"/>
+    <path d="M-12.5-5.5a16 8 0 0 1 11-2.4" fill="none" stroke="#ffffff" stroke-width="1.5" stroke-linecap="round" opacity=".92"/>
+  </g>
+  <!-- 前方银白圆片 -->
+  <g transform="translate(47 69) rotate(-18)">
+    <ellipse cx="0" cy="5.2" rx="26" ry="14.2" fill="#c0d1e0" stroke="#7890a6" stroke-width="1.5"/>
+    <ellipse cx="0" cy="0" rx="26" ry="14.2" fill="url(#zn-pill)" stroke="#7d95ab" stroke-width="1.5"/>
+    <ellipse cx="0" cy="0" rx="20.5" ry="10" fill="none" stroke="#dce7f2" stroke-width="1"/>
+    <path d="M-17-7.5a20 9.8 0 0 1 13-2.8" fill="none" stroke="#ffffff" stroke-width="2" stroke-linecap="round" opacity=".94"/>
+  </g>
+  <!-- 右下角 Zn 角标 -->
+  <g transform="translate(88 82)">
+    <circle cx="0" cy="3" r="21" fill="#1b4d78" opacity=".15"/>
+    <circle cx="0" cy="0" r="22" fill="#ffffff"/>
+    <circle cx="0" cy="0" r="19.5" fill="url(#zn-badge)" stroke="#215887" stroke-width="1.5"/>
+    <path d="M-9-6.2h7.4L-9 6.2h7.4" fill="none" stroke="#ffffff" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
+    <path d="M2 6.2V-2m0 1.8c0-2 2.1-3 3.9-3 1.9 0 3.1 1.4 3.1 4v5.4" fill="none" stroke="#ffffff" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/>
+  </g>
+</svg>

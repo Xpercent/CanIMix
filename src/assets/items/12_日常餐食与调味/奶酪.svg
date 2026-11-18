@@ -1,0 +1,37 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="128" height="128" viewBox="0 0 128 128">
+  <defs>
+    <linearGradient id="chs-top" x2="1" y2="1" gradientUnits="objectBoundingBox">
+      <stop stop-color="#fff09c"/>
+      <stop offset="1" stop-color="#ffd54f"/>
+    </linearGradient>
+    <linearGradient id="chs-front" x2="0" y2="1" gradientUnits="objectBoundingBox">
+      <stop stop-color="#ffc93b"/>
+      <stop offset="1" stop-color="#e39912"/>
+    </linearGradient>
+    <linearGradient id="chs-rind" x2="0" y2="1" gradientUnits="objectBoundingBox">
+      <stop stop-color="#e89a15"/>
+      <stop offset="1" stop-color="#bd7208"/>
+    </linearGradient>
+  </defs>
+  <ellipse cx="62" cy="108" rx="43" ry="5.5" fill="#9c6309" opacity=".15"/>
+  <g transform="translate(61 67) rotate(-8)">
+    <!-- 奶酪顶面 -->
+    <path d="M-36-2L26-28c10 7 14 18 14 28l-76-2Z" fill="url(#chs-top)" stroke="#b8780b" stroke-width="1.4" stroke-linejoin="round"/>
+    <!-- 奶酪侧面切面 -->
+    <path d="M-36-2l76 2v26l-76-2Z" fill="url(#chs-front)" stroke="#b8780b" stroke-width="1.4" stroke-linejoin="round"/>
+    <!-- 右侧弧形外皮 -->
+    <path d="M26-28c10 7 14 18 14 28v26c0-10-4-21-14-28" fill="url(#chs-rind)" opacity=".35"/>
+    <!-- 奶酪气孔（带立体内壁） -->
+    <g>
+      <circle cx="-10" cy="12" r="6" fill="#d9870d" stroke="#b36c07" stroke-width="1"/>
+      <circle cx="-9.2" cy="12.8" r="4.6" fill="#f0a81d"/>
+      <circle cx="14" cy="10" r="5" fill="#d9870d" stroke="#b36c07" stroke-width="1"/>
+      <circle cx="14.6" cy="10.7" r="3.8" fill="#f0a81d"/>
+      <circle cx="28" cy="17" r="3.5" fill="#d9870d" stroke="#b36c07" stroke-width=".9"/>
+      <ellipse cx="10" cy="-9" rx="5.5" ry="3.2" fill="#e69b15" stroke="#bd7a0a" stroke-width=".9"/>
+      <ellipse cx="-8" cy="-5" rx="3.8" ry="2.2" fill="#e69b15" stroke="#bd7a0a" stroke-width=".8"/>
+    </g>
+    <!-- 高光 -->
+    <path d="M-24-6l38-16" fill="none" stroke="#ffffff" stroke-width="2" stroke-linecap="round" opacity=".72"/>
+  </g>
+</svg>

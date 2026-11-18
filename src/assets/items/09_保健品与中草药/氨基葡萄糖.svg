@@ -1,0 +1,38 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="128" height="128" viewBox="0 0 128 128">
+  <defs>
+    <linearGradient id="glu-pill" x2="1" y2="1" gradientUnits="objectBoundingBox">
+      <stop stop-color="#ffffff"/>
+      <stop offset=".6" stop-color="#faf6ed"/>
+      <stop offset="1" stop-color="#e8dfd0"/>
+    </linearGradient>
+    <linearGradient id="glu-badge" x2="0" y2="1" gradientUnits="objectBoundingBox">
+      <stop stop-color="#5b84d6"/>
+      <stop offset="1" stop-color="#2f53a6"/>
+    </linearGradient>
+  </defs>
+  <ellipse cx="62" cy="110" rx="44" ry="6" fill="#234085" opacity=".14"/>
+  <!-- 后方长片 -->
+  <g transform="translate(66 42) rotate(12)">
+    <rect x="-19" y="-5.5" width="38" height="19" rx="9.5" fill="#d9cfbf" stroke="#9e9280" stroke-width="1.3"/>
+    <rect x="-19" y="-9.5" width="38" height="19" rx="9.5" fill="url(#glu-pill)" stroke="#a39784" stroke-width="1.3"/>
+    <path d="M-11-5.2h18" fill="none" stroke="#ffffff" stroke-width="1.5" stroke-linecap="round" opacity=".92"/>
+  </g>
+  <!-- 前方象牙白大长片 -->
+  <g transform="translate(47 68) rotate(-24)">
+    <rect x="-27.5" y="-8.5" width="55" height="27" rx="13.5" fill="#d6ccb9" stroke="#968a77" stroke-width="1.5"/>
+    <rect x="-27.5" y="-13.5" width="55" height="27" rx="13.5" fill="url(#glu-pill)" stroke="#9c907d" stroke-width="1.5"/>
+    <rect x="-20.5" y="-8.5" width="41" height="17" rx="8.5" fill="none" stroke="#ebe3d5" stroke-width="1"/>
+    <path d="M-16.5-9.2h25" fill="none" stroke="#ffffff" stroke-width="2" stroke-linecap="round" opacity=".92"/>
+  </g>
+  <!-- 右下角软骨修复角标 -->
+  <g transform="translate(88 82)">
+    <circle cx="0" cy="3" r="21" fill="#203b7a" opacity=".15"/>
+    <circle cx="0" cy="0" r="22" fill="#ffffff"/>
+    <circle cx="0" cy="0" r="19.5" fill="url(#glu-badge)" stroke="#26458f" stroke-width="1.5"/>
+    <!-- 上下骨节 -->
+    <path d="M-3.6-10.5h7.2l-.8 4.6c2.1.8 2.6 2.8.5 3.4-1.7.5-5 .5-6.6 0-2.1-.6-1.6-2.6.5-3.4Z" fill="#ffffff"/>
+    <path d="M-3.6 10.5h7.2l-.8-4.6c2.1-.8 2.6-2.8.5-3.4-1.7-.5-5-.5-6.6 0-2.1.6-1.6 2.6.5 3.4Z" fill="#ffffff"/>
+    <!-- 软骨缓冲垫 -->
+    <ellipse cx="0" cy="0" rx="6.8" ry="2" fill="#8ff0e2" stroke="#2f53a6" stroke-width=".7"/>
+  </g>
+</svg>

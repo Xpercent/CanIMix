@@ -1,0 +1,40 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="128" height="128" viewBox="0 0 128 128">
+  <defs>
+    <linearGradient id="lev-pill" x2="1" y2="1" gradientUnits="objectBoundingBox">
+      <stop stop-color="#ffffff"/>
+      <stop offset=".6" stop-color="#f2f7f7"/>
+      <stop offset="1" stop-color="#dce8e7"/>
+    </linearGradient>
+    <linearGradient id="lev-badge" x2="0" y2="1" gradientUnits="objectBoundingBox">
+      <stop stop-color="#43bfa8"/>
+      <stop offset="1" stop-color="#1d8070"/>
+    </linearGradient>
+  </defs>
+  <ellipse cx="62" cy="110" rx="44" ry="6" fill="#1e6e60" opacity=".14"/>
+  <!-- 后方药片 -->
+  <g transform="translate(65 42) rotate(13)">
+    <ellipse cx="0" cy="4.2" rx="22" ry="12" fill="#cfe0de" stroke="#85a3a0" stroke-width="1.3"/>
+    <ellipse cx="0" cy="0" rx="22" ry="12" fill="url(#lev-pill)" stroke="#89a6a3" stroke-width="1.3"/>
+    <path d="M-13-6a17 8.5 0 0 1 11-2.4" fill="none" stroke="#ffffff" stroke-width="1.5" stroke-linecap="round" opacity=".9"/>
+  </g>
+  <!-- 前方主药片 -->
+  <g transform="translate(47 69) rotate(-18)">
+    <ellipse cx="0" cy="5.5" rx="27" ry="14.5" fill="#ccdedc" stroke="#7f9e9b" stroke-width="1.5"/>
+    <ellipse cx="0" cy="0" rx="27" ry="14.5" fill="url(#lev-pill)" stroke="#84a39f" stroke-width="1.5"/>
+    <ellipse cx="0" cy="0" rx="21.5" ry="10.4" fill="none" stroke="#e0eceb" stroke-width="1"/>
+    <path d="M0-11v22" stroke="#96b3b0" stroke-width="1.5" stroke-linecap="round"/>
+    <path d="M1.3-10v20" stroke="#ffffff" stroke-width="1" stroke-linecap="round" opacity=".9"/>
+    <path d="M-17-7.8a21 10 0 0 1 13-2.8" fill="none" stroke="#ffffff" stroke-width="1.8" stroke-linecap="round" opacity=".94"/>
+  </g>
+  <!-- 右下角甲状腺角标 -->
+  <g transform="translate(88 82)">
+    <circle cx="0" cy="3" r="21" fill="#176154" opacity=".15"/>
+    <circle cx="0" cy="0" r="22" fill="#ffffff"/>
+    <circle cx="0" cy="0" r="19.5" fill="url(#lev-badge)" stroke="#186b5d" stroke-width="1.5"/>
+    <!-- 隐约气管背景 -->
+    <rect x="-2.2" y="-10" width="4.4" height="20" rx="2.2" fill="#ffffff" opacity=".28"/>
+    <path d="M-1.5-6h3M-1.5-2.5h3M-1.5 4.5h3M-1.5 7.5h3" stroke="#1d8070" stroke-width=".9" opacity=".4"/>
+    <!-- 蝴蝶状甲状腺 -->
+    <path d="M-2-2q2 1 4 0C3.5-8.5 10.5-8.5 10.5-1c0 6.5-4.5 10.5-8 6.5-.7-1-.5-3-.5-3.5q-2 .8-4 0c0 .5.2 2.5-.5 3.5-3.5 4-8 0-8-6.5 0-7.5 7-7.5 8.5-1Z" fill="#ffffff" stroke="#186b5d" stroke-width=".9" stroke-linejoin="round"/>
+  </g>
+</svg>

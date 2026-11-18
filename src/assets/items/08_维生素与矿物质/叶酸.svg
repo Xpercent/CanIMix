@@ -1,0 +1,39 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="128" height="128" viewBox="0 0 128 128">
+  <defs>
+    <linearGradient id="fol-pill" x2="1" y2="1" gradientUnits="objectBoundingBox">
+      <stop stop-color="#fffef2"/>
+      <stop offset=".58" stop-color="#faea9b"/>
+      <stop offset="1" stop-color="#edd064"/>
+    </linearGradient>
+    <linearGradient id="fol-badge" x2="0" y2="1" gradientUnits="objectBoundingBox">
+      <stop stop-color="#f6fcf5"/>
+      <stop offset="1" stop-color="#d7f0d4"/>
+    </linearGradient>
+    <linearGradient id="fol-leaf" x2="1" y2="1" gradientUnits="objectBoundingBox">
+      <stop stop-color="#90db6b"/>
+      <stop offset="1" stop-color="#409135"/>
+    </linearGradient>
+  </defs>
+  <ellipse cx="62" cy="110" rx="44" ry="6" fill="#8f7822" opacity=".14"/>
+  <g transform="translate(68 42) rotate(12)">
+    <ellipse cx="0" cy="4.2" rx="17" ry="11" fill="#e6cf73" stroke="#b59528" stroke-width="1.3"/>
+    <ellipse cx="0" cy="0" rx="17" ry="11" fill="url(#fol-pill)" stroke="#ba9a2c" stroke-width="1.3"/>
+    <path d="M-11-4.6a14 8 0 0 1 11-3.4" fill="none" stroke="#fff" stroke-width="1.4" stroke-linecap="round" opacity=".9"/>
+  </g>
+  <g transform="translate(47 69) rotate(-17)">
+    <ellipse cx="0" cy="5.2" rx="27" ry="18" fill="#e3ca6b" stroke="#b08f23" stroke-width="1.5"/>
+    <ellipse cx="0" cy="0" rx="27" ry="18" fill="url(#fol-pill)" stroke="#b59426" stroke-width="1.5"/>
+    <ellipse cx="0" cy="0" rx="21.5" ry="13.2" fill="none" stroke="#faf0be" stroke-width="1"/>
+    <path d="M-21 0h42" stroke="#bd9c2f" stroke-width="1.5" stroke-linecap="round"/>
+    <path d="M-20 1.4h40" stroke="#fff" stroke-width="1" stroke-linecap="round" opacity=".82"/>
+    <path d="M-16-10a22 13 0 0 1 16-4.5" fill="none" stroke="#fff" stroke-width="1.8" stroke-linecap="round" opacity=".92"/>
+  </g>
+  <g transform="translate(88 82)">
+    <circle cx="0" cy="3" r="21" fill="#3a7533" opacity=".14"/>
+    <circle cx="0" cy="0" r="22" fill="#ffffff"/>
+    <circle cx="0" cy="0" r="19.5" fill="url(#fol-badge)" stroke="#4c9945" stroke-width="1.5"/>
+    <path d="M-10.5 9.5L-6.5 5.5" stroke="#367a2c" stroke-width="2" stroke-linecap="round"/>
+    <path d="M-8 7C-8.5-3-1-10.5 9.5-9.5C10 1 2.5 9.5-8 7Z" fill="url(#fol-leaf)" stroke="#2e7325" stroke-width="1.3" stroke-linejoin="round"/>
+    <path d="M-6.5 5.5Q.5-1.5 6.5-6.5" fill="none" stroke="#e4fad9" stroke-width="1.4" stroke-linecap="round" opacity=".9"/>
+  </g>
+</svg>

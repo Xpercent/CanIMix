@@ -1,0 +1,36 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="128" height="128" viewBox="0 0 128 128">
+  <defs>
+    <linearGradient id="lor-pill" x2="1" y2="1" gradientUnits="objectBoundingBox">
+      <stop stop-color="#ffffff"/>
+      <stop offset=".6" stop-color="#f2f6fc"/>
+      <stop offset="1" stop-color="#dbe5f2"/>
+    </linearGradient>
+    <linearGradient id="lor-badge" x2="0" y2="1" gradientUnits="objectBoundingBox">
+      <stop stop-color="#6a8ce6"/>
+      <stop offset="1" stop-color="#3a5bb3"/>
+    </linearGradient>
+  </defs>
+  <ellipse cx="62" cy="110" rx="44" ry="6" fill="#2f4d9e" opacity=".14"/>
+  <!-- 后方椭圆药片 -->
+  <g transform="translate(66 43) rotate(14)">
+    <rect x="-20" y="-6" width="40" height="20" rx="10" fill="#cdd9eb" stroke="#8ba0c2" stroke-width="1.3"/>
+    <rect x="-20" y="-10" width="40" height="20" rx="10" fill="url(#lor-pill)" stroke="#8fa3c4" stroke-width="1.3"/>
+    <path d="M-12-5.5h18" fill="none" stroke="#ffffff" stroke-width="1.6" stroke-linecap="round" opacity=".9"/>
+  </g>
+  <!-- 前方主椭圆刻痕片 -->
+  <g transform="translate(47 68) rotate(-22)">
+    <rect x="-26" y="-8.5" width="52" height="26" rx="13" fill="#cbd7ea" stroke="#8297ba" stroke-width="1.5"/>
+    <rect x="-26" y="-13" width="52" height="26" rx="13" fill="url(#lor-pill)" stroke="#869bbd" stroke-width="1.5"/>
+    <path d="M0-10v20" stroke="#9eb0cc" stroke-width="1.5" stroke-linecap="round"/>
+    <path d="M1.4-9v18" stroke="#ffffff" stroke-width="1" stroke-linecap="round" opacity=".9"/>
+    <path d="M-16-8h24" fill="none" stroke="#ffffff" stroke-width="2" stroke-linecap="round" opacity=".92"/>
+  </g>
+  <!-- 右下角防护盾角标 -->
+  <g transform="translate(88 82)">
+    <circle cx="0" cy="3" r="21" fill="#26408a" opacity=".15"/>
+    <circle cx="0" cy="0" r="22" fill="#ffffff"/>
+    <circle cx="0" cy="0" r="19.5" fill="url(#lor-badge)" stroke="#2e4a96" stroke-width="1.5"/>
+    <path d="M0-10.5L8.5-7.2V-.5C8.5 5.2 4.5 9.2 0 11-4.5 9.2-8.5 5.2-8.5-.5v-6.7Z" fill="#ffffff" stroke="#2c478f" stroke-width="1" stroke-linejoin="round"/>
+    <path d="M-3.8-.3H3.8M0-4.1v7.6" stroke="#4868c2" stroke-width="2.3" stroke-linecap="round"/>
+  </g>
+</svg>

@@ -1,0 +1,40 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="128" height="128" viewBox="0 0 128 128">
+  <defs>
+    <linearGradient id="ssri-cap1" x2="0" y2="1" gradientUnits="objectBoundingBox">
+      <stop stop-color="#70a9f2"/>
+      <stop offset="1" stop-color="#356bbf"/>
+    </linearGradient>
+    <linearGradient id="ssri-cap2" x2="0" y2="1" gradientUnits="objectBoundingBox">
+      <stop stop-color="#f7faff"/>
+      <stop offset="1" stop-color="#d2e1f5"/>
+    </linearGradient>
+    <linearGradient id="ssri-badge" x2="0" y2="1" gradientUnits="objectBoundingBox">
+      <stop stop-color="#f5b547"/>
+      <stop offset="1" stop-color="#c97a12"/>
+    </linearGradient>
+  </defs>
+  <ellipse cx="62" cy="110" rx="44" ry="6" fill="#8f580d" opacity=".14"/>
+  <!-- 后方胶囊 -->
+  <g transform="translate(67 42) rotate(13)">
+    <rect x="-21" y="-10" width="42" height="20" rx="10" fill="url(#ssri-cap1)" stroke="#2c5ba6" stroke-width="1.3"/>
+    <path d="M0-10h11a10 10 0 0 1 0 20H0Z" fill="url(#ssri-cap2)" stroke="#7a98c4" stroke-width="1.2"/>
+    <path d="M-13-5.2h26" fill="none" stroke="#ffffff" stroke-width="2" stroke-linecap="round" opacity=".78"/>
+  </g>
+  <!-- 前方晴蓝白胶囊 -->
+  <g transform="translate(48 67) rotate(-30)">
+    <rect x="-28" y="-12" width="56" height="24" rx="12" fill="url(#ssri-cap1)" stroke="#2957a1" stroke-width="1.5"/>
+    <path d="M0-12h16a12 12 0 0 1 0 24H0Z" fill="url(#ssri-cap2)" stroke="#7694bf" stroke-width="1.4"/>
+    <path d="M0-11.2v22.4" stroke="#3c6eb8" stroke-width="1" opacity=".4"/>
+    <path d="M-19-6.2h38" fill="none" stroke="#ffffff" stroke-width="2.4" stroke-linecap="round" opacity=".82"/>
+  </g>
+  <!-- 右下角脑与阳光角标 -->
+  <g transform="translate(88 82)">
+    <circle cx="0" cy="3" r="21" fill="#8c5308" opacity=".15"/>
+    <circle cx="0" cy="0" r="22" fill="#ffffff"/>
+    <circle cx="0" cy="0" r="19.5" fill="url(#ssri-badge)" stroke="#a3620b" stroke-width="1.5"/>
+    <!-- 大脑轮廓 -->
+    <path d="M0-7.5C2.5-9.5 7-8.5 8.2-5c2.3 1.5 2.3 5.5.3 7.5C9 5.5 6 8 2.5 7.5 1.2 7.3.5 6.5 0 5.5c-.5 1-1.2 1.8-2.5 2C-6 8-9 5.5-8.5 2.5c-2-2-2-6 .3-7.5C-7-8.5-2.5-9.5 0-7.5Z" fill="#ffffff" stroke="#a1600a" stroke-width=".9" stroke-linejoin="round"/>
+    <!-- 阳光提振星芒 -->
+    <path d="M0-5.2L1.1-2l3.2 1-3.2 1L0 3.2-1.1 0l-3.2-1 3.2-1Z" fill="#d98716"/>
+  </g>
+</svg>

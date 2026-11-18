@@ -1,0 +1,40 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="128" height="128" viewBox="0 0 128 128">
+  <defs>
+    <linearGradient id="ace-pill" x2="1" y2="1" gradientUnits="objectBoundingBox">
+      <stop stop-color="#f7fcf9"/>
+      <stop offset=".6" stop-color="#dcf2e5"/>
+      <stop offset="1" stop-color="#b5dec7"/>
+    </linearGradient>
+    <linearGradient id="ace-badge" x2="0" y2="1" gradientUnits="objectBoundingBox">
+      <stop stop-color="#5b84d6"/>
+      <stop offset="1" stop-color="#2e52a3"/>
+    </linearGradient>
+  </defs>
+  <ellipse cx="62" cy="110" rx="44" ry="6" fill="#234082" opacity=".14"/>
+  <!-- 后方药片 -->
+  <g transform="translate(66 43) rotate(13)">
+    <rect x="-20" y="-6" width="40" height="20" rx="10" fill="#a2cfb6" stroke="#629478" stroke-width="1.3"/>
+    <rect x="-20" y="-10" width="40" height="20" rx="10" fill="url(#ace-pill)" stroke="#67997d" stroke-width="1.3"/>
+    <path d="M-12-5.5h18" fill="none" stroke="#ffffff" stroke-width="1.6" stroke-linecap="round" opacity=".9"/>
+  </g>
+  <!-- 前方淡薄荷绿椭圆刻痕片 -->
+  <g transform="translate(47 68) rotate(-22)">
+    <rect x="-26" y="-8.5" width="52" height="26" rx="13" fill="#9eccb3" stroke="#5b8c71" stroke-width="1.5"/>
+    <rect x="-26" y="-13" width="52" height="26" rx="13" fill="url(#ace-pill)" stroke="#609176" stroke-width="1.5"/>
+    <path d="M0-10v20" stroke="#75a68b" stroke-width="1.5" stroke-linecap="round"/>
+    <path d="M1.4-9v18" stroke="#ffffff" stroke-width="1" stroke-linecap="round" opacity=".9"/>
+    <path d="M-16-8h24" fill="none" stroke="#ffffff" stroke-width="2" stroke-linecap="round" opacity=".92"/>
+  </g>
+  <!-- 右下角血压柱下降角标 -->
+  <g transform="translate(88 82)">
+    <circle cx="0" cy="3" r="21" fill="#1e397a" opacity=".15"/>
+    <circle cx="0" cy="0" r="22" fill="#ffffff"/>
+    <circle cx="0" cy="0" r="19.5" fill="url(#ace-badge)" stroke="#24438f" stroke-width="1.5"/>
+    <!-- 压力柱 -->
+    <rect x="-7.8" y="-8.8" width="6.8" height="17.6" rx="3.4" fill="#ffffff"/>
+    <rect x="-5.8" y="-1" width="2.8" height="7.8" rx="1.4" fill="#3a60b8"/>
+    <path d="M-3.5-5h2.2M-3.5-2.5h2.2" stroke="#85a6eb" stroke-width="1.1" stroke-linecap="round"/>
+    <!-- 下降箭头 ↓ -->
+    <path d="M5-7.5v15M1.5 4L5 7.5 8.5 4" fill="none" stroke="#ffffff" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/>
+  </g>
+</svg>
