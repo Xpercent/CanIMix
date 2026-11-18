@@ -1,0 +1,30 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="128" height="128" viewBox="0 0 128 128">
+  <defs>
+    <radialGradient id="vtd-pearl" cx=".35" cy=".32" r=".72" gradientUnits="objectBoundingBox">
+      <stop stop-color="#fff6ad"/>
+      <stop offset=".5" stop-color="#f7b225"/>
+      <stop offset="1" stop-color="#cf780a"/>
+    </radialGradient>
+    <linearGradient id="vtd-badge" x2="0" y2="1" gradientUnits="objectBoundingBox">
+      <stop stop-color="#ffb03b"/>
+      <stop offset="1" stop-color="#de7510"/>
+    </linearGradient>
+  </defs>
+  <ellipse cx="62" cy="110" rx="44" ry="6" fill="#a35e0d" opacity=".14"/>
+  <g transform="translate(68 42)">
+    <circle cx="0" cy="0" r="15" fill="url(#vtd-pearl)" stroke="#b56b0b" stroke-width="1.4"/>
+    <path d="M-8-6.5a10 10 0 0 1 7-3.5" fill="none" stroke="#ffffff" stroke-width="2" stroke-linecap="round" opacity=".78"/>
+  </g>
+  <g transform="translate(48 68)">
+    <circle cx="0" cy="0" r="24" fill="url(#vtd-pearl)" stroke="#ad6308" stroke-width="1.5"/>
+    <ellipse cx="0" cy="3" rx="14" ry="11" fill="#fff7bf" opacity=".28"/>
+    <path d="M-13.5-10a16 16 0 0 1 11-6" fill="none" stroke="#ffffff" stroke-width="2.6" stroke-linecap="round" opacity=".84"/>
+    <circle cx="-15.5" cy="-4" r="1.6" fill="#ffffff" opacity=".8"/>
+  </g>
+  <g transform="translate(88 82)">
+    <circle cx="0" cy="3" r="21" fill="#944d09" opacity=".15"/>
+    <circle cx="0" cy="0" r="22" fill="#ffffff"/>
+    <circle cx="0" cy="0" r="19.5" fill="url(#vtd-badge)" stroke="#b85d09" stroke-width="1.5"/>
+    <path d="M-5.5-8.5H-.5C5-8.5 7.5-4.5 7.5 0C7.5 4.5 5 8.5-.5 8.5H-5.5Z" fill="none" stroke="#ffffff" stroke-width="3.2" stroke-linejoin="round"/>
+  </g>
+</svg>

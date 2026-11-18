@@ -1,0 +1,28 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="128" height="128" viewBox="0 0 128 128">
+  <defs>
+    <linearGradient id="syr-glass" x2="1" y2="0" gradientUnits="objectBoundingBox"><stop stop-color="#83401f"/><stop offset=".24" stop-color="#b56131"/><stop offset=".5" stop-color="#c17640"/><stop offset="1" stop-color="#75351c"/></linearGradient>
+    <linearGradient id="syr-cap" x2="1" y2="0" gradientUnits="objectBoundingBox"><stop stop-color="#6c9284"/><stop offset=".5" stop-color="#4e7368"/><stop offset="1" stop-color="#3d5c52"/></linearGradient>
+  </defs>
+  <g transform="translate(-14 8.1) scale(1.3)">
+    <ellipse cx="58" cy="78" rx="37" ry="5.5" fill="#925127" opacity=".13"/>
+    <g transform="translate(52 44) rotate(-5)">
+      <path d="M-10-31v7c0 2-1 3-2 4-6 3-9 8-9 14v28a10 10 0 0 0 10 10h22a10 10 0 0 0 10-10V-6c0-6-3-11-9-14-1-1-2-2-2-4v-7Z" fill="url(#syr-glass)" stroke="#7d3e27" stroke-width="1.3"/>
+      <path d="M-15-14c.5-3 2-5 4-6M-15 22v4" fill="none" stroke="#e4a675" stroke-width="1.9" opacity=".65" stroke-linecap="round"/>
+      <path d="M-21-2h42v21h-42Z" fill="#fff3d6" stroke="#d0a06a"/>
+      <path d="M-21 1h42M-21 16h42" stroke="#bc8a55" stroke-width=".75"/>
+      <path d="M0 4.5c2.6 3.4 3.8 5.4 3.8 7.1a3.8 3.8 0 0 1-7.6 0c0-1.7 1.2-3.7 3.8-7.1Z" fill="#c07b49"/>
+      <path d="M-1.3 10.6c0 1.1.5 1.9 1.3 2.3" fill="none" stroke="#fff" stroke-width=".9" opacity=".55" stroke-linecap="round"/>
+      <rect x="-10.5" y="-25" width="21" height="3" rx="1.5" fill="#d9a06a" stroke="#a4693a" stroke-width=".9"/>
+      <rect x="-11.5" y="-41" width="23" height="14" rx="3.5" fill="url(#syr-cap)" stroke="#3a574d" stroke-width="1.1"/>
+      <path d="M-7.5-38.5v9M-4-38.5v9M-.5-38.5v9M3-38.5v9M6.5-38.5v9" stroke="#35524a" stroke-width="1" opacity=".55"/>
+    </g>
+    <g transform="translate(88 56) rotate(9)">
+      <path d="M-9.8 1h19.6l-2.4 18a4.4 4.4 0 0 1-4.4 4h-6a4.4 4.4 0 0 1-4.4-4Z" fill="#cf8b52" opacity=".58"/>
+      <path d="M-9.8 1h19.6" stroke="#b5763f" stroke-width=".9" opacity=".6" stroke-linecap="round"/>
+      <path d="M-12-12h24l-3.2 25.5a5 5 0 0 1-5 4.5h-7.6a5 5 0 0 1-5-4.5Z" fill="#f3fbfa" fill-opacity=".45" stroke="#8fb0ac" stroke-width="1.1"/>
+      <ellipse cx="0" cy="-12" rx="12" ry="3.2" fill="#f7fdfc" fill-opacity=".7" stroke="#8fb0ac" stroke-width="1.1"/>
+      <path d="M-8.6-3h5M-7.8 4h4.4M-8.2 10h4.6" stroke="#698f8b" stroke-width=".9" opacity=".7"/>
+      <path d="M-9.5-8.5-11.2 11" fill="none" stroke="#fff" stroke-width="1.6" stroke-linecap="round" opacity=".65"/>
+    </g>
+  </g>
+</svg>

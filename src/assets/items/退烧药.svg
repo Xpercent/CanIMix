@@ -1,0 +1,47 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="128" height="128" viewBox="0 0 128 128">
+  <defs>
+    <linearGradient id="ant-bag" x2="1" y2="1" gradientUnits="objectBoundingBox">
+      <stop stop-color="#fffdf9"/>
+      <stop offset=".6" stop-color="#f9eee6"/>
+      <stop offset="1" stop-color="#eed9cd"/>
+    </linearGradient>
+    <linearGradient id="ant-band" x2="1" y2="0" gradientUnits="objectBoundingBox">
+      <stop stop-color="#ff9973"/>
+      <stop offset="1" stop-color="#eb6545"/>
+    </linearGradient>
+    <linearGradient id="ant-badge" x2="0" y2="1" gradientUnits="objectBoundingBox">
+      <stop stop-color="#fff8f5"/>
+      <stop offset="1" stop-color="#fde3d9"/>
+    </linearGradient>
+    <linearGradient id="ant-merc" x2="0" y2="1" gradientUnits="objectBoundingBox">
+      <stop stop-color="#ff5e52"/>
+      <stop offset="1" stop-color="#cc2720"/>
+    </linearGradient>
+  </defs>
+  <ellipse cx="62" cy="110" rx="43" ry="6" fill="#a84b36" opacity=".14"/>
+  <g transform="translate(52 62) rotate(-8)">
+    <path d="M-24-33l3 3.4 3-3.4 3 3.4 3-3.4 3 3.4 3-3.4 3 3.4 3-3.4 3 3.4 3-3.4 3 3.4 3-3.4 3 3.4 3-3.4 3 3.4 3-3.4V25a7 7 0 0 1-7 7h-34a7 7 0 0 1-7-7Z" fill="url(#ant-bag)" stroke="#ca9682" stroke-width="1.5" stroke-linejoin="round"/>
+    <path d="M-23-24h46" stroke="#d49e8a" stroke-width="1.2" stroke-dasharray="3.2 2.4"/>
+    <path d="M24-25.8l-4 2 4 2" fill="none" stroke="#c98d77" stroke-width="1.2" stroke-linejoin="round"/>
+    <path d="M-19-20v42" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" opacity=".85"/>
+    <rect x="-18" y="-11" width="36" height="33" rx="5" fill="#fffaf7" stroke="#ebb29d" stroke-width="1.1"/>
+    <path d="M-18-1c6-4 12-4 18 0s12 4 18 0v18a5 5 0 0 1-5 5h-26a5 5 0 0 1-5-5Z" fill="url(#ant-band)"/>
+    <path d="M-10-6h20" stroke="#e89a82" stroke-width="1.5" stroke-linecap="round"/>
+    <circle cx="-6" cy="10" r="1.8" fill="#fff" opacity=".85"/>
+    <circle cx="0" cy="12" r="1.4" fill="#fff" opacity=".75"/>
+    <circle cx="6" cy="9.5" r="1.8" fill="#fff" opacity=".85"/>
+    <path d="M-11 17h22" stroke="#ffd8c9" stroke-width="1.3" stroke-linecap="round"/>
+  </g>
+  <g transform="translate(88 82)">
+    <circle cx="0" cy="3" r="21" fill="#994230" opacity=".14"/>
+    <circle cx="0" cy="0" r="22" fill="#ffffff"/>
+    <circle cx="0" cy="0" r="19.5" fill="url(#ant-badge)" stroke="#e3745b" stroke-width="1.5"/>
+    <g transform="translate(0 .5) rotate(14)">
+      <path d="M-3.2-12.5a3.2 3.2 0 0 1 6.4 0v15a5.6 5.6 0 1 1-6.4 0Z" fill="#ffffff" stroke="#d93e36" stroke-width="1.4" stroke-linejoin="round"/>
+      <rect x="-1.5" y="-8.5" width="3" height="14" rx="1.5" fill="url(#ant-merc)"/>
+      <circle cx="0" cy="7.2" r="3.7" fill="url(#ant-merc)"/>
+      <path d="M3.4-8h2.6M3.4-4.5h2.2M3.4-1h2.6" stroke="#d96b64" stroke-width="1.1" stroke-linecap="round"/>
+      <circle cx="-1.3" cy="6" r="1" fill="#fff" opacity=".85"/>
+    </g>
+  </g>
+</svg>

@@ -1,0 +1,41 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="128" height="128" viewBox="0 0 128 128">
+  <defs>
+    <linearGradient id="slp-box" x2="1" y2="1" gradientUnits="objectBoundingBox">
+      <stop stop-color="#3c568a"/>
+      <stop offset=".55" stop-color="#283c66"/>
+      <stop offset="1" stop-color="#1b2b4d"/>
+    </linearGradient>
+    <linearGradient id="slp-gold" x2="0" y2="1" gradientUnits="objectBoundingBox">
+      <stop stop-color="#ffe58f"/>
+      <stop offset=".55" stop-color="#f4bd41"/>
+      <stop offset="1" stop-color="#d8921e"/>
+    </linearGradient>
+    <linearGradient id="slp-pill" x2="0" y2="1" gradientUnits="objectBoundingBox">
+      <stop stop-color="#4e6ca6"/>
+      <stop offset="1" stop-color="#293f6b"/>
+    </linearGradient>
+  </defs>
+  <ellipse cx="62" cy="110" rx="44" ry="6.5" fill="#182440" opacity=".16"/>
+  <g transform="translate(53 69) rotate(-8)">
+    <rect x="-32" y="-29" width="64" height="64" rx="17" fill="#182542" stroke="#131e36" stroke-width="1.5"/>
+    <rect x="-32" y="-33" width="64" height="63" rx="17" fill="url(#slp-box)" stroke="#16223d" stroke-width="1.5"/>
+    <path d="M-21-27h24" fill="none" stroke="#7c98cf" stroke-width="1.8" stroke-linecap="round" opacity=".55"/>
+    <g transform="translate(0 -1) rotate(-14)">
+      <path d="M12.6-14A17 17 0 1 0 12.6 14A14.8 14.8 0 0 1 12.6-14Z" fill="url(#slp-gold)" stroke="#b87614" stroke-width="1.3" stroke-linejoin="round"/>
+      <path d="M-9.5-7a12 12 0 0 1 8-7.5" fill="none" stroke="#fff6d1" stroke-width="1.6" stroke-linecap="round" opacity=".75"/>
+      <circle cx="10.5" cy="-4.5" r="2" fill="#ffe48c"/>
+      <circle cx="15" cy="3.5" r="1.3" fill="#ffe48c" opacity=".85"/>
+    </g>
+  </g>
+  <g transform="translate(88 94) rotate(-8)">
+    <ellipse cx="0" cy="3.5" rx="12.5" ry="8" fill="#1b2a4a" stroke="#141f38" stroke-width="1.3"/>
+    <ellipse cx="0" cy="0" rx="12.5" ry="8" fill="url(#slp-pill)" stroke="#1a2847" stroke-width="1.3"/>
+    <path d="M-8.5 0h17" stroke="#f4bd41" stroke-width="1.3" stroke-linecap="round" opacity=".85"/>
+    <path d="M-6.5-4c2.4-1 5.2-1.4 8-1" fill="none" stroke="#9ab4e6" stroke-width="1.3" stroke-linecap="round" opacity=".75"/>
+  </g>
+  <g fill="none" stroke="url(#slp-gold)" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M80 35h7l-7 8h7" stroke-width="2.4"/>
+    <path d="M90 24h9l-9 10.5h9" stroke-width="2.8"/>
+    <path d="M102 12h11.5l-11.5 13h11.5" stroke-width="3.3"/>
+  </g>
+</svg>

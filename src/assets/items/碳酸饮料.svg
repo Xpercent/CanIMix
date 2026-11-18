@@ -1,0 +1,32 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="128" height="128" viewBox="0 0 128 128">
+  <defs>
+    <linearGradient id="sod-can" x2="1" y2="0" gradientUnits="objectBoundingBox">
+      <stop stop-color="#ff7466"/>
+      <stop offset=".3" stop-color="#f25046"/>
+      <stop offset=".72" stop-color="#d9362e"/>
+      <stop offset="1" stop-color="#ab231d"/>
+    </linearGradient>
+    <linearGradient id="sod-metal" x2="1" y2="0" gradientUnits="objectBoundingBox">
+      <stop stop-color="#f5f8fa"/>
+      <stop offset=".5" stop-color="#d7e1e8"/>
+      <stop offset="1" stop-color="#a8b9c4"/>
+    </linearGradient>
+  </defs>
+  <ellipse cx="64" cy="111" rx="38" ry="6" fill="#8f322c" opacity=".14"/>
+  <g transform="translate(62 72) rotate(-11)">
+    <path d="M-21 28h42l-3.5 5.5a2 2 0 0 1-1.7 1H-15.8a2 2 0 0 1-1.7-1Z" fill="url(#sod-metal)" stroke="#758894" stroke-width="1.4" stroke-linejoin="round"/>
+    <path d="M-22-26h44v54h-44Z" fill="url(#sod-can)" stroke="#9e2720" stroke-width="1.5" stroke-linejoin="round"/>
+    <path d="M-21.5 6Q-8-5 2 4T21.5-4v11Q8 18-2 9T-21.5 17Z" fill="#fff7f5" opacity=".92"/>
+    <path d="M-15-20v42" fill="none" stroke="#ffffff" stroke-width="2.6" stroke-linecap="round" opacity=".52"/>
+    <path d="M-22-26l3-5.5h38l3 5.5Z" fill="url(#sod-metal)" stroke="#758894" stroke-width="1.4" stroke-linejoin="round"/>
+    <ellipse cx="0" cy="-31.5" rx="19" ry="4.5" fill="#eef4f7" stroke="#758894" stroke-width="1.4"/>
+    <ellipse cx="2" cy="-31.5" rx="6" ry="2" fill="#4f606b"/>
+    <path d="M-7-32.5h7a2 2 0 0 1 0 2.5h-7a2 2 0 0 1 0-2.5Z" fill="#cfdbe3" stroke="#6c7f8c" stroke-width="1"/>
+    <circle cx="-6" cy="-42" r="3.4" fill="#eef9ff" stroke="#78b7d6" stroke-width="1.2"/>
+    <circle cx="5" cy="-45" r="4.2" fill="#ffffff" stroke="#78b7d6" stroke-width="1.2"/>
+    <circle cx="13" cy="-39" r="2.5" fill="#eef9ff" stroke="#78b7d6" stroke-width="1.1"/>
+    <circle cx="-1" cy="-54" r="2.8" fill="#ffffff" stroke="#78b7d6" stroke-width="1.1"/>
+    <circle cx="11" cy="-52" r="1.9" fill="#eef9ff" stroke="#78b7d6" stroke-width="1"/>
+    <circle cx="-13" cy="-37" r="2" fill="#ffffff" stroke="#78b7d6" stroke-width="1"/>
+  </g>
+</svg>

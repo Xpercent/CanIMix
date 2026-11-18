@@ -1,0 +1,39 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="128" height="128" viewBox="0 0 128 128">
+  <defs>
+    <linearGradient id="wrf-pill-top" x2="1" y2="1" gradientUnits="objectBoundingBox">
+      <stop stop-color="#fffdfb"/>
+      <stop offset=".6" stop-color="#fae9df"/>
+      <stop offset="1" stop-color="#efd4c7"/>
+    </linearGradient>
+    <linearGradient id="wrf-badge" x2="0" y2="1" gradientUnits="objectBoundingBox">
+      <stop stop-color="#fff8f6"/>
+      <stop offset="1" stop-color="#fddcd6"/>
+    </linearGradient>
+    <linearGradient id="wrf-drop" x2="0" y2="1" gradientUnits="objectBoundingBox">
+      <stop stop-color="#ff6b5f"/>
+      <stop offset=".55" stop-color="#e53d35"/>
+      <stop offset="1" stop-color="#b8221c"/>
+    </linearGradient>
+  </defs>
+  <ellipse cx="62" cy="110" rx="44" ry="6" fill="#9c4a46" opacity=".14"/>
+  <g transform="translate(68 42) rotate(14)">
+    <ellipse cx="0" cy="4" rx="17" ry="11" fill="#e6c8be" stroke="#c99e93" stroke-width="1.3"/>
+    <ellipse cx="0" cy="0" rx="17" ry="11" fill="url(#wrf-pill-top)" stroke="#cfa59a" stroke-width="1.3"/>
+    <path d="M-11-4.5a14 8 0 0 1 11-3.5" fill="none" stroke="#fff" stroke-width="1.4" stroke-linecap="round" opacity=".85"/>
+  </g>
+  <g transform="translate(48 68) rotate(-18)">
+    <ellipse cx="0" cy="5.5" rx="27" ry="19" fill="#e4c2b7" stroke="#c5968b" stroke-width="1.5"/>
+    <ellipse cx="0" cy="0" rx="27" ry="19" fill="url(#wrf-pill-top)" stroke="#cb9e93" stroke-width="1.5"/>
+    <ellipse cx="0" cy="0" rx="21.5" ry="14" fill="none" stroke="#e9cbc0" stroke-width="1"/>
+    <path d="M-21 0h42" stroke="#cb9e93" stroke-width="1.5" stroke-linecap="round"/>
+    <path d="M-20 1.4h40" stroke="#fff" stroke-width="1" stroke-linecap="round" opacity=".8"/>
+    <path d="M-16-10.5a22 14 0 0 1 16-4.8" fill="none" stroke="#fff" stroke-width="1.8" stroke-linecap="round" opacity=".88"/>
+  </g>
+  <g transform="translate(88 82)">
+    <circle cx="0" cy="3" r="21" fill="#8f3b36" opacity=".14"/>
+    <circle cx="0" cy="0" r="22" fill="#ffffff"/>
+    <circle cx="0" cy="0" r="19.5" fill="url(#wrf-badge)" stroke="#df7269" stroke-width="1.5"/>
+    <path d="M0-11.5C5-4 8.5 1 8.5 5.2A8.5 8.5 0 0 1-8.5 5.2C-8.5 1-5-4 0-11.5Z" fill="url(#wrf-drop)" stroke="#ad221c" stroke-width="1.2" stroke-linejoin="round"/>
+    <path d="M-4.3 2.5c-.6 2.3.2 4.5 1.7 5.7" fill="none" stroke="#fff" stroke-width="1.6" stroke-linecap="round" opacity=".78"/>
+  </g>
+</svg>

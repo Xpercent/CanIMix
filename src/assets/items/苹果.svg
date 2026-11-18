@@ -1,0 +1,23 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="128" height="128" viewBox="0 0 128 128">
+  <defs>
+    <radialGradient id="apl-body" cx=".36" cy=".32" r=".72" gradientUnits="objectBoundingBox">
+      <stop stop-color="#ff8373"/>
+      <stop offset=".48" stop-color="#ea453c"/>
+      <stop offset="1" stop-color="#b5201c"/>
+    </radialGradient>
+    <linearGradient id="apl-leaf" x2="1" y2="1" gradientUnits="objectBoundingBox">
+      <stop stop-color="#9be06c"/>
+      <stop offset="1" stop-color="#559e38"/>
+    </linearGradient>
+  </defs>
+  <ellipse cx="64" cy="110" rx="40" ry="6" fill="#992a24" opacity=".14"/>
+  <g transform="translate(64 69) rotate(-5)">
+    <path d="M0-24C-10-32-28-28-33-10C-37 8-26 32-12 34C-5 35-2 31 0 31C2 31 5 35 12 34C26 32 37 8 33-10C28-28 10-32 0-24Z" fill="url(#apl-body)" stroke="#9e1e1a" stroke-width="1.5" stroke-linejoin="round"/>
+    <path d="M-7-22c4 2.5 10 2.5 14 0" fill="none" stroke="#9e1e1a" stroke-width="1.4" stroke-linecap="round" opacity=".45"/>
+    <path d="M0-22Q2-34 9-39" fill="none" stroke="#7d4b2a" stroke-width="3.6" stroke-linecap="round"/>
+    <path d="M3-30C11-39 24-37 27-28C19-23 9-24 3-30Z" fill="url(#apl-leaf)" stroke="#427a2a" stroke-width="1.4" stroke-linejoin="round"/>
+    <path d="M5-30Q14-31 22-28.5" fill="none" stroke="#daf5c4" stroke-width="1.2" stroke-linecap="round" opacity=".8"/>
+    <path d="M-23-12a16 20 0 0 1 11-11" fill="none" stroke="#ffffff" stroke-width="2.6" stroke-linecap="round" opacity=".58"/>
+    <circle cx="-25" cy="-3" r="1.7" fill="#ffffff" opacity=".55"/>
+  </g>
+</svg>

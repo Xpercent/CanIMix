@@ -1,0 +1,36 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="128" height="128" viewBox="0 0 128 128">
+  <defs>
+    <linearGradient id="cal-pill" x2="1" y2="1" gradientUnits="objectBoundingBox">
+      <stop stop-color="#ffffff"/>
+      <stop offset=".6" stop-color="#f3f6f9"/>
+      <stop offset="1" stop-color="#e0e8ef"/>
+    </linearGradient>
+    <linearGradient id="cal-badge" x2="0" y2="1" gradientUnits="objectBoundingBox">
+      <stop stop-color="#76b4e3"/>
+      <stop offset="1" stop-color="#4784b8"/>
+    </linearGradient>
+  </defs>
+  <ellipse cx="62" cy="110" rx="44" ry="6" fill="#52748f" opacity=".14"/>
+  <g transform="translate(64 43) rotate(13)">
+    <ellipse cx="0" cy="4.5" rx="23" ry="12.5" fill="#d5e0e8" stroke="#90a5b5" stroke-width="1.3"/>
+    <ellipse cx="0" cy="0" rx="23" ry="12.5" fill="url(#cal-pill)" stroke="#92a7b8" stroke-width="1.3"/>
+    <path d="M-14-6.5a18 9 0 0 1 12-2.5" fill="none" stroke="#fff" stroke-width="1.5" stroke-linecap="round" opacity=".9"/>
+  </g>
+  <g transform="translate(47 70) rotate(-18)">
+    <ellipse cx="0" cy="5.5" rx="28" ry="15" fill="#d3dee6" stroke="#8a9fb0" stroke-width="1.5"/>
+    <ellipse cx="0" cy="0" rx="28" ry="15" fill="url(#cal-pill)" stroke="#8da2b3" stroke-width="1.5"/>
+    <ellipse cx="0" cy="0" rx="22.5" ry="10.8" fill="none" stroke="#e2eaf0" stroke-width="1"/>
+    <path d="M0-12v24" stroke="#a0b3c2" stroke-width="1.5" stroke-linecap="round"/>
+    <path d="M1.4-11v22" stroke="#fff" stroke-width="1" stroke-linecap="round" opacity=".88"/>
+    <path d="M-18-8a22 10.5 0 0 1 14-3" fill="none" stroke="#fff" stroke-width="1.8" stroke-linecap="round" opacity=".94"/>
+  </g>
+  <g transform="translate(88 82)">
+    <circle cx="0" cy="3" r="21" fill="#3a678f" opacity=".15"/>
+    <circle cx="0" cy="0" r="22" fill="#ffffff"/>
+    <circle cx="0" cy="0" r="19.5" fill="url(#cal-badge)" stroke="#386c99" stroke-width="1.5"/>
+    <g transform="rotate(-32)">
+      <path d="M-5.15-2.4L5.15-2.4A3.4 3.4 0 1 1 10.1 0A3.4 3.4 0 1 1 5.15 2.4L-5.15 2.4A3.4 3.4 0 1 1-10.1 0A3.4 3.4 0 1 1-5.15-2.4Z" fill="#ffffff" stroke="#31638f" stroke-width="1.2" stroke-linejoin="round"/>
+      <path d="M-4.5-.6h9" stroke="#d5e9f7" stroke-width="1.2" stroke-linecap="round"/>
+    </g>
+  </g>
+</svg>
