@@ -12,7 +12,6 @@ import {
   ListFilter,
   Share2,
   ShieldCheck,
-  X,
 } from 'lucide-react'
 import { cn } from '@/lib/utils'
 import { haptic } from './haptics'
@@ -318,19 +317,6 @@ export function ResultSheet({ items, onClose }: ResultSheetProps) {
                 配伍检测结果
               </h2>
             </div>
-            <span className="po-sheet-live">
-              <span className="po-sheet-live-dot" aria-hidden="true" />
-              本地计算
-            </span>
-            <button
-              type="button"
-              aria-label="关闭检测结果"
-              className="po-sheet-close"
-              onClick={requestClose}
-              onPointerDown={(event) => event.stopPropagation()}
-            >
-              <X size={17} strokeWidth={2} aria-hidden="true" />
-            </button>
           </div>
         </header>
 
