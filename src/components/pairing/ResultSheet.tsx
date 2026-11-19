@@ -78,6 +78,7 @@ export function ResultSheet({ items, onClose, onRemove }: ResultSheetProps) {
   const copiedTimer = useRef<number | null>(null)
   const dragStart = useRef<{ y: number; time: number; pointerId: number } | null>(null)
   const closingRef = useRef(false)
+  const returnFocusRef = useRef<HTMLElement | null>(null)
 
   const [phase, setPhase] = useState<'scanning' | 'result'>('scanning')
   const [closing, setClosing] = useState(false)
@@ -122,15 +123,55 @@ export function ResultSheet({ items, onClose, onRemove }: ResultSheetProps) {
   }, [])
 
   useEffect(() => {
+    returnFocusRef.current =
+      document.activeElement instanceof HTMLElement ? document.activeElement : null
     sheetRef.current?.focus()
-    const onKeyDown = (event: KeyboardEvent) => {
-      if (event.key === 'Escape') requestClose()
+
+    const focusableSelector =
+      'summary, a[href], button:not([disabled]), input:not([disabled]), select:not([disabled]), textarea:not([disabled]), [tabindex]:not([tabindex="-1"])'
+    const getFocusable = () => {
+      const root = sheetRef.current
+      if (!root) return []
+      return [...root.querySelectorAll<HTMLElement>(focusableSelector)].filter(
+        (element) => element.offsetParent !== null,
+      )
     }
+
+    const onKeyDown = (event: KeyboardEvent) => {
+      if (event.key === 'Escape') {
+        requestClose()
+        return
+      }
+      if (event.key !== 'Tab') return
+
+      const focusable = getFocusable()
+      if (focusable.length === 0) {
+        event.preventDefault()
+        sheetRef.current?.focus()
+        return
+      }
+
+      const first = focusable[0]
+      const last = focusable[focusable.length - 1]
+      const active = document.activeElement
+      if (event.shiftKey && (active === first || active === sheetRef.current)) {
+        event.preventDefault()
+        last.focus()
+      } else if (!event.shiftKey && active === last) {
+        event.preventDefault()
+        first.focus()
+      }
+    }
+
     window.addEventListener('keydown', onKeyDown)
     return () => {
       window.removeEventListener('keydown', onKeyDown)
       if (closeTimer.current !== null) window.clearTimeout(closeTimer.current)
       if (copiedTimer.current !== null) window.clearTimeout(copiedTimer.current)
+      const returnTarget = returnFocusRef.current?.isConnected
+        ? returnFocusRef.current
+        : document.querySelector<HTMLElement>('[data-pairing-start]')
+      returnTarget?.focus()
     }
   }, [requestClose])
 

@@ -34,6 +34,7 @@ export function ControlDeck({
           canTest ? `开始检测，共 ${count} 项` : '至少选择 2 项后才能检测'
         }
         className={cn('po-test', canTest && 'is-active', hinting && 'is-hinting')}
+        data-pairing-start
         disabled={!canTest}
         onClick={onTest}
       >
