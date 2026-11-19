@@ -1,0 +1,45 @@
+/* ── Status bar ──────────────────────────────────────────────── */
+
+.po-status {
+  position: relative;
+  display: flex;
+  flex: 0 0 auto;
+  align-items: center;
+  justify-content: space-between;
+  height: calc(59 * var(--u));
+  color: #050807;
+}
+
+.po-status-zoom {
+  position: absolute;
+  top: 0;
+  left: 0;
+  display: flex;
+  width: 200%;
+  height: 200%;
+  align-items: center;
+  justify-content: space-between;
+  padding: calc(10.8 * var(--u)) calc(60 * var(--u)) 0 calc(94 * var(--u));
+  transform: translateZ(0) scale(0.5);
+  transform-origin: top left;
+  will-change: transform;
+}
+
+.po-status-time {
+  display: block;
+  width: auto;
+  height: calc(26 * var(--u));
+}
+
+.po-status-icons {
+  display: flex;
+  align-items: center;
+  gap: calc(15 * var(--u));
+}
+
+.po-status-icons svg {
+  display: block;
+  width: auto;
+  height: calc(26 * var(--u));
+}
+

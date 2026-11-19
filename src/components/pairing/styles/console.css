@@ -1,0 +1,196 @@
+/* ── Console ─────────────────────────────────────────────────── */
+
+.po-console {
+  position: relative;
+  z-index: 20;
+  display: flex;
+  flex: 0 0 auto;
+  height: calc(76 * var(--u));
+  align-items: stretch;
+  gap: calc(10 * var(--u));
+  padding: calc(12 * var(--u)) calc(16 * var(--u));
+  border-radius: calc(28 * var(--u)) calc(28 * var(--u)) 0 0;
+  background: linear-gradient(180deg, rgba(251, 252, 251, 0.7), #f4f7f5 58%, #f1f3f2);
+  box-shadow:
+    0 -1px 0 rgba(255, 255, 255, 0.7),
+    0 -12px 32px -22px rgba(18, 32, 30, 0.2);
+  -webkit-backdrop-filter: blur(18px) saturate(1.02);
+  backdrop-filter: blur(18px) saturate(1.02);
+}
+
+.po-clear {
+  display: flex;
+  width: calc(86 * var(--u));
+  height: calc(52 * var(--u));
+  flex: 0 0 auto;
+  align-items: center;
+  justify-content: center;
+  gap: calc(5 * var(--u));
+  border-radius: calc(26 * var(--u));
+  background: #eef2f1;
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.55),
+    0 1px 1px rgba(18, 32, 30, 0.02);
+  color: var(--po-ink-700);
+  font-size: calc(11 * var(--u));
+  font-weight: 600;
+  transition:
+    transform 180ms cubic-bezier(0.22, 1.4, 0.36, 1),
+    color 180ms ease,
+    box-shadow 180ms ease,
+    background 180ms ease;
+}
+
+.po-clear svg {
+  width: calc(13 * var(--u));
+  height: calc(13 * var(--u));
+}
+
+.po-clear:not(:disabled):active {
+  background: #e6ecea;
+  transform: scale(0.97);
+}
+
+.po-clear:disabled {
+  background: rgba(238, 242, 241, 0.55);
+  color: var(--po-ink-300);
+  box-shadow: none;
+}
+
+.po-test {
+  position: relative;
+  display: flex;
+  flex: 1 1 auto;
+  height: calc(52 * var(--u));
+  min-width: 0;
+  align-items: center;
+  justify-content: center;
+  gap: calc(8 * var(--u));
+  padding: 0 calc(14 * var(--u)) 0 calc(16 * var(--u));
+  overflow: hidden;
+  border-radius: calc(26 * var(--u));
+  background: linear-gradient(180deg, #fcfdfc, #f2f5f3);
+  box-shadow:
+    inset 0 0 0 1px var(--po-line),
+    inset 0 1px 0 rgba(255, 255, 255, 0.9);
+  color: var(--po-ink-300);
+  font-size: calc(14 * var(--u));
+  font-weight: 600;
+  transition:
+    transform 180ms cubic-bezier(0.22, 1.4, 0.36, 1),
+    background 350ms ease,
+    box-shadow 450ms ease,
+    color 250ms ease;
+}
+
+.po-test:disabled {
+  cursor: default;
+}
+
+.po-test.is-hinting {
+  color: var(--po-ink-500);
+}
+
+.po-test.is-hinting .po-test-label {
+  font-size: calc(12.5 * var(--u));
+  letter-spacing: 0;
+}
+
+.po-test.is-active {
+  background: linear-gradient(160deg, #12796d 0%, #0e6b60 48%, #0a524a 100%);
+  box-shadow:
+    0 1px 1px rgba(8, 56, 50, 0.22),
+    0 5px 13px -6px rgba(14, 107, 96, 0.44),
+    inset 0 1px 0 rgba(255, 255, 255, 0.22),
+    inset 0 0 0 1px rgba(255, 255, 255, 0.1);
+  color: #fff;
+}
+
+.po-test.is-active:active {
+  transform: scale(0.97);
+}
+
+.po-test-label {
+  flex: 0 1 auto;
+  overflow: hidden;
+  text-align: center;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.po-test-count {
+  display: grid;
+  height: calc(24 * var(--u));
+  min-width: calc(40 * var(--u));
+  flex: none;
+  padding: 0 calc(8 * var(--u));
+  place-items: center;
+  border-radius: calc(12 * var(--u));
+  background: rgba(26, 37, 35, 0.05);
+  color: var(--po-ink-300);
+  font-family: var(--font-num);
+  font-size: calc(10 * var(--u));
+  font-weight: 600;
+  font-variant-numeric: tabular-nums;
+  transition: background 300ms ease, color 250ms ease;
+}
+
+.po-test.is-hinting .po-test-count {
+  color: var(--po-ink-500);
+}
+
+.po-test.is-active .po-test-count {
+  background: rgba(255, 255, 255, 0.14);
+  color: rgba(255, 255, 255, 0.94);
+}
+
+.po-test-chevron {
+  width: calc(14 * var(--u));
+  height: calc(14 * var(--u));
+  flex: none;
+  opacity: 0.35;
+  transition: opacity 250ms ease, transform 250ms ease;
+}
+
+.po-test.is-active .po-test-chevron {
+  opacity: 0.78;
+}
+
+.po-test-sheen {
+  position: absolute;
+  top: -40%;
+  left: -30%;
+  width: 30%;
+  height: 180%;
+  pointer-events: none;
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.22), transparent);
+  opacity: 0;
+  transform: rotate(18deg) translateX(-160%);
+}
+
+.po-test.is-active .po-test-sheen {
+  animation: po-test-sheen 700ms ease-out 120ms 1;
+}
+
+/* ── Home indicator ──────────────────────────────────────────── */
+
+.po-home {
+  position: relative;
+  z-index: 21;
+  flex: 0 0 auto;
+  height: calc(34 * var(--u));
+  background: var(--po-canvas);
+}
+
+.po-home-indicator {
+  position: absolute;
+  right: 0;
+  bottom: calc(8 * var(--u));
+  left: 0;
+  width: calc(134 * var(--u));
+  height: calc(5 * var(--u));
+  margin: auto;
+  border-radius: calc(3 * var(--u));
+  background: rgba(26, 37, 35, 0.82);
+}
+

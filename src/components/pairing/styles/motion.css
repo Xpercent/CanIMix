@@ -1,0 +1,122 @@
+/* ── Flight layer ────────────────────────────────────────────── */
+
+.po-flight-layer {
+  position: absolute;
+  inset: 0;
+  z-index: 40;
+  overflow: hidden;
+  pointer-events: none;
+}
+
+.po-flight {
+  position: absolute;
+  object-fit: contain;
+  transform-origin: top left;
+  filter: drop-shadow(0 10px 14px rgba(18, 32, 30, 0.22));
+  will-change: transform, opacity;
+}
+
+/* ── Motion ──────────────────────────────────────────────────── */
+
+@keyframes po-count-roll {
+  from {
+    opacity: 0;
+    transform: translateY(-5px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes po-state-fade {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes po-dot-breathe {
+  0%,
+  100% {
+    box-shadow: 0 0 0 0 rgba(14, 107, 96, 0.16);
+  }
+  50% {
+    box-shadow: 0 0 0 4px rgba(14, 107, 96, 0.04);
+  }
+}
+
+@keyframes po-slot-card-in {
+  from {
+    opacity: 0;
+    transform: scale(0.94);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+@keyframes po-card-in {
+  from {
+    opacity: 0;
+    transform: translateY(4px) scale(0.985);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+@keyframes po-badge-pop {
+  0% {
+    opacity: 0;
+    transform: scale(0.4);
+  }
+  70% {
+    opacity: 1;
+    transform: scale(1.12);
+  }
+  100% {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+@keyframes po-hint-in {
+  from {
+    opacity: 0;
+    transform: translateY(3px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes po-test-sheen {
+  0% {
+    opacity: 0;
+    transform: rotate(18deg) translateX(-160%);
+  }
+  20% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 0;
+    transform: rotate(18deg) translateX(480%);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .pairing-app *,
+  .pairing-app *::before,
+  .pairing-app *::after {
+    animation-duration: 1ms !important;
+    animation-iteration-count: 1 !important;
+    scroll-behavior: auto !important;
+    transition-duration: 1ms !important;
+  }
+}

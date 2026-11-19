@@ -1,0 +1,97 @@
+/* ── Hero: header + bench ────────────────────────────────────── */
+
+.po-hero {
+  position: relative;
+  display: flex;
+  flex: 0 0 auto;
+  flex-direction: column;
+  height: calc(248 * var(--u));
+}
+
+.po-hero-glow {
+  position: absolute;
+  z-index: 0;
+  border-radius: 50%;
+  pointer-events: none;
+  filter: blur(calc(28 * var(--u)));
+  transition: opacity 600ms ease, transform 800ms ease;
+}
+
+.po-hero-glow-cool {
+  top: calc(68 * var(--u));
+  left: calc(28 * var(--u));
+  width: calc(240 * var(--u));
+  height: calc(150 * var(--u));
+  background: radial-gradient(closest-side, rgba(26, 146, 130, 0.18), transparent 74%);
+  opacity: 0.55;
+}
+
+.po-hero-glow-warm {
+  top: calc(126 * var(--u));
+  right: calc(4 * var(--u));
+  width: calc(160 * var(--u));
+  height: calc(110 * var(--u));
+  background: radial-gradient(closest-side, rgba(198, 139, 78, 0.1), transparent 74%);
+  opacity: 0.4;
+}
+
+.po-hero.is-ready .po-hero-glow-cool {
+  opacity: 0.9;
+  transform: scale(1.03);
+}
+
+.po-hero.is-full .po-hero-glow-warm {
+  opacity: 0.72;
+}
+
+.po-hero-head {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  flex: 0 0 auto;
+  flex-direction: column;
+  justify-content: space-between;
+  height: calc(54 * var(--u));
+  padding: calc(6 * var(--u)) calc(16 * var(--u));
+}
+
+.po-eyebrow {
+  display: flex;
+  align-items: center;
+  gap: calc(5 * var(--u));
+  color: var(--po-ink-300);
+  font-family: var(--font-num);
+  font-size: calc(8.5 * var(--u));
+  font-weight: 600;
+  letter-spacing: 0.14em;
+  line-height: calc(10 * var(--u));
+}
+
+.po-brand-glyph {
+  width: calc(10 * var(--u));
+  height: calc(10 * var(--u));
+  margin-right: calc(1 * var(--u));
+  color: var(--po-primary);
+  opacity: 0.72;
+}
+
+.po-eyebrow-divider {
+  opacity: 0.55;
+}
+
+.po-title-row {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: calc(8 * var(--u));
+}
+
+.po-title {
+  margin: 0;
+  color: var(--po-ink-900);
+  font-size: calc(21 * var(--u));
+  font-weight: 600;
+  letter-spacing: -0.015em;
+  line-height: calc(26 * var(--u));
+}
+
