@@ -1,0 +1,246 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Items 资产预览</title>
+<style>
+  :root {
+    color-scheme: light;
+    --bg: #f5f6f8;
+    --card: #ffffff;
+    --border: #e5e7eb;
+    --text: #17181a;
+    --muted: #6b7280;
+    --faint: #9ca3af;
+  }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0;
+    padding: 28px;
+    background: var(--bg);
+    color: var(--text);
+    font-family: ui-sans-serif, system-ui, -apple-system, "Segoe UI", "Microsoft YaHei", "PingFang SC", sans-serif;
+  }
+  header {
+    max-width: 1440px;
+    margin: 0 auto 22px;
+    display: flex;
+    align-items: flex-end;
+    justify-content: space-between;
+    gap: 16px;
+    flex-wrap: wrap;
+  }
+  h1 { margin: 0; font-size: 20px; letter-spacing: -.02em; }
+  .sub { margin: 6px 0 0; font-size: 12px; color: var(--muted); }
+  code {
+    padding: 1px 5px;
+    border-radius: 5px;
+    background: #eef0f3;
+    font-family: ui-monospace, SFMono-Regular, Consolas, monospace;
+    font-size: 11px;
+  }
+  .tools { display: flex; align-items: center; gap: 10px; }
+  input[type="search"] {
+    width: 280px;
+    padding: 9px 12px;
+    border: 1px solid #d8dce2;
+    border-radius: 10px;
+    background: #fff;
+    color: var(--text);
+    font: inherit;
+    font-size: 13px;
+    outline: none;
+    transition: border-color .15s, box-shadow .15s;
+  }
+  input[type="search"]:focus {
+    border-color: #94a3b8;
+    box-shadow: 0 0 0 3px rgba(148, 163, 184, .16);
+  }
+  .count {
+    font-size: 12px;
+    color: var(--muted);
+    white-space: nowrap;
+    font-variant-numeric: tabular-nums;
+  }
+  main { max-width: 1440px; margin: 0 auto; }
+  .category {
+    margin: 24px 0 10px;
+    display: flex;
+    align-items: baseline;
+    gap: 8px;
+    font-size: 13px;
+    font-weight: 600;
+    color: #374151;
+  }
+  .category:first-child { margin-top: 0; }
+  .category span { font-weight: 400; color: var(--faint); font-size: 12px; }
+  .grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(148px, 1fr));
+    gap: 12px;
+  }
+  .card {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    padding: 10px;
+    border: 1px solid var(--border);
+    border-radius: 14px;
+    background: var(--card);
+    color: inherit;
+    text-decoration: none;
+    transition: border-color .15s, box-shadow .15s, transform .15s;
+  }
+  .card:hover {
+    border-color: #cbd5e1;
+    box-shadow: 0 6px 18px rgba(15, 23, 42, .06);
+    transform: translateY(-1px);
+  }
+  .card:focus-visible {
+    outline: 2px solid #64748b;
+    outline-offset: 2px;
+  }
+  .thumb {
+    aspect-ratio: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+    border-radius: 10px;
+    background: #fafbfc;
+  }
+  .thumb img {
+    width: 100%;
+    height: 100%;
+    padding: 8px;
+    object-fit: contain;
+  }
+  .name {
+    font-size: 12px;
+    line-height: 1.35;
+    color: #1f2937;
+    word-break: break-all;
+  }
+  .name .ext { color: var(--faint); }
+  .empty {
+    padding: 48px 24px;
+    border: 1px dashed #d1d5db;
+    border-radius: 14px;
+    background: #fff;
+    color: var(--muted);
+    text-align: center;
+    font-size: 13px;
+    line-height: 1.8;
+  }
+  @media (max-width: 640px) {
+    body { padding: 16px; }
+    .tools { width: 100%; }
+    input[type="search"] { width: 100%; }
+  }
+</style>
+</head>
+<body>
+<header>
+  <div>
+    <h1>Items 资产预览</h1>
+    <p class="sub">图片 + 文件名 · 先运行 <code>list-items.bat</code> 生成清单，页面读取 <code>items.js</code></p>
+  </div>
+  <div class="tools">
+    <input id="search" type="search" placeholder="搜索文件名…" autocomplete="off">
+    <span class="count" id="count"></span>
+  </div>
+</header>
+<main id="app"></main>
+
+<script src="items.js"></script>
+<script>
+  const files = Array.isArray(window.ITEM_FILES) ? window.ITEM_FILES : [];
+  const app = document.getElementById('app');
+  const countEl = document.getElementById('count');
+  const searchEl = document.getElementById('search');
+
+  function groupByCategory(items) {
+    const map = new Map();
+    for (const path of items) {
+      const parts = path.split('/');
+      const category = parts.length > 1 ? parts[0] : '未分类';
+      if (!map.has(category)) map.set(category, []);
+      map.get(category).push(path);
+    }
+    return [...map.entries()].sort((a, b) => a[0].localeCompare(b[0], 'zh-CN'));
+  }
+
+  function render(filter = '') {
+    const q = filter.trim().toLowerCase();
+    const visible = files.filter((path) => !q || path.toLowerCase().includes(q));
+    countEl.textContent = `${visible.length} / ${files.length}`;
+    app.replaceChildren();
+
+    if (!visible.length) {
+      const empty = document.createElement('div');
+      empty.className = 'empty';
+      empty.textContent = files.length
+        ? '没有匹配的文件名'
+        : '还没有资产清单。请先运行 artificial/list-items.bat 生成 items.js。';
+      app.appendChild(empty);
+      return;
+    }
+
+    for (const [category, items] of groupByCategory(visible)) {
+      const heading = document.createElement('h2');
+      heading.className = 'category';
+      heading.title = category;
+      heading.textContent = category.replace(/^\d+_/, '');
+      const num = document.createElement('span');
+      num.textContent = `${items.length} 项`;
+      heading.appendChild(num);
+      app.appendChild(heading);
+
+      const grid = document.createElement('div');
+      grid.className = 'grid';
+
+      for (const path of items) {
+        const file = path.split('/').pop();
+        const dot = file.lastIndexOf('.');
+        const base = dot > -1 ? file.slice(0, dot) : file;
+        const ext = dot > -1 ? file.slice(dot) : '';
+
+        const card = document.createElement('a');
+        card.className = 'card';
+        card.href = '../src/assets/items/' + path;
+        card.target = '_blank';
+        card.rel = 'noopener';
+        card.title = path;
+
+        const thumb = document.createElement('div');
+        thumb.className = 'thumb';
+        const img = document.createElement('img');
+        img.src = '../src/assets/items/' + path;
+        img.alt = base;
+        img.loading = 'lazy';
+        thumb.appendChild(img);
+
+        const name = document.createElement('div');
+        name.className = 'name';
+        name.textContent = base;
+        if (ext) {
+          const extEl = document.createElement('span');
+          extEl.className = 'ext';
+          extEl.textContent = ext;
+          name.appendChild(extEl);
+        }
+
+        card.append(thumb, name);
+        grid.appendChild(card);
+      }
+
+      app.appendChild(grid);
+    }
+  }
+
+  searchEl.addEventListener('input', () => render(searchEl.value));
+  render();
+</script>
+</body>
+</html>

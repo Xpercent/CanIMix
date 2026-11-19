@@ -1,0 +1,34 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="128" height="128" viewBox="0 0 128 128">
+  <defs>
+    <linearGradient id="liver-meat" x2="1" y2="1" gradientUnits="objectBoundingBox">
+      <stop stop-color="#a3483f"/>
+      <stop offset=".55" stop-color="#7d2b28"/>
+      <stop offset="1" stop-color="#521b1a"/>
+    </linearGradient>
+    <linearGradient id="liver-meat2" x2="1" y2="1" gradientUnits="objectBoundingBox">
+      <stop stop-color="#b85a4e"/>
+      <stop offset="1" stop-color="#6a2220"/>
+    </linearGradient>
+    <linearGradient id="liver-badge" x2="0" y2="1" gradientUnits="objectBoundingBox">
+      <stop stop-color="#6fc06d"/>
+      <stop offset="1" stop-color="#2f7a3a"/>
+    </linearGradient>
+  </defs>
+  <ellipse cx="64" cy="111" rx="46" ry="6" fill="#3f2a1f" opacity=".14"/>
+  <ellipse cx="64" cy="96" rx="45" ry="14" fill="#ffffff" stroke="#d9dde2" stroke-width="1.2"/>
+  <ellipse cx="64" cy="94" rx="37" ry="10" fill="#f4f6f8"/>
+  <g transform="translate(64 68) rotate(-6)">
+    <path d="M8-16C22-25 37-17 39-4c2 12-8 22-21 22-8 0-11-6-10-14 1-8 3-14 0-20Z" fill="url(#liver-meat2)" stroke="#4d1917" stroke-width="1.4" stroke-linejoin="round"/>
+    <path d="M-30 6C-38-8-27-25-8-26 8-27 22-18 28-6 34 6 25 20 9 24-8 28-22 20-30 6Z" fill="url(#liver-meat)" stroke="#4d1917" stroke-width="1.4" stroke-linejoin="round"/>
+    <path d="M-20-8C-11-15-1-12 4-4M-14 10C-4 4 8 5 15 11M-24 0C-18-2-12-2-7 1" fill="none" stroke="#c27363" stroke-width="1.4" stroke-linecap="round" opacity=".75"/>
+    <path d="M-22-15C-16-21-7-23 1-21" fill="none" stroke="#e09a86" stroke-width="1.8" stroke-linecap="round" opacity=".7"/>
+    <path d="M17-27c4-6 10-7 14-5-2 5-8 8-14 5Z" fill="#5aa85a" stroke="#3d7d3f" stroke-width="1" stroke-linejoin="round"/>
+    <path d="M20-24c2-3 4-5 7-6" fill="none" stroke="#b9e3a3" stroke-width="1" stroke-linecap="round" opacity=".8"/>
+  </g>
+  <g transform="translate(95 86)">
+    <circle cx="0" cy="3" r="20" fill="#1f4a2a" opacity=".15"/>
+    <circle cx="0" cy="0" r="21" fill="#ffffff"/>
+    <circle cx="0" cy="0" r="18.5" fill="url(#liver-badge)" stroke="#245f2d" stroke-width="1.4"/>
+    <path d="M-4-8v16M-4 0l7-8M-4 0l8 8" fill="none" stroke="#ffffff" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round"/>
+  </g>
+</svg>
