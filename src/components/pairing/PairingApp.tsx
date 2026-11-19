@@ -16,6 +16,8 @@ import { ControlDeck } from './ControlDeck'
 import { Flight, type FlightState } from './Flight'
 import { HeroHeader } from './HeroHeader'
 import { StatusBar } from './StatusBar'
+import { ResultSheet } from './ResultSheet'
+import { validateRulesData } from './pairing-engine'
 import { haptic } from './haptics'
 import { prefersReducedMotion } from './motion'
 import type { Notice, NoticeTone } from './types'
@@ -38,6 +40,16 @@ export function PairingApp() {
   const [shakeNonce, setShakeNonce] = useState(0)
   const [testNonce, setTestNonce] = useState(0)
   const [clearing, setClearing] = useState(false)
+  const [sheetOpen, setSheetOpen] = useState(false)
+  const [sheetSession, setSheetSession] = useState(0)
+
+  useEffect(() => {
+    if (!import.meta.env.DEV) return
+    const result = validateRulesData()
+    if (!result.ok) {
+      console.error('[pairing] rules data mismatch', result.errors)
+    }
+  }, [])
 
   const updateStack = useCallback((updater: (previous: string[]) => string[]) => {
     const next = updater(stackRef.current)
@@ -281,7 +293,23 @@ export function PairingApp() {
     if (stackRef.current.length < 2 || clearingRef.current) return
     haptic('test')
     setTestNonce((value) => value + 1)
+    setSheetSession((value) => value + 1)
+    setSheetOpen(true)
   }, [])
+
+  const closeSheet = useCallback(() => setSheetOpen(false), [])
+
+  const handleSheetRemove = useCallback(
+    (id: string) => {
+      const index = stackRef.current.indexOf(id)
+      if (index >= 0) removeAt(index)
+    },
+    [removeAt],
+  )
+
+  useEffect(() => {
+    if (sheetOpen && stack.length < 2) setSheetOpen(false)
+  }, [sheetOpen, stack.length])
 
   const count = stack.length
   const metaState =
@@ -344,6 +372,15 @@ export function PairingApp() {
       <div className="po-home" aria-hidden="true">
         <span className="po-home-indicator" />
       </div>
+
+      {sheetOpen && (
+        <ResultSheet
+          items={stackItems}
+          key={sheetSession}
+          onClose={closeSheet}
+          onRemove={handleSheetRemove}
+        />
+      )}
 
       <div className="po-flight-layer" aria-hidden="true">
         {flights.map((flight) => (
