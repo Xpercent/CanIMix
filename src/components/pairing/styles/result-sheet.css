@@ -11,9 +11,7 @@
 .po-sheet-scrim {
   position: absolute;
   inset: 0;
-  background: rgba(18, 32, 30, 0.24);
-  -webkit-backdrop-filter: blur(2.5px) saturate(0.92);
-  backdrop-filter: blur(2.5px) saturate(0.92);
+  background: rgba(18, 32, 30, 0.28);
   animation: po-scrim-in 260ms ease both;
 }
 
