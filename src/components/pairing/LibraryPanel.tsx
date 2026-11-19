@@ -13,6 +13,7 @@ import { ChevronDown, Search, X } from 'lucide-react'
 import { cn } from '@/lib/utils'
 import {
   CATEGORIES,
+  normalizeSearch,
   type CategoryFilter,
   type PairingItem,
 } from './pairing-data'
@@ -294,6 +295,7 @@ export function LibraryPanel({
         {items.length === 0 && (
           <div className="po-empty-overlay">
             <GridEmpty
+              hasCategoryEntries={railEntries.some((entry) => entry.id !== 'all')}
               onClear={clearSearch}
               onShowAll={onShowAll}
               query={query}
@@ -313,6 +315,16 @@ interface ItemCardProps {
   onAdd: (item: PairingItem, event: MouseEvent<HTMLButtonElement>) => void
 }
 
+function matchedHiddenIngredients(item: PairingItem, query: string): string[] {
+  const needle = normalizeSearch(query)
+  if (!needle) return []
+  const name = normalizeSearch(item.name)
+  return item.ingredients.filter((ingredient) => {
+    const normalized = normalizeSearch(ingredient)
+    return normalized.includes(needle) && !name.includes(normalized)
+  })
+}
+
 const ItemCard = memo(function ItemCard({
   item,
   query,
@@ -321,6 +333,7 @@ const ItemCard = memo(function ItemCard({
   onAdd,
 }: ItemCardProps) {
   const slotNumber = slotIndex === undefined ? null : slotIndex + 1
+  const matchIngredients = matchedHiddenIngredients(item, query)
   const style = { '--i': Math.min(index, 8) } as CSSProperties
 
   return (
@@ -331,7 +344,11 @@ const ItemCard = memo(function ItemCard({
           ? `${item.name}，已入栈，第 ${slotNumber} 位，再次点击移出`
           : `将 ${item.name} 放入检测台`
       }
-      className={cn('po-item-card', slotNumber !== null && 'is-stacked')}
+      className={cn(
+        'po-item-card',
+        slotNumber !== null && 'is-stacked',
+        matchIngredients.length > 0 && 'has-match',
+      )}
       data-selected={slotNumber !== null || undefined}
       onClick={(event) => onAdd(item, event)}
       style={style}
@@ -349,6 +366,11 @@ const ItemCard = memo(function ItemCard({
       <span className="po-item-name">
         <HighlightedName query={query} text={item.displayName} />
       </span>
+      {matchIngredients.length > 0 && (
+        <span className="po-item-match">
+          含 {matchIngredients.join('、')}
+        </span>
+      )}
       {slotNumber !== null && (
         <span className="po-item-badge" aria-hidden="true">
           {String(slotNumber).padStart(2, '0')}
@@ -378,10 +400,12 @@ function GridEmpty({
   query,
   onClear,
   onShowAll,
+  hasCategoryEntries,
 }: {
   query: string
   onClear: () => void
   onShowAll: () => void
+  hasCategoryEntries: boolean
 }) {
   const searching = query.trim().length > 0
   const shown = query.trim().length > 10 ? `${query.trim().slice(0, 10)}…` : query.trim()
@@ -398,7 +422,11 @@ function GridEmpty({
         {searching ? `没有找到「${shown}」` : '这个分类还没有物品'}
       </p>
       <p className="po-empty-sub">
-        {searching ? '试试更短的词，或浏览左侧分类' : '先看看全部物品吧'}
+        {searching
+          ? hasCategoryEntries
+            ? '试试更短的词，或浏览左侧分类'
+            : '试试更短的词，或清除搜索后浏览全部物品'
+          : '先看看全部物品吧'}
       </p>
       <button
         type="button"

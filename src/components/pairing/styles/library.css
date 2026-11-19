@@ -401,6 +401,31 @@
   text-wrap: balance;
   -webkit-box-orient: vertical;
   -webkit-line-clamp: 2;
+  word-break: auto-phrase;
+}
+
+.po-item-card.has-match {
+  height: auto;
+  min-height: calc(118 * var(--u));
+}
+
+.po-item-match {
+  display: -webkit-box;
+  max-width: 100%;
+  margin-top: calc(3 * var(--u));
+  overflow: hidden;
+  padding: calc(1.5 * var(--u)) calc(5 * var(--u));
+  border-radius: calc(999 * var(--u));
+  background: var(--po-primary-soft);
+  color: var(--po-primary-deep);
+  font-size: calc(8.2 * var(--u));
+  font-weight: 500;
+  line-height: calc(11 * var(--u));
+  text-align: center;
+  text-wrap: balance;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2;
+  word-break: auto-phrase;
 }
 
 .po-item-badge {
