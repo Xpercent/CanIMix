@@ -1131,13 +1131,6 @@
   transform: scale(0.97);
 }
 
-.po-sheet-secondary {
-  flex: 1 1 0;
-  background: #eef2f1;
-  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.62);
-  color: var(--po-ink-700);
-}
-
 .po-sheet-share {
   display: inline-flex;
   flex: 0 0 auto;

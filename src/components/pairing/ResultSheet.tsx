@@ -87,7 +87,6 @@ export function ResultSheet({ items, onClose, onRemove }: ResultSheetProps) {
   const dragStart = useRef<{ y: number; time: number; pointerId: number } | null>(null)
   const closingRef = useRef(false)
   const returnFocusRef = useRef<HTMLElement | null>(null)
-  const focusTrayRef = useRef(false)
 
   const [phase, setPhase] = useState<'scanning' | 'result'>('scanning')
   const [closing, setClosing] = useState(false)
@@ -121,11 +120,6 @@ export function ResultSheet({ items, onClose, onRemove }: ResultSheetProps) {
     if (closeTimer.current !== null) window.clearTimeout(closeTimer.current)
     closeTimer.current = window.setTimeout(onClose, 220)
   }, [onClose])
-
-  const requestAdjust = useCallback(() => {
-    focusTrayRef.current = true
-    requestClose()
-  }, [requestClose])
 
   useEffect(() => {
     const delay = prefersReducedMotion() ? 0 : 300
@@ -185,9 +179,7 @@ export function ResultSheet({ items, onClose, onRemove }: ResultSheetProps) {
       const returnTarget = returnFocusRef.current?.isConnected
         ? returnFocusRef.current
         : document.querySelector<HTMLElement>('[data-pairing-start]')
-      const adjustTarget = document.querySelector<HTMLElement>('[data-pairing-bench]')
-      if (focusTrayRef.current && adjustTarget) adjustTarget.focus()
-      else returnTarget?.focus()
+      returnTarget?.focus()
     }
   }, [requestClose])
 
@@ -523,13 +515,6 @@ export function ResultSheet({ items, onClose, onRemove }: ResultSheetProps) {
 
         {phase === 'result' && (
           <footer className="po-sheet-footer">
-            <button
-              type="button"
-              className="po-sheet-secondary"
-              onClick={requestAdjust}
-            >
-              调整托盘
-            </button>
             <button
               type="button"
               aria-label="分享检测结果"

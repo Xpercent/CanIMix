@@ -124,7 +124,7 @@ export function Bench({
   }, [testNonce])
 
   return (
-    <section className="po-bench" aria-label="检测托盘" data-pairing-bench tabIndex={-1}>
+    <section className="po-bench" aria-label="检测托盘">
       <span className="po-bench-flare" ref={flareRef} aria-hidden="true" />
       <div className="po-bench-meta">
         <span className="po-bench-id">
