@@ -47,12 +47,6 @@ interface FlightState {
   endSize: number
 }
 
-interface ToastState {
-  nonce: number
-  count: number
-  previous: string[]
-}
-
 const pad2 = (value: number) => String(value).padStart(2, '0')
 
 export function PairingApp() {
@@ -60,7 +54,6 @@ export function PairingApp() {
   const stackRef = useRef<string[]>([])
   const clearingRef = useRef(false)
   const noticeTimer = useRef<number | null>(null)
-  const toastTimer = useRef<number | null>(null)
   const clearTimer = useRef<number | null>(null)
   const landingTimers = useRef<Map<string, number>>(new Map())
   const nonce = useRef(0)
@@ -71,24 +64,14 @@ export function PairingApp() {
   const [notice, setNotice] = useState<Notice | null>(null)
   const [flights, setFlights] = useState<FlightState[]>([])
   const [landingIds, setLandingIds] = useState<Set<string>>(new Set())
-  const [pulse, setPulse] = useState<{ index: number; nonce: number } | null>(null)
   const [shakeNonce, setShakeNonce] = useState(0)
   const [testNonce, setTestNonce] = useState(0)
   const [clearing, setClearing] = useState(false)
-  const [toast, setToast] = useState<ToastState | null>(null)
 
   const updateStack = useCallback((updater: (previous: string[]) => string[]) => {
     const next = updater(stackRef.current)
     stackRef.current = next
     setStack(next)
-  }, [])
-
-  const dismissToast = useCallback(() => {
-    if (toastTimer.current !== null) {
-      window.clearTimeout(toastTimer.current)
-      toastTimer.current = null
-    }
-    setToast(null)
   }, [])
 
   const showNotice = useCallback((text: string, tone: NoticeTone = 'info') => {
@@ -105,7 +88,6 @@ export function PairingApp() {
     const timers = landingTimers.current
     return () => {
       if (noticeTimer.current !== null) window.clearTimeout(noticeTimer.current)
-      if (toastTimer.current !== null) window.clearTimeout(toastTimer.current)
       if (clearTimer.current !== null) window.clearTimeout(clearTimer.current)
       for (const timer of timers.values()) window.clearTimeout(timer)
       timers.clear()
@@ -179,6 +161,28 @@ export function PairingApp() {
     [availableCategories, counts, matchedItems.length],
   )
 
+  const removeAt = useCallback(
+    (index: number) => {
+      if (clearingRef.current) return
+      const removedId = stackRef.current[index]
+      updateStack((previous) => previous.filter((_, itemIndex) => itemIndex !== index))
+      if (removedId) {
+        const timer = landingTimers.current.get(removedId)
+        if (timer !== undefined) window.clearTimeout(timer)
+        landingTimers.current.delete(removedId)
+        setLandingIds((previous) => {
+          if (!previous.has(removedId)) return previous
+          const next = new Set(previous)
+          next.delete(removedId)
+          return next
+        })
+        setFlights((previous) => previous.filter((flight) => flight.itemId !== removedId))
+      }
+      haptic('remove')
+    },
+    [updateStack],
+  )
+
   const addItem = useCallback(
     (item: PairingItem, sourceEl: HTMLElement | null) => {
       if (clearingRef.current) return
@@ -186,10 +190,7 @@ export function PairingApp() {
       const current = stackRef.current
       const existingIndex = current.indexOf(item.id)
       if (existingIndex >= 0) {
-        haptic('duplicate')
-        nonce.current += 1
-        setPulse({ index: existingIndex, nonce: nonce.current })
-        showNotice(`${item.shortName} 已在 ${pad2(existingIndex + 1)} 号位`)
+        removeAt(existingIndex)
         return
       }
 
@@ -200,7 +201,6 @@ export function PairingApp() {
         return
       }
 
-      dismissToast()
       const slotIndex = current.length
       const app = appRef.current
       let flightStarted = false
@@ -225,8 +225,8 @@ export function PairingApp() {
                 h: sourceRect.height,
               },
               endX: targetRect.left - appRect.left + targetRect.width / 2,
-              endY: targetRect.top - appRect.top + targetRect.height * 0.43,
-              endSize: 40 * ratio,
+              endY: targetRect.top - appRect.top + targetRect.height * 0.477,
+              endSize: 48 * ratio,
             }
             setFlights((previous) => [...previous, flight])
             flightStarted = true
@@ -252,36 +252,13 @@ export function PairingApp() {
             return next
           })
           landingTimers.current.delete(item.id)
-        }, 460)
+        }, 400)
         landingTimers.current.set(item.id, timer)
       }
 
       haptic(current.length + 1 === 2 ? 'ready' : 'add')
     },
-    [dismissToast, showNotice, updateStack],
-  )
-
-  const removeAt = useCallback(
-    (index: number) => {
-      if (clearingRef.current) return
-      const removedId = stackRef.current[index]
-      updateStack((previous) => previous.filter((_, itemIndex) => itemIndex !== index))
-      if (removedId) {
-        const timer = landingTimers.current.get(removedId)
-        if (timer !== undefined) window.clearTimeout(timer)
-        landingTimers.current.delete(removedId)
-        setLandingIds((previous) => {
-          if (!previous.has(removedId)) return previous
-          const next = new Set(previous)
-          next.delete(removedId)
-          return next
-        })
-        setFlights((previous) => previous.filter((flight) => flight.itemId !== removedId))
-      }
-      dismissToast()
-      haptic('remove')
-    },
-    [dismissToast, updateStack],
+    [removeAt, showNotice, updateStack],
   )
 
   const removeFlight = useCallback((key: number) => {
@@ -292,7 +269,6 @@ export function PairingApp() {
     const current = stackRef.current
     if (current.length === 0 || clearingRef.current) return
 
-    dismissToast()
     haptic('clear')
     clearingRef.current = true
     setClearing(true)
@@ -327,23 +303,8 @@ export function PairingApp() {
       setFlights([])
       for (const timer of landingTimers.current.values()) window.clearTimeout(timer)
       landingTimers.current.clear()
-
-      nonce.current += 1
-      setToast({ nonce: nonce.current, count: current.length, previous: current })
-      if (toastTimer.current !== null) window.clearTimeout(toastTimer.current)
-      toastTimer.current = window.setTimeout(() => {
-        setToast(null)
-        toastTimer.current = null
-      }, 4200)
     }, delay)
-  }, [dismissToast, updateStack])
-
-  const undoClear = useCallback(() => {
-    if (!toast) return
-    updateStack(() => toast.previous)
-    dismissToast()
-    haptic('undo')
-  }, [dismissToast, toast, updateStack])
+  }, [updateStack])
 
   const handleTest = useCallback(() => {
     if (stackRef.current.length < 2 || clearingRef.current) return
@@ -361,7 +322,7 @@ export function PairingApp() {
         ? '再装入 1 项即可开始检测'
         : count >= MAX_SLOTS
           ? '台面已满 · 轻点任一槽位移出'
-          : '台面就绪 · 可继续添加，或开始检测'
+          : ''
 
   return (
     <div className="pairing-app" ref={appRef}>
@@ -385,7 +346,6 @@ export function PairingApp() {
           metaState={metaState}
           notice={notice}
           onRemove={removeAt}
-          pulse={pulse}
           shakeNonce={shakeNonce}
           testNonce={testNonce}
         />
@@ -419,15 +379,6 @@ export function PairingApp() {
           <Flight flight={flight} key={flight.key} onDone={removeFlight} />
         ))}
       </div>
-
-      {toast && (
-        <div className="po-undo-toast" key={toast.nonce} role="status">
-          <span>已清空 {toast.count} 项</span>
-          <button type="button" className="po-undo-action" onClick={undoClear}>
-            撤销
-          </button>
-        </div>
-      )}
     </div>
   )
 }
@@ -435,29 +386,70 @@ export function PairingApp() {
 function StatusBar() {
   return (
     <div className="po-status" aria-hidden="true">
-      <span className="po-status-time">9:41</span>
-      <span className="po-status-icons">
-        <svg fill="currentColor" viewBox="0 0 16 11">
-          <rect height="4" opacity=".9" rx=".8" width="2.6" x="0" y="7" />
-          <rect height="6" opacity=".9" rx=".8" width="2.6" x="4.4" y="5" />
-          <rect height="8.5" opacity=".9" rx=".8" width="2.6" x="8.8" y="2.5" />
-          <rect height="11" opacity=".9" rx=".8" width="2.6" x="13.2" y="0" />
-        </svg>
-        <svg fill="none" viewBox="0 0 16 12">
+      <div className="po-status-zoom">
+        <svg className="po-status-time" fill="none" viewBox="0 0 35 12">
           <path
-            d="M1.2 4.3a10 10 0 0 1 13.6 0M3.8 7a6.2 6.2 0 0 1 8.4 0"
-            stroke="currentColor"
-            strokeLinecap="round"
-            strokeWidth="1.4"
+            clipRule="evenodd"
+            d="M4.2 0.5C6.65 0.5 8 2.4 8 6C8 9.6 6.65 11.5 4.2 11.5C1.75 11.5 0.4 9.6 0.4 6C0.4 2.4 1.75 0.5 4.2 0.5ZM4.2 2.1C2.95 2.1 2.25 3.45 2.25 6C2.25 8.55 2.95 9.9 4.2 9.9C5.45 9.9 6.15 8.55 6.15 6C6.15 3.45 5.45 2.1 4.2 2.1Z"
+            fill="currentColor"
+            fillRule="evenodd"
           />
-          <circle cx="8" cy="10" fill="currentColor" r="1.3" />
+          <path
+            clipRule="evenodd"
+            d="M13 0.5C15.4 0.5 16.8 2.3 16.8 5.5C16.8 9.2 15.3 11.5 12.85 11.5C10.9 11.5 9.75 10.45 9.55 8.95H11.35C11.55 9.65 12.1 10 12.85 10C14.1 10 14.95 8.9 14.95 6.75C14.35 7.45 13.5 7.75 12.6 7.75C10.6 7.75 9.3 6.25 9.3 4.15C9.3 1.95 10.8 0.5 13 0.5ZM13 2C11.85 2 11.1 2.85 11.1 4.08C11.1 5.3 11.85 6.15 13 6.15C14.15 6.15 14.95 5.3 14.95 4.08C14.95 2.85 14.15 2 13 2Z"
+            fill="currentColor"
+            fillRule="evenodd"
+          />
+          <circle cx="19" cy="3.6" fill="currentColor" r="1.05" />
+          <circle cx="19" cy="8.4" fill="currentColor" r="1.05" />
+          <path
+            clipRule="evenodd"
+            d="M25.45 0.7H27.65V7.6H29.1V9.25H27.65V11.3H25.8V9.25H21V7.6L25.45 0.7ZM25.8 3.38L23.08 7.6H25.8V3.38Z"
+            fill="currentColor"
+            fillRule="evenodd"
+          />
+          <path
+            d="M32.3 0.7H34.2V11.3H32.3V2.55L29.8 4.15V2.45L32.3 0.7Z"
+            fill="currentColor"
+          />
         </svg>
-        <svg fill="none" viewBox="0 0 25 12">
-          <rect height="11" opacity=".38" rx="3" stroke="currentColor" width="21" x=".5" y=".5" />
-          <rect fill="currentColor" height="8" rx="1.8" width="16.5" x="2" y="2" />
-          <path d="M23 3.8v4.4a2.2 2.2 0 0 0 0-4.4Z" fill="currentColor" opacity=".4" />
-        </svg>
-      </span>
+        <span className="po-status-icons">
+          <svg fill="none" viewBox="0 0 18 12">
+            <rect fill="currentColor" height="4.5" rx="1" width="3" x="0" y="7.5" />
+            <rect fill="currentColor" height="6.5" rx="1" width="3" x="5" y="5.5" />
+            <rect fill="currentColor" height="9" rx="1" width="3" x="10" y="3" />
+            <rect fill="currentColor" height="12" rx="1" width="3" x="15" y="0" />
+          </svg>
+          <svg fill="none" viewBox="0 0 17 12">
+            <path
+              d="M0.58 3.58A11.2 11.2 0 0 1 16.42 3.58L14.86 5.14A9 9 0 0 0 2.14 5.14Z"
+              fill="currentColor"
+            />
+            <path
+              d="M3.48 6.48A7.1 7.1 0 0 1 13.52 6.48L11.96 8.04A4.9 4.9 0 0 0 5.04 8.04Z"
+              fill="currentColor"
+            />
+            <path
+              d="M6.38 9.38A3 3 0 0 1 10.62 9.38L8.75 11.25Q8.5 11.5 8.25 11.25Z"
+              fill="currentColor"
+            />
+          </svg>
+          <svg className="po-status-battery" fill="none" viewBox="0 0 25 12">
+            <rect
+              height="11"
+              rx="2.8"
+              stroke="currentColor"
+              strokeOpacity="0.35"
+              strokeWidth="1"
+              width="21"
+              x="0.5"
+              y="0.5"
+            />
+            <rect fill="currentColor" height="8" rx="1.5" width="18" x="2" y="2" />
+            <path d="M23 4A1.4 2 0 0 1 23 8Z" fill="currentColor" fillOpacity="0.4" />
+          </svg>
+        </span>
+      </div>
     </div>
   )
 }
@@ -481,7 +473,6 @@ function HeroHeader() {
       </div>
       <div className="po-title-row">
         <h1 className="po-title">能一起用吗？</h1>
-        <span className="po-max">MAX 5</span>
       </div>
     </header>
   )
@@ -494,7 +485,6 @@ interface BenchProps {
   hint: string
   notice: Notice | null
   landingIds: Set<string>
-  pulse: { index: number; nonce: number } | null
   shakeNonce: number
   testNonce: number
   onRemove: (index: number) => void
@@ -507,7 +497,6 @@ function Bench({
   hint,
   notice,
   landingIds,
-  pulse,
   shakeNonce,
   testNonce,
   onRemove,
@@ -574,22 +563,6 @@ function Bench({
       }
     }
   }, [signature])
-
-  useEffect(() => {
-    if (!pulse) return
-    const card = rowRef.current?.querySelector<HTMLElement>(
-      `[data-slot-index="${pulse.index}"] .po-slot-card`,
-    )
-    if (!card || prefersReducedMotion()) return
-    card.animate(
-      [
-        { transform: 'scale(1)' },
-        { transform: 'scale(1.05)' },
-        { transform: 'scale(1)' },
-      ],
-      { duration: 320, easing: 'cubic-bezier(.34,1.56,.64,1)' },
-    )
-  }, [pulse])
 
   useEffect(() => {
     if (!shakeNonce) return
@@ -674,6 +647,7 @@ function Bench({
                   aria-label={`移出 ${item.name}，第 ${index + 1} 位`}
                   className={cn('po-slot-card', landingIds.has(item.id) && 'is-landing')}
                   data-slot-item={item.id}
+                  key={item.id}
                   onClick={() => handleRemove(index, item.id)}
                   title="轻点移出"
                 >
@@ -802,14 +776,14 @@ function Flight({
 
     const animation = element.animate(
       [
-        { opacity: 0.96, transform: 'translate(0px, 0px) scale(1)' },
+        { opacity: 1, transform: 'translate(0px, 0px) scale(1)' },
         {
           opacity: 1,
           offset: 0.55,
           transform: `translate(${midX}px, ${midY}px) scale(1.07)`,
         },
         {
-          opacity: 0.08,
+          opacity: 1,
           transform: `translate(${deltaX}px, ${deltaY}px) scale(${scale})`,
         },
       ],

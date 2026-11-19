@@ -47,7 +47,7 @@ function useScrollMask(ref: RefObject<HTMLElement | null>, revision: string): vo
       const max = element.scrollHeight - element.clientHeight
       const scrollable = max > 2
       const top = scrollable && element.scrollTop > 4 ? 8 : 0
-      const bottom = scrollable && element.scrollTop < max - 2 ? 10 : 0
+      const bottom = scrollable ? 20 : 0
       element.style.setProperty('--fade-top', `${top}`)
       element.style.setProperty('--fade-bottom', `${bottom}`)
     }
@@ -265,36 +265,41 @@ export function LibraryPanel({
             if (document.activeElement === inputRef.current) inputRef.current?.blur()
           }}
         >
-          {items.length === 0 ? (
+          {items.length > 0 &&
+            (sectionMode ? (
+              sections.map((section) => (
+                <section className="po-grid-section" key={section.category.id}>
+                  <h3 className="po-grid-section-head">
+                    <span>{section.category.shortName}</span>
+                    <span className="po-grid-section-count">{section.items.length}</span>
+                  </h3>
+                  <div className="po-grid">
+                    {section.items.map((item, index) => renderCard(item, index))}
+                  </div>
+                </section>
+              ))
+            ) : (
+              <div className="po-grid">
+                {items.map((item, index) => renderCard(item, index))}
+                {activeCategory !== 'all' && items.length < 3 && (
+                  <button type="button" className="po-sparse-note" onClick={onShowAll}>
+                    <span>此分类仅 {items.length} 项 · </span>
+                    <span className="po-sparse-action">查看全部</span>
+                  </button>
+                )}
+              </div>
+            ))}
+        </div>
+
+        {items.length === 0 && (
+          <div className="po-empty-overlay">
             <GridEmpty
               onClear={clearSearch}
               onShowAll={onShowAll}
               query={query}
             />
-          ) : sectionMode ? (
-            sections.map((section) => (
-              <section className="po-grid-section" key={section.category.id}>
-                <h3 className="po-grid-section-head">
-                  <span>{section.category.shortName}</span>
-                  <span className="po-grid-section-count">{section.items.length}</span>
-                </h3>
-                <div className="po-grid">
-                  {section.items.map((item, index) => renderCard(item, index))}
-                </div>
-              </section>
-            ))
-          ) : (
-            <div className="po-grid">
-              {items.map((item, index) => renderCard(item, index))}
-              {activeCategory !== 'all' && items.length < 3 && (
-                <button type="button" className="po-sparse-note" onClick={onShowAll}>
-                  <span>此分类仅 {items.length} 项 · </span>
-                  <span className="po-sparse-action">查看全部</span>
-                </button>
-              )}
-            </div>
-          )}
-        </div>
+          </div>
+        )}
       </div>
     </section>
   )
@@ -323,7 +328,7 @@ const ItemCard = memo(function ItemCard({
       type="button"
       aria-label={
         slotNumber !== null
-          ? `${item.name}，已入栈，第 ${slotNumber} 位`
+          ? `${item.name}，已入栈，第 ${slotNumber} 位，再次点击移出`
           : `将 ${item.name} 放入检测台`
       }
       className={cn('po-item-card', slotNumber !== null && 'is-stacked')}
