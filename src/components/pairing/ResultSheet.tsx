@@ -133,7 +133,7 @@ export function ResultSheet({ items, onClose, onRemove }: ResultSheetProps) {
   useEffect(() => {
     returnFocusRef.current =
       document.activeElement instanceof HTMLElement ? document.activeElement : null
-    sheetRef.current?.focus()
+    sheetRef.current?.focus({ preventScroll: true })
 
     const focusableSelector =
       'summary, a[href], button:not([disabled]), input:not([disabled]), select:not([disabled]), textarea:not([disabled]), [tabindex]:not([tabindex="-1"])'
@@ -155,7 +155,7 @@ export function ResultSheet({ items, onClose, onRemove }: ResultSheetProps) {
       const focusable = getFocusable()
       if (focusable.length === 0) {
         event.preventDefault()
-        sheetRef.current?.focus()
+        sheetRef.current?.focus({ preventScroll: true })
         return
       }
 
@@ -164,10 +164,10 @@ export function ResultSheet({ items, onClose, onRemove }: ResultSheetProps) {
       const active = document.activeElement
       if (event.shiftKey && (active === first || active === sheetRef.current)) {
         event.preventDefault()
-        last.focus()
+        last.focus({ preventScroll: true })
       } else if (!event.shiftKey && active === last) {
         event.preventDefault()
-        first.focus()
+        first.focus({ preventScroll: true })
       }
     }
 
@@ -179,7 +179,7 @@ export function ResultSheet({ items, onClose, onRemove }: ResultSheetProps) {
       const returnTarget = returnFocusRef.current?.isConnected
         ? returnFocusRef.current
         : document.querySelector<HTMLElement>('[data-pairing-start]')
-      returnTarget?.focus()
+      returnTarget?.focus({ preventScroll: true })
     }
   }, [requestClose])
 
