@@ -712,7 +712,6 @@ function ItemNode({
   badges: string[]
   art?: string
 }) {
-  const shown = badges.slice(0, 1)
   return (
     <span className="po-pair-node">
       <span className="po-pair-icon">
@@ -721,14 +720,11 @@ function ItemNode({
       <span className="po-pair-name">{item.name}</span>
       {badges.length > 0 && (
         <span className="po-badge-row">
-          {shown.map((ingredient) => (
+          {badges.map((ingredient) => (
             <span className="po-ingredient-badge" key={ingredient}>
               含 {ingredient}
             </span>
           ))}
-          {badges.length > shown.length && (
-            <span className="po-ingredient-badge">+{badges.length - shown.length}</span>
-          )}
         </span>
       )}
     </span>
