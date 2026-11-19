@@ -151,7 +151,6 @@ const rulesDoc = rulesFile as unknown as {
 
 export const ENGINE_ITEMS: readonly ItemData[] = itemsDoc.items
 export const ENGINE_RULES: readonly RuleData[] = rulesDoc.rules
-export const ENGINE_RULE_COUNT = ENGINE_RULES.length
 const INGREDIENT_HINTS = rulesDoc.ingredient_hints ?? {}
 
 const ITEMS_BY_ID = new Map<string, ItemData>(ENGINE_ITEMS.map((item) => [item.id, item]))
@@ -781,6 +780,9 @@ function consolidateSpacing(
     const laterNames = isAdsorbent
       ? focus.name
       : orderedCounterparts.map((item) => item.name).join('、')
+    const orderHint = isAdsorbent
+      ? `间隔 ${hours} 小时后再服${focus.name}`
+      : `间隔 ${hours} 小时后再服${laterNames}`
 
     consolidated.push({
       ...first,
@@ -795,7 +797,7 @@ function consolidateSpacing(
         trayIndex,
       ),
       spacingHours: hours,
-      spacingOrderHint: `先服${firstNames}，间隔 ${hours} 小时后再服${laterNames}`,
+      spacingOrderHint: orderHint,
     })
   }
 
@@ -936,10 +938,10 @@ function buildSpacingPlan(
       label: '优先服用',
       detail:
         kinds === '药品'
-          ? '先服以下药品，按说明书剂量用清水送服'
+          ? '按说明书剂量用温水送服'
           : kinds === '饮食或补剂'
-            ? '先服用以下饮食或补剂'
-            : '先服用以下物品，按说明书使用',
+            ? '按推荐方式先摄入'
+            : '按说明书或推荐方式先使用',
       items: sortReportItems(firstItems, trayIndex),
     })
   }
@@ -950,10 +952,12 @@ function buildSpacingPlan(
     if (!group || group.size === 0) continue
     const laterItems = [...group.values()]
     const hints = [...(hintsByHours.get(hours) ?? [])]
+    const kinds = describeItemKinds(laterItems)
+    const verb = kinds === '药品' ? '服用' : kinds === '饮食或补剂' ? '摄入' : '使用'
     const detail =
       hints.length === 1
         ? hints[0]
-        : `间隔至少 ${hours} 小时后再服用以下${describeItemKinds(laterItems)}`
+        : `间隔至少 ${hours} 小时后再${verb}以下${kinds}`
     steps.push({
       id: `spacing-${hours}`,
       kind: 'spacing',
@@ -991,22 +995,19 @@ function buildSummary(
   const top = conflicts[0]
   if (verdict === 'danger' && top) {
     const dangerCount = conflicts.filter((finding) => finding.severity === 'danger').length
-    return `发现 ${dangerCount} 组不建议同用的组合，优先处理「${top.title}」。`
+    return `发现 ${dangerCount} 组不建议同用的搭配。\n优先处理「${top.title}」。`
   }
   if (verdict === 'caution' && top) {
-    return `发现 ${conflicts.length} 组需谨慎的组合，重点关注「${top.title}」。`
+    return `发现 ${conflicts.length} 组需谨慎的搭配。\n重点关注「${top.title}」。`
   }
   if (verdict === 'spacing' && top) {
-    const hours = Math.max(
-      ...conflicts
-        .filter((finding) => finding.severity === 'spacing')
-        .map((finding) => finding.spacingHours ?? 0),
-    )
-    return `需要错开服用，优先处理「${top.title}」，间隔至少 ${hours} 小时。`
+    const spacing = conflicts.filter((finding) => finding.severity === 'spacing')
+    const hours = Math.max(...spacing.map((finding) => finding.spacingHours ?? 0))
+    return `发现 ${spacing.length} 组需间隔的搭配，至少间隔 ${hours} 小时。\n优先处理「${top.title}」。`
   }
   return positiveCount > 0
-    ? `已排查 ${pairCount} 组两两组合，暂未发现已知冲突，另有 ${positiveCount} 条安心提示。规则未覆盖的组合不等于安全，仍需以说明书为准。`
-    : `已排查 ${pairCount} 组两两组合，暂未发现已知冲突。规则未覆盖的组合不等于安全，仍需以说明书为准。`
+    ? `已比对 ${pairCount} 组两两搭配，暂未发现已知冲突，另有 ${positiveCount} 条安心提示。规则未覆盖的组合不等于安全，仍需以说明书为准。`
+    : `已比对 ${pairCount} 组两两搭配，暂未发现已知冲突。规则未覆盖的组合不等于安全，仍需以说明书为准。`
 }
 
 export function validateRulesData(
