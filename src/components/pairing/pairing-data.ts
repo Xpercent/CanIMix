@@ -86,6 +86,7 @@ const CATEGORY_ID_BY_NAME: Record<string, CategoryId | undefined> = {
 
 const SHORT_NAMES: Record<string, string> = {
   '999感冒灵颗粒': '999感冒灵',
+  '藿香正气口服液': '藿香口服液',
   头孢类: '头孢类',
   MAOI: 'MAOI',
   SSRI: 'SSRI',
@@ -93,8 +94,8 @@ const SHORT_NAMES: Record<string, string> = {
   洛尔类: '洛尔类',
   普利类: '普利类',
   沙坦类: '沙坦类',
-  苯二氮䓬类: '苯二氮䓬',
-  非苯二氮䓬类: '非苯二氮䓬',
+  苯二氮䓬类: 'BZD 类',
+  非苯二氮䓬类: 'Z 类安眠药',
   复方短效口服避孕药: '短效避孕药',
 }
 

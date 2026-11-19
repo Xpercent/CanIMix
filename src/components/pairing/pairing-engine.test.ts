@@ -61,7 +61,7 @@ test('玛巴洛沙韦与钙片/牛奶/酸奶/铝碳酸镁统一间隔 4 小时',
 
     assert.ok(spacing, `${id} 应命中螯合间隔规则`)
     assert.equal(spacing.spacingHours, 4, `${id} 应间隔 4 小时`)
-    assert.ok(spacing.action.includes('4小时'), `${id} 的行动建议应写 4 小时`)
+    assert.ok(spacing.action.includes('4 小时'), `${id} 的行动建议应写 4 小时`)
     assert.equal(report.spacingPlan?.totalHours, 4, `${id} 的错峰计划应为 4 小时`)
   }
 })

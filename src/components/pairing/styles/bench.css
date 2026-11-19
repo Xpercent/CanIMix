@@ -254,6 +254,7 @@
   font-size: calc(10 * var(--u));
   font-weight: 500;
   line-height: calc(12.5 * var(--u));
+  word-break: auto-phrase;
   text-align: center;
   text-wrap: balance;
   -webkit-box-orient: vertical;

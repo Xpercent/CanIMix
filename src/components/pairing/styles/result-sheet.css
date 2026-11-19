@@ -417,6 +417,7 @@
   text-wrap: balance;
   -webkit-box-orient: vertical;
   -webkit-line-clamp: 2;
+  word-break: auto-phrase;
 }
 
 .po-case-dot {
@@ -667,6 +668,7 @@
   text-wrap: balance;
   -webkit-box-orient: vertical;
   -webkit-line-clamp: 2;
+  word-break: auto-phrase;
 }
 
 .po-pair-link {
@@ -809,7 +811,7 @@
 
 .po-detail-body strong {
   display: block;
-  margin-bottom: calc(2 * var(--u));
+  margin-bottom: calc(4 * var(--u));
   color: var(--po-ink-700);
   font-size: calc(8.6 * var(--u));
   font-weight: 600;
@@ -960,7 +962,7 @@
   display: flex;
   flex-wrap: wrap;
   gap: calc(4 * var(--u));
-  margin-top: calc(5 * var(--u));
+  margin-top: calc(4 * var(--u));
 }
 
 .po-plan-item {
@@ -975,6 +977,7 @@
   color: var(--po-ink-700);
   font-size: calc(9 * var(--u));
   line-height: calc(12.5 * var(--u));
+  word-break: auto-phrase;
 }
 
 .po-plan-item img {
@@ -985,7 +988,7 @@
 }
 
 .po-plan-detail {
-  margin: calc(4 * var(--u)) 0 0;
+  margin: calc(5 * var(--u)) 0 0;
   color: var(--po-ink-500);
   font-size: calc(9 * var(--u));
   line-height: calc(14 * var(--u));

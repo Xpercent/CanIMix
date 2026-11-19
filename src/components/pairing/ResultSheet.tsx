@@ -694,7 +694,7 @@ function FindingCard({
             : ShieldCheck
   const riskLabel =
     finding.severity === 'spacing'
-      ? `间隔 ≥${finding.spacingHours ?? 0}h`
+      ? `间隔 ≥${finding.spacingHours ?? 0} 小时`
       : RISK_LABELS[finding.severity]
 
   const badgesByItem = new Map<string, string[]>()
@@ -746,12 +746,12 @@ function FindingCard({
         </summary>
         <div className="po-detail-body">
           <p>
-            <strong>药理机制</strong>
+            <strong>药理机制：</strong>
             {finding.mechanism}
           </p>
           {finding.symptoms && (
             <p>
-              <strong>注意症状</strong>
+              <strong>注意症状：</strong>
               {finding.symptoms}
             </p>
           )}
@@ -808,7 +808,7 @@ function SpacingPlanCard({
             <h3 className="po-plan-title">智能错峰建议</h3>
           </div>
         </div>
-        <span className="po-plan-total">间隔 ≥{plan.totalHours}h</span>
+        <span className="po-plan-total">间隔 ≥{plan.totalHours} 小时</span>
       </div>
 
       <ol className="po-plan-steps">
@@ -819,6 +819,7 @@ function SpacingPlanCard({
               <div className="po-plan-step-head">
                 <span>{step.label}</span>
               </div>
+              <p className="po-plan-detail">{step.detail}</p>
               <div className="po-plan-items">
                 {step.items.map((item) => (
                   <span className="po-plan-item" key={item.id}>
@@ -829,7 +830,6 @@ function SpacingPlanCard({
                   </span>
                 ))}
               </div>
-              <p className="po-plan-detail">{step.detail}</p>
             </div>
           </li>
         ))}

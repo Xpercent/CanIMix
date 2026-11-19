@@ -778,7 +778,7 @@ function consolidateSpacing(
       key: `spacing|${key}`,
       priority: Math.max(...list.map((finding) => finding.priority)),
       title: spacingTitle(first.overrideGroup, focus.name, first.title),
-      action: `先服${firstNames}，间隔至少${hours}小时后再服用${laterNames}。`,
+      action: `先服${firstNames}，间隔至少 ${hours} 小时后再服用${laterNames}。`,
       mechanism: spacingMechanism(first.overrideGroup, first.mechanism),
       items: [focus, ...orderedCounterparts],
       triggeredIngredients: sortTriggered(
@@ -786,7 +786,7 @@ function consolidateSpacing(
         trayIndex,
       ),
       spacingHours: hours,
-      spacingOrderHint: `先服${firstNames}，间隔${hours}小时后再服${laterNames}`,
+      spacingOrderHint: `先服${firstNames}，间隔 ${hours} 小时后再服${laterNames}`,
     })
   }
 
@@ -944,7 +944,7 @@ function buildSpacingPlan(
     const detail =
       hints.length === 1
         ? hints[0]
-        : `间隔至少${hours}小时后再服用以下${describeItemKinds(laterItems)}`
+        : `间隔至少 ${hours} 小时后再服用以下${describeItemKinds(laterItems)}`
     steps.push({
       id: `spacing-${hours}`,
       kind: 'spacing',
