@@ -285,8 +285,10 @@
 }
 
 .po-grid-scroll {
-  margin: 0 calc(-10 * var(--u));
-  padding: calc(6 * var(--u)) calc(10 * var(--u)) calc(22 * var(--u));
+  --grid-gutter: calc(10 * var(--u));
+  --grid-head-offset: calc(6 * var(--u));
+  margin: 0 calc(var(--grid-gutter) * -1);
+  padding: var(--grid-head-offset) var(--grid-gutter) calc(22 * var(--u));
 }
 
 .po-grid {
@@ -315,7 +317,7 @@
 }
 
 .po-item-card.is-stacked {
-  background: linear-gradient(180deg, #ffffff, #fbfcfb);
+  background: #ffffff;
   box-shadow:
     0 0 0 1px rgba(14, 107, 96, 0.3),
     0 0 0 4px rgba(14, 107, 96, 0.06),
@@ -450,6 +452,10 @@
   animation: po-badge-pop 280ms cubic-bezier(0.2, 0.9, 0.3, 1.35);
 }
 
+.po-item-badge.is-exiting {
+  animation: po-badge-out 180ms ease-out forwards;
+}
+
 .po-sparse-note {
   display: inline-flex;
   height: calc(24 * var(--u));
@@ -491,6 +497,19 @@
   font-weight: 600;
   -webkit-backdrop-filter: blur(6px);
   backdrop-filter: blur(6px);
+}
+
+.po-grid-section-head::before {
+  content: "";
+  position: absolute;
+  /* 吸顶位置从上内边距开始，背景需向上、向左补齐这段滚动容器留白 */
+  top: calc(var(--grid-head-offset) * -1);
+  right: 0;
+  left: calc(var(--grid-gutter) * -1);
+  z-index: -1;
+  height: calc(var(--grid-head-offset) + 1px);
+  background: var(--po-canvas);
+  pointer-events: none;
 }
 
 .po-grid-section-count {

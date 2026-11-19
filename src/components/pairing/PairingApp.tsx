@@ -11,7 +11,7 @@ import {
   type PairingItem,
 } from './pairing-data'
 import { LibraryPanel, type RailEntry } from './LibraryPanel'
-import { Bench } from './Bench'
+import { Bench, type BenchHandle } from './Bench'
 import { ControlDeck } from './ControlDeck'
 import { Flight, type FlightState } from './Flight'
 import { HeroHeader } from './HeroHeader'
@@ -22,12 +22,14 @@ import { haptic } from './haptics'
 import { prefersReducedMotion } from './motion'
 import type { Notice, NoticeTone } from './types'
 
+const NO_SLOT_INDEX = new Map<string, number>()
+
 export function PairingApp() {
   const appRef = useRef<HTMLDivElement>(null)
+  const benchRef = useRef<BenchHandle>(null)
   const stackRef = useRef<string[]>([])
   const clearingRef = useRef(false)
   const noticeTimer = useRef<number | null>(null)
-  const clearTimer = useRef<number | null>(null)
   const landingTimers = useRef<Map<string, number>>(new Map())
   const nonce = useRef(0)
 
@@ -71,7 +73,6 @@ export function PairingApp() {
     const timers = landingTimers.current
     return () => {
       if (noticeTimer.current !== null) window.clearTimeout(noticeTimer.current)
-      if (clearTimer.current !== null) window.clearTimeout(clearTimer.current)
       for (const timer of timers.values()) window.clearTimeout(timer)
       timers.clear()
     }
@@ -144,26 +145,34 @@ export function PairingApp() {
     [availableCategories, counts, matchedItems.length],
   )
 
-  const removeAt = useCallback(
-    (index: number) => {
-      if (clearingRef.current) return
-      const removedId = stackRef.current[index]
-      updateStack((previous) => previous.filter((_, itemIndex) => itemIndex !== index))
-      if (removedId) {
-        const timer = landingTimers.current.get(removedId)
-        if (timer !== undefined) window.clearTimeout(timer)
-        landingTimers.current.delete(removedId)
-        setLandingIds((previous) => {
-          if (!previous.has(removedId)) return previous
-          const next = new Set(previous)
-          next.delete(removedId)
-          return next
-        })
-        setFlights((previous) => previous.filter((flight) => flight.itemId !== removedId))
-      }
+  const removeItem = useCallback(
+    (id: string) => {
+      const timer = landingTimers.current.get(id)
+      if (timer !== undefined) window.clearTimeout(timer)
+      landingTimers.current.delete(id)
+      updateStack((previous) => previous.filter((itemId) => itemId !== id))
+      setLandingIds((previous) => {
+        if (!previous.has(id)) return previous
+        const next = new Set(previous)
+        next.delete(id)
+        return next
+      })
+      setFlights((previous) => previous.filter((flight) => flight.itemId !== id))
       haptic('remove')
     },
     [updateStack],
+  )
+
+  const requestRemove = useCallback(
+    (id: string) => {
+      if (clearingRef.current) return
+      if (benchRef.current) {
+        benchRef.current.exitItem(id)
+        return
+      }
+      removeItem(id)
+    },
+    [removeItem],
   )
 
   const addItem = useCallback(
@@ -171,9 +180,8 @@ export function PairingApp() {
       if (clearingRef.current) return
 
       const current = stackRef.current
-      const existingIndex = current.indexOf(item.id)
-      if (existingIndex >= 0) {
-        removeAt(existingIndex)
+      if (current.includes(item.id)) {
+        requestRemove(item.id)
         return
       }
 
@@ -241,53 +249,34 @@ export function PairingApp() {
 
       haptic(current.length + 1 === 2 ? 'ready' : 'add')
     },
-    [removeAt, showNotice, updateStack],
+    [requestRemove, showNotice, updateStack],
   )
 
   const removeFlight = useCallback((key: number) => {
     setFlights((previous) => previous.filter((flight) => flight.key !== key))
   }, [])
 
-  const clearStack = useCallback(() => {
-    const current = stackRef.current
-    if (current.length === 0 || clearingRef.current) return
+  const finishClear = useCallback(() => {
+    clearingRef.current = false
+    setClearing(false)
+    updateStack(() => [])
+    setLandingIds(new Set())
+    setFlights([])
+    for (const timer of landingTimers.current.values()) window.clearTimeout(timer)
+    landingTimers.current.clear()
+  }, [updateStack])
 
+  const clearStack = useCallback(() => {
+    if (stackRef.current.length === 0 || clearingRef.current) return
     haptic('clear')
     clearingRef.current = true
     setClearing(true)
-    const reduce = prefersReducedMotion()
-    const app = appRef.current
-
-    if (app && !reduce) {
-      app.querySelectorAll<HTMLElement>('[data-slot-item]').forEach((element, index) => {
-        element.animate(
-          [
-            { opacity: 1, transform: 'scale(1) translateY(0)' },
-            { opacity: 0, transform: 'scale(.94) translateY(2px)' },
-          ],
-          {
-            duration: 190,
-            delay: index * 24,
-            easing: 'ease-in',
-            fill: 'forwards',
-          },
-        )
-      })
+    if (benchRef.current) {
+      benchRef.current.exitAll()
+      return
     }
-
-    const delay = reduce ? 0 : 190 + 24 * Math.max(0, current.length - 1)
-    if (clearTimer.current !== null) window.clearTimeout(clearTimer.current)
-    clearTimer.current = window.setTimeout(() => {
-      clearTimer.current = null
-      clearingRef.current = false
-      setClearing(false)
-      updateStack(() => [])
-      setLandingIds(new Set())
-      setFlights([])
-      for (const timer of landingTimers.current.values()) window.clearTimeout(timer)
-      landingTimers.current.clear()
-    }, delay)
-  }, [updateStack])
+    finishClear()
+  }, [finishClear])
 
   const handleTest = useCallback(() => {
     if (stackRef.current.length < 2 || clearingRef.current) return
@@ -298,14 +287,6 @@ export function PairingApp() {
   }, [])
 
   const closeSheet = useCallback(() => setSheetOpen(false), [])
-
-  const handleSheetRemove = useCallback(
-    (id: string) => {
-      const index = stackRef.current.indexOf(id)
-      if (index >= 0) removeAt(index)
-    },
-    [removeAt],
-  )
 
   useEffect(() => {
     if (sheetOpen && stack.length < 2) setSheetOpen(false)
@@ -338,13 +319,15 @@ export function PairingApp() {
         <span className="po-hero-glow po-hero-glow-warm" aria-hidden="true" />
         <HeroHeader />
         <Bench
+          ref={benchRef}
           count={count}
           hint={hint}
           items={stackItems}
           landingIds={landingIds}
           metaState={metaState}
           notice={notice}
-          onRemove={removeAt}
+          onClear={finishClear}
+          onRemove={removeItem}
           shakeNonce={shakeNonce}
           testNonce={testNonce}
         />
@@ -359,7 +342,7 @@ export function PairingApp() {
         onShowAll={() => setCategory('all')}
         query={query}
         railEntries={railEntries}
-        slotIndexById={slotIndexById}
+        slotIndexById={clearing ? NO_SLOT_INDEX : slotIndexById}
       />
 
       <ControlDeck
@@ -374,12 +357,7 @@ export function PairingApp() {
       </div>
 
       {sheetOpen && (
-        <ResultSheet
-          items={stackItems}
-          key={sheetSession}
-          onClose={closeSheet}
-          onRemove={handleSheetRemove}
-        />
+        <ResultSheet items={stackItems} key={sheetSession} onClose={closeSheet} />
       )}
 
       <div className="po-flight-layer" aria-hidden="true">

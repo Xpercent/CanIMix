@@ -438,29 +438,6 @@
   white-space: nowrap;
 }
 
-.po-case-remove {
-  position: absolute;
-  top: calc(2 * var(--u));
-  right: calc(2 * var(--u));
-  z-index: 2;
-  display: grid;
-  width: calc(15 * var(--u));
-  height: calc(15 * var(--u));
-  place-items: center;
-  border-radius: 50%;
-  background: rgba(255, 255, 255, 0.92);
-  box-shadow:
-    0 1px 2px rgba(18, 32, 30, 0.09),
-    0 0 0 1px rgba(26, 37, 35, 0.05);
-  color: var(--po-ink-300);
-  transition: color 150ms ease, transform 150ms ease;
-}
-
-.po-case-remove:active {
-  color: var(--po-ink-900);
-  transform: scale(0.9);
-}
-
 .po-case-hint {
   margin: calc(7 * var(--u)) 0 0;
   color: var(--po-ink-500);

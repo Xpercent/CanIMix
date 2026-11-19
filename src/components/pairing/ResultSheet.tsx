@@ -39,7 +39,6 @@ import {
 interface ResultSheetProps {
   items: PairingItem[]
   onClose: () => void
-  onRemove: (id: string) => void
 }
 
 const RISK_ORDER: Record<RiskLevel, number> = {
@@ -80,7 +79,7 @@ function buildShareText(report: PairingReport, items: PairingItem[]): string {
   return lines.join('\n')
 }
 
-export function ResultSheet({ items, onClose, onRemove }: ResultSheetProps) {
+export function ResultSheet({ items, onClose }: ResultSheetProps) {
   const sheetRef = useRef<HTMLElement>(null)
   const closeTimer = useRef<number | null>(null)
   const copiedTimer = useRef<number | null>(null)
@@ -198,14 +197,6 @@ export function ResultSheet({ items, onClose, onRemove }: ResultSheetProps) {
       setFilterId((previous) => (previous === id ? null : id))
     },
     [items.length],
-  )
-
-  const handleRemove = useCallback(
-    (id: string) => {
-      if (items.length <= 2) return
-      onRemove(id)
-    },
-    [items.length, onRemove],
   )
 
   const handlePointerDown = (event: ReactPointerEvent<HTMLElement>) => {
@@ -383,7 +374,6 @@ export function ResultSheet({ items, onClose, onRemove }: ResultSheetProps) {
                 filterId={filterId}
                 itemRisk={itemRisk}
                 items={items}
-                onRemove={handleRemove}
                 onToggleFilter={handleToggleFilter}
                 report={report}
               />
@@ -581,14 +571,12 @@ function VerdictCard({
   itemRisk,
   filterId,
   onToggleFilter,
-  onRemove,
 }: {
   report: PairingReport
   items: PairingItem[]
   itemRisk: Map<string, RiskLevel>
   filterId: string | null
   onToggleFilter: (id: string) => void
-  onRemove: (id: string) => void
 }) {
   const VerdictIcon =
     report.verdict === 'danger'
@@ -648,20 +636,6 @@ function VerdictCard({
                   </span>
                 )}
               </button>
-              {items.length > 2 && (
-                <button
-                  type="button"
-                  aria-label={`从托盘中移出 ${item.name}`}
-                  className="po-case-remove"
-                  onClick={(event) => {
-                    event.stopPropagation()
-                    onRemove(item.id)
-                  }}
-                  onPointerDown={(event) => event.stopPropagation()}
-                >
-                  <X size={9} strokeWidth={2.4} aria-hidden="true" />
-                </button>
-              )}
             </div>
           )
         })}

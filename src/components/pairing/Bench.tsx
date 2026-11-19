@@ -1,11 +1,43 @@
-import { useEffect, useLayoutEffect, useRef } from 'react'
+import {
+  useCallback,
+  useEffect,
+  useImperativeHandle,
+  useLayoutEffect,
+  useRef,
+  type Ref,
+} from 'react'
 import { Plus, X } from 'lucide-react'
 import { cn } from '@/lib/utils'
 import { MAX_SLOTS, type PairingItem } from './pairing-data'
-import { prefersReducedMotion } from './motion'
+import {
+  prefersReducedMotion,
+  SLOT_CLEAR_EASING,
+  SLOT_CLEAR_MS,
+  SLOT_CLEAR_STAGGER_MS,
+  SLOT_EXIT_EASING,
+  SLOT_EXIT_MS,
+  SLOT_FLIP_EASING,
+  SLOT_FLIP_MS,
+} from './motion'
+import { SwapText } from './SwapText'
 import type { Notice } from './types'
 
 const pad2 = (value: number) => String(value).padStart(2, '0')
+
+const EXIT_KEYFRAMES: Keyframe[] = [
+  { opacity: 1, transform: 'scale(1)' },
+  { opacity: 0, transform: 'scale(.94)' },
+]
+
+const CLEAR_KEYFRAMES: Keyframe[] = [
+  { opacity: 1, transform: 'scale(1) translateY(0)' },
+  { opacity: 0, transform: 'scale(.94) translateY(2px)' },
+]
+
+export interface BenchHandle {
+  exitItem: (id: string) => void
+  exitAll: () => void
+}
 
 interface BenchProps {
   items: PairingItem[]
@@ -16,10 +48,12 @@ interface BenchProps {
   landingIds: Set<string>
   shakeNonce: number
   testNonce: number
-  onRemove: (index: number) => void
+  onRemove: (id: string) => void
+  onClear: () => void
 }
 
 export function Bench({
+  ref,
   items,
   count,
   metaState,
@@ -29,75 +63,108 @@ export function Bench({
   shakeNonce,
   testNonce,
   onRemove,
-}: BenchProps) {
-  const rowRef = useRef<HTMLDivElement>(null)
+  onClear,
+}: BenchProps & { ref?: Ref<BenchHandle> }) {
+  const railRef = useRef<HTMLDivElement>(null)
   const flareRef = useRef<HTMLSpanElement>(null)
-  const beforeRects = useRef<Map<string, DOMRect>>(new Map())
+  const slotRects = useRef<Map<string, DOMRect>>(new Map())
+  const exitAnimations = useRef<Map<string, Animation>>(new Map())
+  const clearing = useRef(false)
   const signature = items.map((item) => item.id).join('|')
 
-  const handleRemove = (index: number, id: string) => {
-    const row = rowRef.current
-    if (!row) {
-      onRemove(index)
+  const exitItem = useCallback(
+    (id: string) => {
+      if (exitAnimations.current.has(id)) return
+      const card = railRef.current?.querySelector<HTMLElement>(`[data-slot-item="${id}"]`)
+      if (!card || prefersReducedMotion()) {
+        onRemove(id)
+        return
+      }
+
+      const animation = card.animate(EXIT_KEYFRAMES, {
+        duration: SLOT_EXIT_MS,
+        easing: SLOT_EXIT_EASING,
+        fill: 'forwards',
+      })
+      exitAnimations.current.set(id, animation)
+      animation.onfinish = () => {
+        exitAnimations.current.delete(id)
+        onRemove(id)
+      }
+      animation.oncancel = () => exitAnimations.current.delete(id)
+    },
+    [onRemove],
+  )
+
+  const exitAll = useCallback(() => {
+    if (clearing.current) return
+    const cards = railRef.current
+      ? Array.from(railRef.current.querySelectorAll<HTMLElement>('[data-slot-item]'))
+      : []
+    if (cards.length === 0 || prefersReducedMotion()) {
+      onClear()
       return
     }
 
-    const cards = Array.from(row.querySelectorAll<HTMLElement>('[data-slot-item]'))
-    const snapshot = new Map(
-      cards.map((card) => [card.dataset.slotItem ?? '', card.getBoundingClientRect()] as const),
+    clearing.current = true
+    const animations = cards.map((card, index) =>
+      card.animate(CLEAR_KEYFRAMES, {
+        duration: SLOT_CLEAR_MS,
+        delay: index * SLOT_CLEAR_STAGGER_MS,
+        easing: SLOT_CLEAR_EASING,
+        fill: 'forwards',
+      }),
     )
-    const card = row.querySelector<HTMLElement>(`[data-slot-item="${id}"]`)
+    void Promise.allSettled(animations.map((animation) => animation.finished)).then(() => {
+      clearing.current = false
+      onClear()
+    })
+  }, [onClear])
 
-    if (card && !prefersReducedMotion()) {
-      const animation = card.animate(
-        [
-          { opacity: 1, transform: 'scale(1)' },
-          { opacity: 0, transform: 'scale(.94)' },
-        ],
-        { duration: 110, easing: 'ease-in', fill: 'forwards' },
-      )
-      animation.onfinish = () => {
-        beforeRects.current = snapshot
-        onRemove(index)
-      }
-    } else {
-      beforeRects.current = snapshot
-      onRemove(index)
-    }
-  }
+  useImperativeHandle(ref, () => ({ exitItem, exitAll }), [exitItem, exitAll])
 
   useLayoutEffect(() => {
-    const row = rowRef.current
-    const previous = beforeRects.current
-    if (!row || previous.size === 0) return
-    beforeRects.current = new Map()
-    if (prefersReducedMotion()) return
+    const rail = railRef.current
+    if (!rail) return
 
-    const cards = Array.from(row.querySelectorAll<HTMLElement>('[data-slot-item]'))
+    const cards = Array.from(rail.querySelectorAll<HTMLElement>('[data-slot-item]'))
+    const previous = slotRects.current
+    const measured = new Map<string, DOMRect>()
     for (const card of cards) {
       const id = card.dataset.slotItem
-      const oldRect = id ? previous.get(id) : undefined
-      if (!oldRect) continue
-      const newRect = card.getBoundingClientRect()
-      const deltaX = oldRect.left - newRect.left
-      const deltaY = oldRect.top - newRect.top
-      if (Math.abs(deltaX) > 0.5 || Math.abs(deltaY) > 0.5) {
-        card.animate(
-          [
-            { transform: `translate(${deltaX}px, ${deltaY}px)` },
-            { transform: 'translate(0px, 0px)' },
-          ],
-          { duration: 360, easing: 'cubic-bezier(.22,1.02,.36,1)' },
-        )
+      // 槽位格子不做动画，量它才能得到最终落位，避免把上一轮 FLIP 位移量进来
+      const cell = card.closest<HTMLElement>('.po-slot-cell')
+      if (id && cell) measured.set(id, cell.getBoundingClientRect())
+    }
+
+    if (!prefersReducedMotion()) {
+      for (const card of cards) {
+        const id = card.dataset.slotItem
+        const before = id ? previous.get(id) : undefined
+        const after = id ? measured.get(id) : undefined
+        if (!before || !after) continue
+        const deltaX = before.left - after.left
+        const deltaY = before.top - after.top
+        if (Math.abs(deltaX) > 0.5 || Math.abs(deltaY) > 0.5) {
+          card.animate(
+            [
+              { transform: `translate(${deltaX}px, ${deltaY}px)` },
+              { transform: 'translate(0px, 0px)' },
+            ],
+            { duration: SLOT_FLIP_MS, easing: SLOT_FLIP_EASING },
+          )
+        }
       }
     }
+
+    slotRects.current = measured
   }, [signature])
 
   useEffect(() => {
     if (!shakeNonce) return
-    const row = rowRef.current
-    if (!row || prefersReducedMotion()) return
-    row.animate(
+    const rail = railRef.current
+    if (!rail || prefersReducedMotion()) return
+    rail.animate(
       [
         { transform: 'translateX(0)' },
         { transform: 'translateX(-2.5px)' },
@@ -148,19 +215,15 @@ export function Bench({
           )}
         >
           <span className="po-count">
-            <span className="po-count-num" key={count}>
-              {count}
-            </span>
+            <SwapText className="po-count-num" text={String(count)} />
             <span className="po-count-total">/5</span>
           </span>
           <span className="po-status-dot" aria-hidden="true" />
-          <span className="po-state-label" key={metaState}>
-            {metaState}
-          </span>
+          <SwapText className="po-state-label" text={metaState} />
         </span>
       </div>
 
-      <div className="po-slot-rail" ref={rowRef}>
+      <div className="po-slot-rail" ref={railRef}>
         {Array.from({ length: MAX_SLOTS }, (_, index) => {
           const item = items[index]
           return (
@@ -170,14 +233,23 @@ export function Bench({
               data-slot-index={index}
               key={index}
             >
-              {item ? (
+              <div
+                className={cn('po-slot-empty', !item && index === count && 'is-next')}
+                aria-hidden="true"
+              >
+                <span className="po-slot-ordinal">{pad2(index + 1)}</span>
+                {!item && index === count && (
+                  <Plus className="po-slot-plus" size={12} strokeWidth={1.5} />
+                )}
+              </div>
+              {item && (
                 <button
                   type="button"
                   aria-label={`移出 ${item.name}，第 ${index + 1} 位`}
                   className={cn('po-slot-card', landingIds.has(item.id) && 'is-landing')}
                   data-slot-item={item.id}
                   key={item.id}
-                  onClick={() => handleRemove(index, item.id)}
+                  onClick={() => exitItem(item.id)}
                   title="轻点移出"
                 >
                   <span className="po-slot-ordinal">{pad2(index + 1)}</span>
@@ -195,16 +267,6 @@ export function Bench({
                     <X size={8} strokeWidth={2.4} />
                   </span>
                 </button>
-              ) : (
-                <div
-                  className={cn('po-slot-empty', index === count && 'is-next')}
-                  aria-hidden="true"
-                >
-                  <span className="po-slot-ordinal">{pad2(index + 1)}</span>
-                  {index === count && (
-                    <Plus className="po-slot-plus" size={12} strokeWidth={1.5} />
-                  )}
-                </div>
               )}
             </div>
           )
@@ -220,9 +282,7 @@ export function Bench({
             {notice.text}
           </span>
         ) : (
-          <span className="po-hint-default" key={`${count}-${hint}`}>
-            {hint}
-          </span>
+          <SwapText className="po-hint-default" text={hint} />
         )}
       </div>
       <span className="po-sr-only" aria-live="polite">

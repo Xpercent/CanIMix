@@ -18,10 +18,29 @@
 
 /* ── Motion ──────────────────────────────────────────────────── */
 
-@keyframes po-count-roll {
+.po-swap {
+  position: relative;
+  display: inline-block;
+  white-space: nowrap;
+}
+
+.po-swap-old {
+  position: absolute;
+  top: 0;
+  left: 0;
+  pointer-events: none;
+  animation: po-swap-out 160ms ease-out forwards;
+}
+
+.po-swap-new {
+  display: inline-block;
+  animation: po-swap-in 200ms cubic-bezier(0.22, 0.9, 0.3, 1);
+}
+
+@keyframes po-swap-in {
   from {
     opacity: 0;
-    transform: translateY(-5px);
+    transform: translateY(3px);
   }
   to {
     opacity: 1;
@@ -29,12 +48,14 @@
   }
 }
 
-@keyframes po-state-fade {
+@keyframes po-swap-out {
   from {
-    opacity: 0;
+    opacity: 1;
+    transform: translateY(0);
   }
   to {
-    opacity: 1;
+    opacity: 0;
+    transform: translateY(-3px);
   }
 }
 
@@ -62,11 +83,11 @@
 @keyframes po-card-in {
   from {
     opacity: 0;
-    transform: translateY(4px) scale(0.985);
+    transform: translateY(4px);
   }
   to {
     opacity: 1;
-    transform: translateY(0) scale(1);
+    transform: translateY(0);
   }
 }
 
@@ -82,6 +103,17 @@
   100% {
     opacity: 1;
     transform: scale(1);
+  }
+}
+
+@keyframes po-badge-out {
+  from {
+    opacity: 1;
+    transform: scale(1);
+  }
+  to {
+    opacity: 0;
+    transform: scale(0.55);
   }
 }
 

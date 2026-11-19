@@ -315,6 +315,30 @@ interface ItemCardProps {
   onAdd: (item: PairingItem, event: MouseEvent<HTMLButtonElement>) => void
 }
 
+function useSlotBadge(slotNumber: number | null) {
+  const [state, setState] = useState({
+    number: slotNumber,
+    mounted: slotNumber !== null,
+    exiting: false,
+  })
+
+  if (slotNumber !== null) {
+    if (!state.mounted || state.number !== slotNumber || state.exiting) {
+      setState({ number: slotNumber, mounted: true, exiting: false })
+    }
+  } else if (state.mounted && !state.exiting) {
+    setState({ ...state, exiting: true })
+  }
+
+  const finishExit = () => {
+    setState((current) =>
+      current.exiting ? { number: null, mounted: false, exiting: false } : current,
+    )
+  }
+
+  return { ...state, finishExit }
+}
+
 function matchedHiddenIngredients(item: PairingItem, query: string): string[] {
   const needle = normalizeSearch(query)
   if (!needle) return []
@@ -333,6 +357,8 @@ const ItemCard = memo(function ItemCard({
   onAdd,
 }: ItemCardProps) {
   const slotNumber = slotIndex === undefined ? null : slotIndex + 1
+  const selected = slotNumber !== null
+  const badge = useSlotBadge(slotNumber)
   const matchIngredients = matchedHiddenIngredients(item, query)
   const style = { '--i': Math.min(index, 8) } as CSSProperties
 
@@ -340,16 +366,16 @@ const ItemCard = memo(function ItemCard({
     <button
       type="button"
       aria-label={
-        slotNumber !== null
+        selected
           ? `${item.name}，已入栈，第 ${slotNumber} 位，再次点击移出`
           : `将 ${item.name} 放入检测台`
       }
       className={cn(
         'po-item-card',
-        slotNumber !== null && 'is-stacked',
+        selected && 'is-stacked',
         matchIngredients.length > 0 && 'has-match',
       )}
-      data-selected={slotNumber !== null || undefined}
+      data-selected={selected || undefined}
       onClick={(event) => onAdd(item, event)}
       style={style}
     >
@@ -371,9 +397,17 @@ const ItemCard = memo(function ItemCard({
           含 {matchIngredients.join('、')}
         </span>
       )}
-      {slotNumber !== null && (
-        <span className="po-item-badge" aria-hidden="true">
-          {String(slotNumber).padStart(2, '0')}
+      {badge.mounted && badge.number !== null && (
+        <span
+          className={cn('po-item-badge', badge.exiting && 'is-exiting')}
+          aria-hidden="true"
+          onAnimationEnd={(event) => {
+            if (event.animationName === 'po-badge-out' && slotNumber === null) {
+              badge.finishExit()
+            }
+          }}
+        >
+          {String(badge.number).padStart(2, '0')}
         </span>
       )}
     </button>
