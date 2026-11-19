@@ -380,8 +380,6 @@ export function ResultSheet({ items, onClose, onRemove }: ResultSheetProps) {
 
               {allSafe ? (
                 <>
-                  <CalmCard report={report} />
-
                   {(visibleSafetyNotes.length > 0 || visibleSynergies.length > 0) && (
                     <section className="po-result-section">
                       <SectionLabel
@@ -799,23 +797,6 @@ function SpacingPlanCard({
       <p className="po-plan-note">
         以药品说明书为准；缓释、肠溶或特殊剂型请先咨询药师。
       </p>
-    </section>
-  )
-}
-
-function CalmCard({ report }: { report: PairingReport }) {
-  return (
-    <section className="po-calm po-tone-safe">
-      <span className="po-calm-icon">
-        <ShieldCheck size={24} strokeWidth={1.7} aria-hidden="true" />
-      </span>
-      <h3>暂未发现明显冲突</h3>
-      <p>{report.summary}</p>
-      <div className="po-calm-meta">
-        <span>已测 {report.items.length} 项</span>
-        <span>{report.stats.pairs} 组两两组合</span>
-        <span>{report.stats.safetyNotes + report.stats.synergies} 条安心提示</span>
-      </div>
     </section>
   )
 }
