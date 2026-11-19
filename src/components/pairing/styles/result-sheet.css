@@ -1521,17 +1521,19 @@
   gap: calc(8 * var(--u));
   padding: calc(10 * var(--u)) var(--sheet-pad-x)
     calc(30 * var(--u) + env(safe-area-inset-bottom));
-  border-top: 1px solid rgba(26, 37, 35, 0.06);
-  background: linear-gradient(180deg, rgba(251, 252, 251, 0.92), #f7f9f8);
-  box-shadow: 0 -12px 26px -24px rgba(18, 32, 30, 0.28);
-  -webkit-backdrop-filter: blur(16px) saturate(1.02);
-  backdrop-filter: blur(16px) saturate(1.02);
+  border-radius: calc(28 * var(--u)) calc(28 * var(--u)) 0 0;
+  background: linear-gradient(180deg, rgba(251, 252, 251, 0.7), #f4f7f5 58%, #f1f3f2);
+  box-shadow:
+    0 -1px 0 rgba(255, 255, 255, 0.7),
+    0 -12px 32px -22px rgba(18, 32, 30, 0.2);
+  /* 不在此处使用 backdrop-filter：它会为页脚单独合成一层，
+     叠在滑入中的 transform 动画上时，该层光栅边界会滞后于布局，
+     导致按钮和页脚底色在最后几帧被横切一段。 */
 }
 
 .po-sheet-footer button {
   height: max(48px, calc(48 * var(--u)));
   border-radius: 999px;
-  animation: po-footer-in 200ms ease 140ms both;
   transition: transform 160ms ease, background 160ms ease, color 160ms ease;
 }
 
@@ -1578,12 +1580,6 @@
   font-weight: 650;
 }
 
-@media (prefers-reduced-motion: reduce) {
-  .po-sheet-footer button {
-    animation: none;
-  }
-}
-
 /* ── Keyframes ─────────────────────────────────────────────────── */
 
 @keyframes po-sheet-in {
@@ -1592,15 +1588,6 @@
   }
   to {
     transform: translateY(0);
-  }
-}
-
-@keyframes po-footer-in {
-  from {
-    opacity: 0;
-  }
-  to {
-    opacity: 1;
   }
 }
 
