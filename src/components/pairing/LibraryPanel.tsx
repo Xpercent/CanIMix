@@ -398,8 +398,9 @@ const ItemCard = memo(function ItemCard({
         </span>
       )}
       {badge.mounted && badge.number !== null && (
-        <span
+        <svg
           className={cn('po-item-badge', badge.exiting && 'is-exiting')}
+          viewBox="0 0 22 22"
           aria-hidden="true"
           onAnimationEnd={(event) => {
             if (event.animationName === 'po-badge-out' && slotNumber === null) {
@@ -407,8 +408,10 @@ const ItemCard = memo(function ItemCard({
             }
           }}
         >
-          {String(badge.number).padStart(2, '0')}
-        </span>
+          <circle className="po-item-badge-ring" cx="11" cy="11" r="11" />
+          <circle className="po-item-badge-disc" cx="11" cy="11" r="9" />
+          <text className="po-item-badge-num" dominantBaseline="central" textAnchor="middle" x="10.7" y="10.5">{String(badge.number).padStart(2, '0')}</text>
+        </svg>
       )}
     </button>
   )
