@@ -252,12 +252,14 @@ export function ResultSheet({ items, onClose, onRemove }: ResultSheetProps) {
         step.items.some((item) => item.id === filterId),
       ))
 
-  const hasVisibleResult =
+  const hasVisibleFindings =
     visibleConflicts.length > 0 ||
     visibleSynergies.length > 0 ||
     visibleSafetyNotes.length > 0 ||
-    visibleSafePairs.length > 0 ||
     planVisible
+  const hasVisibleResult = hasVisibleFindings || visibleSafePairs.length > 0
+  const filterOnlySafe =
+    filterActive && !hasVisibleFindings && visibleSafePairs.length > 0
 
   const mainFindings = [...visibleConflicts, ...visibleSynergies]
   const allSafe = report.conflicts.length === 0
@@ -363,6 +365,19 @@ export function ResultSheet({ items, onClose, onRemove }: ResultSheetProps) {
                 </div>
               )}
 
+              {filterOnlySafe && !allSafe && (
+                <div className="po-filter-confirm po-tone-safe">
+                  <ShieldCheck size={22} strokeWidth={1.7} aria-hidden="true" />
+                  <h3>「{filterName}」暂未发现已知冲突</h3>
+                  <p>
+                    与其它已选物品的 {visibleSafePairs.length} 组两两组合均未命中现有配伍规则，可按说明书使用。
+                  </p>
+                  <button type="button" onClick={() => setFilterId(null)}>
+                    查看全部结果
+                  </button>
+                </div>
+              )}
+
               {allSafe ? (
                 <>
                   <CalmCard report={report} />
@@ -395,6 +410,8 @@ export function ResultSheet({ items, onClose, onRemove }: ResultSheetProps) {
                   {showSafeFold && (
                     <SafeFold
                       artById={artById}
+                      defaultOpen={filterActive}
+                      key={`safe-${filterId ?? 'all'}`}
                       label={`查看已排查的 ${visibleSafePairs.length} 组组合`}
                       notes={[]}
                       pairs={visibleSafePairs}
@@ -428,6 +445,8 @@ export function ResultSheet({ items, onClose, onRemove }: ResultSheetProps) {
                   {showSafeFold && (
                     <SafeFold
                       artById={artById}
+                      defaultOpen={filterActive}
+                      key={`safe-${filterId ?? 'all'}`}
                       label={
                         visibleSafePairs.length > 0
                           ? `已排查且暂未发现冲突的组合 (${visibleSafePairs.length})`
@@ -806,14 +825,21 @@ function SafeFold({
   pairs,
   notes,
   artById,
+  defaultOpen = false,
 }: {
   label: string
   pairs: SafePair[]
   notes: Finding[]
   artById: Map<string, string>
+  defaultOpen?: boolean
 }) {
+  const [open, setOpen] = useState(defaultOpen)
   return (
-    <details className="po-safe-fold">
+    <details
+      className="po-safe-fold"
+      open={open}
+      onToggle={(event) => setOpen(event.currentTarget.open)}
+    >
       <summary>
         <span>{label}</span>
         <ChevronDown size={13} strokeWidth={2} aria-hidden="true" />

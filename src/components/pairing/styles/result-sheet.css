@@ -529,6 +529,45 @@
   font-weight: 600;
 }
 
+.po-filter-confirm {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: calc(8 * var(--u));
+  padding: calc(22 * var(--u)) calc(18 * var(--u));
+  border: 1px solid var(--tone-line);
+  border-radius: calc(20 * var(--u));
+  background: var(--tone-bg);
+  color: var(--tone-deep);
+  text-align: center;
+}
+
+.po-filter-confirm h3 {
+  margin: 0;
+  color: var(--po-ink-900);
+  font-size: calc(13 * var(--u));
+  font-weight: 650;
+  line-height: calc(18 * var(--u));
+}
+
+.po-filter-confirm p {
+  max-width: calc(280 * var(--u));
+  margin: 0;
+  color: var(--po-ink-500);
+  font-size: calc(10.2 * var(--u));
+  line-height: calc(16 * var(--u));
+}
+
+.po-filter-confirm button {
+  padding: calc(5 * var(--u)) calc(11 * var(--u));
+  border: 1px solid var(--tone-line);
+  border-radius: 999px;
+  background: #fff;
+  color: var(--tone-deep);
+  font-size: calc(9.5 * var(--u));
+  font-weight: 600;
+}
+
 /* ── Sections & cards ───────────────────────────────────────── */
 
 .po-result-section {
