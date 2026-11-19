@@ -5,7 +5,6 @@ import {
   useRef,
   useState,
   type PointerEvent as ReactPointerEvent,
-  type UIEvent,
 } from 'react'
 import {
   Check,
@@ -15,6 +14,7 @@ import {
 } from 'lucide-react'
 import { cn } from '@/lib/utils'
 import { haptic } from './haptics'
+import { useScrollMask } from './use-scroll-mask'
 import type { PairingItem } from './pairing-data'
 import {
   evaluatePairing,
@@ -56,6 +56,7 @@ function buildShareText(report: PairingReport, items: PairingItem[]): string {
 
 export function ResultSheet({ items, onClose }: ResultSheetProps) {
   const sheetRef = useRef<HTMLElement>(null)
+  const scrollRef = useRef<HTMLDivElement>(null)
   const closeTimer = useRef<number | null>(null)
   const copiedTimer = useRef<number | null>(null)
   const dragStart = useRef<{ y: number; time: number; pointerId: number } | null>(null)
@@ -65,9 +66,17 @@ export function ResultSheet({ items, onClose }: ResultSheetProps) {
   const [closing, setClosing] = useState(false)
   const [dragging, setDragging] = useState(false)
   const [dragY, setDragY] = useState(0)
-  const [filterId, setFilterId] = useState<string | null>(null)
+  const [filterPick, setFilterPick] = useState<string | null>(null)
   const [copied, setCopied] = useState(false)
-  const [scrolled, setScrolled] = useState(false)
+
+  // 物品被移出后筛选自动失效，渲染时直接忽略过期的选中项。
+  const filterId =
+    filterPick && items.some((item) => item.id === filterPick) ? filterPick : null
+
+  useScrollMask(
+    scrollRef,
+    `${items.map((item) => item.id).join('|')}:${filterId ?? 'all'}`,
+  )
 
   const report = useMemo(() => evaluatePairing(items), [items])
   const artById = useMemo(
@@ -148,30 +157,15 @@ export function ResultSheet({ items, onClose }: ResultSheetProps) {
     }
   }, [requestClose])
 
-  useEffect(() => {
-    if (filterId && !items.some((item) => item.id === filterId)) setFilterId(null)
-  }, [filterId, items])
-
-  useEffect(() => {
-    if (items.length < 2) requestClose()
-  }, [items.length, requestClose])
-
   const handleToggleFilter = useCallback(
     (id: string) => {
       if (items.length < 3) return
       haptic('category')
-      setFilterId((previous) => (previous === id ? null : id))
-      setScrolled(false)
-      const scroller = sheetRef.current?.querySelector<HTMLElement>('.po-sheet-scroll')
-      if (scroller) scroller.scrollTop = 0
+      setFilterPick((previous) => (previous === id ? null : id))
+      if (scrollRef.current) scrollRef.current.scrollTop = 0
     },
     [items.length],
   )
-
-  const handleSheetScroll = useCallback((event: UIEvent<HTMLDivElement>) => {
-    const next = event.currentTarget.scrollTop > 2
-    setScrolled((previous) => (previous === next ? previous : next))
-  }, [])
 
   const handlePointerDown = (event: ReactPointerEvent<HTMLElement>) => {
     if (event.pointerType === 'mouse' && event.button !== 0) return
@@ -202,7 +196,7 @@ export function ResultSheet({ items, onClose }: ResultSheetProps) {
     const velocity = delta / elapsed
     const threshold = sheetRef.current ? sheetRef.current.offsetWidth * 0.22 : 80
     if (delta > threshold || (delta > 24 && velocity > 0.55)) {
-      setDragY(0)
+      // 保留当前拖拽位移，让关闭动画从松手的位置继续下滑，而不是先弹回全开状态。
       requestClose()
     } else {
       setDragY(0)
@@ -297,11 +291,11 @@ export function ResultSheet({ items, onClose }: ResultSheetProps) {
         aria-modal="true"
         className={cn('po-sheet', dragging && 'is-dragging', closing && 'is-closing')}
         role="dialog"
-        style={dragY > 0 ? { transform: `translateY(${dragY}px)` } : undefined}
+        style={dragY > 0 ? { translate: `0 ${dragY}px` } : undefined}
         tabIndex={-1}
       >
         <header
-          className={cn('po-sheet-head', scrolled && 'is-scrolled')}
+          className="po-sheet-head"
           onPointerCancel={cancelDrag}
           onPointerDown={handlePointerDown}
           onPointerMove={handlePointerMove}
@@ -320,7 +314,7 @@ export function ResultSheet({ items, onClose }: ResultSheetProps) {
           </div>
         </header>
 
-        <div className="po-sheet-scroll" onScroll={handleSheetScroll}>
+        <div className="po-sheet-scroll" ref={scrollRef}>
           <div className="po-result-content">
             <VerdictCard
               filterId={filterId}
@@ -340,7 +334,7 @@ export function ResultSheet({ items, onClose }: ResultSheetProps) {
                 <button
                   type="button"
                   className="po-filter-clear"
-                  onClick={() => setFilterId(null)}
+                  onClick={() => setFilterPick(null)}
                 >
                   显示全部
                 </button>
@@ -351,7 +345,7 @@ export function ResultSheet({ items, onClose }: ResultSheetProps) {
               <div className="po-filter-empty po-tone-safe" role="status">
                 <ShieldCheck size={22} strokeWidth={1.7} aria-hidden="true" />
                 <p>「{filterName}」暂未关联到冲突结果</p>
-                <button type="button" onClick={() => setFilterId(null)}>
+                <button type="button" onClick={() => setFilterPick(null)}>
                   查看全部结果
                 </button>
               </div>
@@ -364,7 +358,7 @@ export function ResultSheet({ items, onClose }: ResultSheetProps) {
                 <p>
                   与其余已选物品的 {visibleSafePairs.length} 组两两搭配均未命中现有配伍规则，可按说明书使用。
                 </p>
-                <button type="button" onClick={() => setFilterId(null)}>
+                <button type="button" onClick={() => setFilterPick(null)}>
                   查看全部结果
                 </button>
               </div>

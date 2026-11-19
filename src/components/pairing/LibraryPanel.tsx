@@ -7,7 +7,6 @@ import {
   useState,
   type CSSProperties,
   type MouseEvent,
-  type RefObject,
 } from 'react'
 import { ChevronDown, Search, X } from 'lucide-react'
 import { cn } from '@/lib/utils'
@@ -18,6 +17,7 @@ import {
   type PairingItem,
 } from './pairing-data'
 import { prefersReducedMotion } from './motion'
+import { useScrollMask } from './use-scroll-mask'
 
 export interface RailEntry {
   id: CategoryFilter
@@ -35,37 +35,6 @@ interface LibraryPanelProps {
   railEntries: RailEntry[]
   slotIndexById: Map<string, number>
   onAdd: (item: PairingItem, source: HTMLElement | null) => void
-}
-
-function useScrollMask(ref: RefObject<HTMLElement | null>, revision: string): void {
-  useEffect(() => {
-    const element = ref.current
-    if (!element) return
-
-    let frame = 0
-    const apply = () => {
-      frame = 0
-      const max = element.scrollHeight - element.clientHeight
-      const scrollable = max > 2
-      const top = scrollable && element.scrollTop > 4 ? 8 : 0
-      const bottom = scrollable ? 20 : 0
-      element.style.setProperty('--fade-top', `${top}`)
-      element.style.setProperty('--fade-bottom', `${bottom}`)
-    }
-    const onScroll = () => {
-      if (!frame) frame = requestAnimationFrame(apply)
-    }
-
-    apply()
-    element.addEventListener('scroll', onScroll, { passive: true })
-    const observer = new ResizeObserver(apply)
-    observer.observe(element)
-    return () => {
-      element.removeEventListener('scroll', onScroll)
-      observer.disconnect()
-      if (frame) cancelAnimationFrame(frame)
-    }
-  }, [ref, revision])
 }
 
 export function LibraryPanel({

@@ -288,10 +288,6 @@ export function PairingApp() {
 
   const closeSheet = useCallback(() => setSheetOpen(false), [])
 
-  useEffect(() => {
-    if (sheetOpen && stack.length < 2) setSheetOpen(false)
-  }, [sheetOpen, stack.length])
-
   const count = stack.length
   const metaState =
     count === 0 ? '待装入' : count === 1 ? '还差 1 项' : count >= MAX_SLOTS ? '满栈' : '就绪'
@@ -356,7 +352,7 @@ export function PairingApp() {
         <span className="po-home-indicator" />
       </div>
 
-      {sheetOpen && (
+      {sheetOpen && count >= 2 && (
         <ResultSheet items={stackItems} key={sheetSession} onClose={closeSheet} />
       )}
 
