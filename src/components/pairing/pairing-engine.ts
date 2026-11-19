@@ -632,13 +632,19 @@ function mergeTriggered(lists: TriggeredIngredient[][]): TriggeredIngredient[] {
   return [...merged.values()]
 }
 
-function renderTitle(rule: RuleData, focus?: ItemData): string {
-  if (!rule.title.includes('{focus}')) return rule.title
-  return rule.title.replace(/\{focus\}/g, focus?.name ?? '双硫仑风险药')
+function renderTitle(rule: RuleData, focus?: ItemData, other?: ItemData): string {
+  if (!rule.title.includes('{')) return rule.title
+  return rule.title
+    .replace(/\{focus\}/g, focus?.name ?? '该药物')
+    .replace(/\{other\}/g, other?.name ?? '相关药物')
 }
 
 function createFinding(draft: FindingDraft, trayIndex: Map<string, number>): Finding {
   const { rule, focus } = draft
+  const other =
+    draft.counterparts.length > 0
+      ? sortItems(draft.counterparts, trayIndex)[0]
+      : undefined
   let items: ItemData[]
 
   if (rule.type === 'tag_pair' || rule.type === 'safe_clarification') {
@@ -659,7 +665,7 @@ function createFinding(draft: FindingDraft, trayIndex: Map<string, number>): Fin
     risk: SEVERITY_RISK[rule.severity],
     priority: rule.priority,
     overrideGroup: rule.override_group,
-    title: renderTitle(rule, focus),
+    title: renderTitle(rule, focus, other),
     action: rule.action,
     mechanism: rule.mechanism,
     symptoms: rule.symptoms,

@@ -85,6 +85,27 @@ test('左甲状腺素与酸奶/钙片/牛奶统一间隔 4 小时', () => {
   )
 })
 
+test('CYP3A4 标题按命中的药物生成，不再固定写西柚', () => {
+  const clarithromycin = evaluatePairing(['克拉霉素', '氨氯地平'])
+  const finding = clarithromycin.conflicts.find((item) => item.ruleId === 'tag-cyp3a4')
+
+  assert.ok(finding)
+  assert.equal(finding.title, '克拉霉素可能升高氨氯地平浓度')
+  assert.equal(finding.title.includes('西柚'), false)
+  assert.ok(clarithromycin.summary.includes('克拉霉素'))
+  assert.equal(clarithromycin.summary.includes('西柚'), false)
+
+  const erythromycin = evaluatePairing(['红霉素', '秋水仙碱']).conflicts.find(
+    (item) => item.ruleId === 'tag-cyp3a4',
+  )
+  assert.equal(erythromycin?.title, '红霉素可能升高秋水仙碱浓度')
+
+  const grapefruit = evaluatePairing(['西柚', '硝苯地平']).conflicts.find(
+    (item) => item.ruleId === 'tag-cyp3a4',
+  )
+  assert.equal(grapefruit?.title, '西柚可能升高硝苯地平浓度')
+})
+
 test('头孢类 + 藿香正气口服液：安全并给出不含酒精澄清', () => {
   const report = evaluatePairing(['头孢类', '藿香正气口服液'])
 
