@@ -106,6 +106,60 @@ test('CYP3A4 标题按命中的药物生成，不再固定写西柚', () => {
   assert.equal(grapefruit?.title, '西柚可能升高硝苯地平浓度')
 })
 
+test('地高辛 + 胰岛素/泼尼松：低钾风险不再判为安全', () => {
+  const insulin = evaluatePairing(['地高辛', '胰岛素'])
+  const insulinFinding = insulin.conflicts.find(
+    (item) => item.ruleId === 'tag-hypokalemia-digoxin',
+  )
+  assert.equal(insulin.verdict, 'caution')
+  assert.ok(insulinFinding)
+  assert.equal(insulinFinding.title, '胰岛素可能加重地高辛毒性')
+  assert.ok(insulin.summary.includes('胰岛素可能加重地高辛毒性'))
+
+  const prednisone = evaluatePairing(['地高辛', '泼尼松'])
+  const prednisoneFinding = prednisone.conflicts.find(
+    (item) => item.ruleId === 'tag-hypokalemia-digoxin',
+  )
+  assert.equal(prednisone.verdict, 'caution')
+  assert.equal(prednisoneFinding?.title, '泼尼松可能加重地高辛毒性')
+})
+
+test('补铁剂 + 苹果/葡萄/钙片/酸奶：铁吸收间隔 2 小时', () => {
+  for (const id of ['苹果', '葡萄']) {
+    const report = evaluatePairing(['补铁剂', id])
+    const spacing = report.conflicts.find((item) => item.ruleId === 'tag-tannin-iron')
+
+    assert.ok(spacing, `${id} 应命中鞣酸影响铁吸收规则`)
+    assert.equal(spacing.title, `${id}会影响补铁剂吸收`)
+    assert.equal(spacing.focusId, '补铁剂')
+    assert.equal(spacing.spacingHours, 2)
+    assert.equal(report.spacingPlan?.totalHours, 2)
+  }
+
+  for (const id of ['钙片', '酸奶']) {
+    const report = evaluatePairing(['补铁剂', id])
+    const spacing = report.conflicts.find((item) => item.ruleId === 'tag-metal-iron')
+
+    assert.ok(spacing, `${id} 应命中多价金属离子影响铁吸收规则`)
+    assert.equal(spacing.title, `${id}会影响补铁剂吸收`)
+    assert.equal(spacing.focusId, '补铁剂')
+    assert.equal(spacing.spacingHours, 2)
+    const priority = report.spacingPlan?.steps.find((step) => step.kind === 'priority')
+    assert.ok(priority?.items.some((item) => item.id === '补铁剂'))
+  }
+
+  const milk = evaluatePairing(['补铁剂', '牛奶'])
+  const milkSpacing = milk.conflicts.find((item) => item.ruleId === 'exact-milk-iron')
+  assert.ok(milkSpacing)
+  assert.equal(milkSpacing.focusId, '补铁剂')
+})
+
+test('安全结论明确规则未覆盖不等于安全', () => {
+  const report = evaluatePairing(['苹果', '香蕉'])
+  assert.equal(report.verdict, 'safe')
+  assert.ok(report.summary.includes('规则未覆盖的组合不等于安全'))
+})
+
 test('头孢类 + 藿香正气口服液：安全并给出不含酒精澄清', () => {
   const report = evaluatePairing(['头孢类', '藿香正气口服液'])
 

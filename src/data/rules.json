@@ -2,7 +2,9 @@
   "new_tags": [
     { "tag": "水溶性维生素", "reason": "用于维生素B6/B12/C/叶酸及强化饮品，避免误标为脂溶性营养素" },
     { "tag": "华法林", "reason": "标记华法林这一需与维生素K摄入联动的抗凝药，支持标签规则" },
-    { "tag": "MAOI", "reason": "标记单胺氧化酶抑制剂，支持高酪胺食物警示与安全澄清" }
+    { "tag": "MAOI", "reason": "标记单胺氧化酶抑制剂，支持高酪胺食物警示与安全澄清" },
+    { "tag": "强心苷", "reason": "标记地高辛等强心苷类药物，用于低钾增强毒性的规则" },
+    { "tag": "铁剂", "reason": "标记补铁剂，用于鞣酸和多价金属离子影响铁吸收的规则" }
   ],
   "matching_notes": [
     "tag_pair 与 safe_clarification 的两个标签必须落在托盘内两个不同物品上，同一物品不能自我配对。",
@@ -43,7 +45,9 @@
     "降压药": ["氨氯地平", "硝苯地平", "美托洛尔", "比索洛尔", "依那普利", "卡托普利", "缬沙坦", "氯沙坦", "硝酸甘油"],
     "降糖药": ["二甲双胍", "胰岛素"],
     "广谱吸附药": ["蒙脱石"],
-    "水溶性维生素": ["维生素B6", "维生素B12", "维生素C", "叶酸"]
+    "水溶性维生素": ["维生素B6", "维生素B12", "维生素C", "叶酸"],
+    "强心苷": ["地高辛"],
+    "铁剂": ["铁"]
   },
   "rules": [
     {"id":"dup-acetaminophen","type":"duplicate_ingredient","severity":"danger","priority":93,"override_group":"对乙酰氨基酚过量","condition":{"ingredient":"对乙酰氨基酚","min_count":2},"spacing_hours":null,"title":"重复用了退烧止痛成分","action":"只保留一种含对乙酰氨基酚的药品，复方感冒药与其他退烧药不要叠加；用药前先核对成分表。","mechanism":"复方感冒药常含对乙酰氨基酚，与单方退烧药同服会叠加剂量，增加肝损伤风险。","symptoms":"恶心、乏力、食欲差、皮肤或眼白发黄"},
@@ -56,6 +60,9 @@
 
     {"id":"tag-alcohol-disulfiram","type":"tag_pair","severity":"danger","priority":89,"override_group":"双硫仑反应","condition":{"tags":["含酒精","双硫仑风险药"]},"spacing_hours":null,"title":"酒精配{focus}，可能双硫仑反应","action":"用甲硝唑、部分头孢等药物期间及停药后7天内避免饮酒，也不要服含酒精的藿香正气水。","mechanism":"部分药物抑制乙醛脱氢酶，酒精代谢产生的乙醛蓄积，引发双硫仑样反应。","symptoms":"面红、心悸、恶心呕吐、胸闷、血压下降"},
     {"id":"tag-metal-chelation","type":"tag_pair","severity":"spacing","priority":70,"override_group":"矿物质螯合","condition":{"tags":["多价金属离子","螯合敏感药"]},"spacing_hours":4,"spacing_order_hint":"先服螯合敏感药，间隔 4 小时后再吃矿物质、奶制品或抗酸药","title":"矿物质会拖住药效","action":"钙、铁、锌、镁、铝制剂和奶制品与左甲状腺素、四环素类、喹诺酮类、玛巴洛沙韦错开至少 4 小时。","mechanism":"多价金属离子与药物形成难溶螯合物，降低药物吸收。","symptoms":"药效下降、症状控制不佳"},
+    {"id":"tag-tannin-iron","type":"tag_pair","severity":"spacing","priority":72,"override_group":"铁吸收","condition":{"tags":["富含鞣酸","铁剂"],"focus_tag":"铁剂"},"spacing_hours":2,"spacing_order_hint":"先服补铁剂，间隔 2 小时后再吃富含鞣酸的水果","title":"{other}会影响{focus}吸收","action":"补铁剂与苹果、葡萄等富含鞣酸的食物错开至少 2 小时。","mechanism":"鞣酸与铁形成难溶性复合物，降低铁吸收。","symptoms":"补铁效果下降、贫血改善慢"},
+    {"id":"tag-metal-iron","type":"tag_pair","severity":"spacing","priority":72,"override_group":"铁吸收","condition":{"tags":["多价金属离子","铁剂"],"focus_tag":"铁剂"},"spacing_hours":2,"spacing_order_hint":"先服补铁剂，间隔 2 小时后再服用钙、锌、镁制剂或奶制品","title":"{other}会影响{focus}吸收","action":"补铁剂与钙片、酸奶、牛奶等含多价金属离子的食物或补剂错开至少 2 小时。","mechanism":"钙、镁、铝等多价金属离子与铁竞争吸收，降低铁利用率。","symptoms":"补铁效果下降、贫血改善慢"},
+    {"id":"tag-hypokalemia-digoxin","type":"tag_pair","severity":"caution","priority":76,"override_group":"地高辛毒性","condition":{"tags":["低钾风险","强心苷"],"focus_tag":"强心苷"},"spacing_hours":null,"title":"{other}可能加重{focus}毒性","action":"与地高辛同用期间注意监测血钾和地高辛浓度；出现恶心、心悸、视物异常及时就医。","mechanism":"胰岛素、糖皮质激素等可导致低钾，低钾会增强地高辛对心脏的毒性。","symptoms":"乏力、恶心、心悸、心律不齐、视物发黄"},
     {"id":"tag-cyp3a4","type":"tag_pair","severity":"caution","priority":70,"override_group":"CYP3A4代谢","condition":{"tags":["CYP3A4抑制剂","CYP3A4底物"]},"spacing_hours":null,"title":"{other}可能升高{focus}浓度","action":"吃西柚或服大环内酯类抗菌药时，留意降压药、他汀、利伐沙班等药物的不良反应；必要时咨询医生调整。","mechanism":"CYP3A4被抑制后，经该酶代谢的药物血药浓度升高，作用增强。","symptoms":"头晕、低血压、肌肉酸痛、心悸"},
     {"id":"tag-highk-ksparing","type":"tag_pair","severity":"caution","priority":70,"override_group":"高钾血症","condition":{"tags":["高钾食物","保钾降压药"]},"spacing_hours":null,"title":"高钾食物配保钾药要当心","action":"正常吃蔬果通常可以，但不要大量集中摄入高钾食物；服用普利类或沙坦类时避免使用低钠盐。","mechanism":"普利类和沙坦类减少钾排泄，高钾食物摄入过多可使血钾升高。","symptoms":"乏力、心悸、四肢麻木、心律不齐"},
     {"id":"tag-vitk-warfarin","type":"tag_pair","severity":"caution","priority":70,"override_group":"华法林与维生素K","condition":{"tags":["富含维生素K","华法林"]},"spacing_hours":null,"title":"华法林与维生素K要稳定","action":"保持绿叶蔬菜摄入量相对稳定，不要突然大量增加或减少；定期复查INR。","mechanism":"维生素K参与凝血因子合成，摄入波动会改变华法林的抗凝强度。","symptoms":"牙龈出血、皮下瘀斑、黑便"},
@@ -106,9 +113,9 @@
     {"id":"exact-insulin-alcohol","type":"exact_pair","severity":"danger","priority":100,"override_group":"低血糖风险","condition":{"items":["胰岛素","酒精饮品"]},"spacing_hours":null,"title":"胰岛素配酒，小心低血糖","action":"注射胰岛素期间避免空腹饮酒；饮酒后监测血糖并随身备糖。","mechanism":"酒精抑制肝糖异生，增强胰岛素的降糖作用，低血糖风险增加。","symptoms":"心慌、出汗、手抖、意识模糊"},
     {"id":"exact-clarithromycin-domperidone","type":"exact_pair","severity":"danger","priority":100,"override_group":"QT间期延长","condition":{"items":["克拉霉素","多潘立酮"]},"spacing_hours":null,"title":"克拉霉素配多潘立酮，心律风险","action":"两药不要自行同用；需要促胃动力时咨询医生换药。","mechanism":"两者均延长QT间期，克拉霉素还抑制CYP3A4，使多潘立酮浓度升高。","symptoms":"心悸、头晕、晕厥"},
     {"id":"exact-vitamina-isotretinoin","type":"exact_pair","severity":"danger","priority":100,"override_group":"维生素A过量","condition":{"items":["维生素A","异维A酸"]},"spacing_hours":null,"title":"维生素A配异维A酸，过量","action":"服异维A酸期间不要额外补维生素A或吃大量动物肝脏。","mechanism":"异维A酸与维生素A同属维A类，叠加可导致维A中毒和致畸风险。","symptoms":"头痛、皮肤干燥、肝酶升高"},
-    {"id":"exact-coffee-iron","type":"exact_pair","severity":"spacing","priority":100,"override_group":"铁吸收","condition":{"items":["咖啡","补铁剂"]},"spacing_hours":2,"spacing_order_hint":"先服补铁剂，间隔 2 小时后再喝咖啡","title":"咖啡会妨碍铁吸收","action":"补铁剂与咖啡错开至少 2 小时；用温水送服，可搭配维生素C。","mechanism":"咖啡中的多酚和鞣酸与铁形成难吸收复合物。","symptoms":"补铁效果下降、贫血改善慢"},
-    {"id":"exact-tea-iron","type":"exact_pair","severity":"spacing","priority":100,"override_group":"铁吸收","condition":{"items":["浓茶","补铁剂"]},"spacing_hours":2,"spacing_order_hint":"先服补铁剂，间隔 2 小时后再喝浓茶","title":"浓茶会妨碍铁吸收","action":"补铁剂与浓茶错开至少 2 小时；不要用茶水送服铁剂。","mechanism":"茶多酚和鞣酸与铁形成难溶性复合物，降低铁吸收。","symptoms":"补铁效果下降、贫血改善慢"},
-    {"id":"exact-milk-iron","type":"exact_pair","severity":"spacing","priority":100,"override_group":"铁吸收","condition":{"items":["牛奶","补铁剂"]},"spacing_hours":2,"spacing_order_hint":"先服补铁剂，间隔 2 小时后再喝牛奶","title":"牛奶会妨碍铁吸收","action":"补铁剂与牛奶错开至少 2 小时；不要用牛奶送服铁剂。","mechanism":"牛奶中的钙和酪蛋白抑制铁的吸收。","symptoms":"补铁效果下降、贫血改善慢"},
+    {"id":"exact-coffee-iron","type":"exact_pair","severity":"spacing","priority":100,"override_group":"铁吸收","condition":{"items":["补铁剂","咖啡"]},"spacing_hours":2,"spacing_order_hint":"先服补铁剂，间隔 2 小时后再喝咖啡","title":"咖啡会妨碍铁吸收","action":"补铁剂与咖啡错开至少 2 小时；用温水送服，可搭配维生素C。","mechanism":"咖啡中的多酚和鞣酸与铁形成难吸收复合物。","symptoms":"补铁效果下降、贫血改善慢"},
+    {"id":"exact-tea-iron","type":"exact_pair","severity":"spacing","priority":100,"override_group":"铁吸收","condition":{"items":["补铁剂","浓茶"]},"spacing_hours":2,"spacing_order_hint":"先服补铁剂，间隔 2 小时后再喝浓茶","title":"浓茶会妨碍铁吸收","action":"补铁剂与浓茶错开至少 2 小时；不要用茶水送服铁剂。","mechanism":"茶多酚和鞣酸与铁形成难溶性复合物，降低铁吸收。","symptoms":"补铁效果下降、贫血改善慢"},
+    {"id":"exact-milk-iron","type":"exact_pair","severity":"spacing","priority":100,"override_group":"铁吸收","condition":{"items":["补铁剂","牛奶"]},"spacing_hours":2,"spacing_order_hint":"先服补铁剂，间隔 2 小时后再喝牛奶","title":"牛奶会妨碍铁吸收","action":"补铁剂与牛奶错开至少 2 小时；不要用牛奶送服铁剂。","mechanism":"牛奶中的钙和酪蛋白抑制铁的吸收。","symptoms":"补铁效果下降、贫血改善慢"},
 
     {"id":"safe-oral-liquid-disulfiram","type":"safe_clarification","severity":"safe_note","priority":95,"override_group":"双硫仑反应","condition":{"tags":["无酒精藿香制剂","双硫仑风险药"]},"spacing_hours":null,"title":"这个藿香剂型不含酒精","action":"藿香正气口服液不含酒精，按说明书服用即可，不需要因双硫仑反应刻意避开。","mechanism":"藿香正气口服液以水为溶剂，不含乙醇；含酒精的是藿香正气水。"},
     {"id":"safe-fresh-cheese-maoi","type":"safe_clarification","severity":"safe_note","priority":95,"override_group":"酪胺危象","condition":{"tags":["低酪胺奶酪","MAOI"]},"spacing_hours":null,"title":"新鲜奶酪酪胺低，通常无碍","action":"新鲜奶酪、酸奶等低酪胺乳制品一般可适量吃；仍避免陈年发酵奶酪。","mechanism":"新鲜奶酪未经长时间发酵，酪胺含量低，通常不足以引发酪胺危象。"},

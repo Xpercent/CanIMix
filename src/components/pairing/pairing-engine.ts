@@ -28,6 +28,7 @@ export interface RuleCondition {
   items?: string[]
   target_is_drug?: boolean
   target_distinct?: boolean
+  focus_tag?: string
 }
 
 export interface RuleData {
@@ -250,7 +251,15 @@ function chooseFocus(
   a: ItemData,
   b: ItemData,
   tags: string[],
+  focusTag?: string,
 ): { focus: ItemData; other: ItemData } {
+  if (focusTag) {
+    const aFocus = a.tags.includes(focusTag)
+    const bFocus = b.tags.includes(focusTag)
+    if (aFocus !== bFocus) {
+      return bFocus ? { focus: b, other: a } : { focus: a, other: b }
+    }
+  }
   if (a.is_drug !== b.is_drug) {
     return a.is_drug ? { focus: a, other: b } : { focus: b, other: a }
   }
@@ -425,7 +434,7 @@ export function evaluatePairing(
         other = b
       }
       if (!target || !other) continue
-      const focus = chooseFocus(target, other, tags)
+      const focus = chooseFocus(target, other, tags, condition.focus_tag)
       matches.push({
         rule,
         items: [focus.focus, focus.other],
@@ -996,8 +1005,8 @@ function buildSummary(
     return `需要错开服用，优先处理「${top.title}」，间隔至少 ${hours} 小时。`
   }
   return positiveCount > 0
-    ? `已排查 ${pairCount} 组两两组合，暂未发现已知冲突，另有 ${positiveCount} 条安心提示。`
-    : `已排查 ${pairCount} 组两两组合，暂未发现已知冲突。`
+    ? `已排查 ${pairCount} 组两两组合，暂未发现已知冲突，另有 ${positiveCount} 条安心提示。规则未覆盖的组合不等于安全，仍需以说明书为准。`
+    : `已排查 ${pairCount} 组两两组合，暂未发现已知冲突。规则未覆盖的组合不等于安全，仍需以说明书为准。`
 }
 
 export function validateRulesData(
@@ -1054,6 +1063,9 @@ export function validateRulesData(
     }
     for (const tag of condition.tags ?? []) {
       if (!tags.has(tag)) errors.push(`规则 ${rule.id} 引用了不存在的标签：${tag}`)
+    }
+    if (condition.focus_tag && !(condition.tags ?? []).includes(condition.focus_tag)) {
+      warnings.push(`规则 ${rule.id} 的 focus_tag 不在 tags 中：${condition.focus_tag}`)
     }
     for (const id of condition.items ?? []) {
       if (!itemIds.has(id)) errors.push(`规则 ${rule.id} 引用了不存在的物品 id：${id}`)
