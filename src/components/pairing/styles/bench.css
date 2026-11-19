@@ -17,6 +17,11 @@
     0 44px 80px -56px rgba(18, 32, 30, 0.22);
 }
 
+.po-bench:focus {
+  outline: 2px solid rgba(14, 107, 96, 0.45);
+  outline-offset: -2px;
+}
+
 .po-bench-flare {
   position: absolute;
   inset: 0;
