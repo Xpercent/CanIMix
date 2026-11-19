@@ -127,7 +127,13 @@ test('左甲状腺素 + 牛奶 + 钙片 + 维生素D：聚合错峰并保留维D
   const spacingStep = plan.steps.find((step) => step.kind === 'spacing' && step.hours === 4)
   assert.ok(spacingStep?.items.some((item) => item.id === '牛奶'))
   assert.ok(spacingStep?.items.some((item) => item.id === '钙片'))
-  assert.ok(plan.steps.some((step) => step.items.some((item) => item.id === '维生素D')))
+  assert.equal(spacingStep?.items.some((item) => item.id === '维生素D'), false)
+  assert.ok(spacingStep?.detail.includes('钙片'))
+  assert.ok(spacingStep?.detail.includes('牛奶'))
+
+  const synergyStep = plan.steps.find((step) => step.kind === 'synergy')
+  assert.ok(synergyStep?.items.some((item) => item.id === '维生素D'))
+  assert.ok(synergyStep?.detail.includes('钙片'))
 
   const synergy = report.synergies.find(
     (item) =>
@@ -135,6 +141,32 @@ test('左甲状腺素 + 牛奶 + 钙片 + 维生素D：聚合错峰并保留维D
       item.items.some((entry) => entry.id === '维生素D'),
   )
   assert.ok(synergy)
+})
+
+test('蒙脱石散 + 阿莫西林 + 益生菌：按规则提示排序并区分药品/补剂', () => {
+  const report = evaluatePairing(['蒙脱石散', '阿莫西林', '益生菌制剂'])
+  const plan = report.spacingPlan
+
+  assert.ok(plan)
+  const priority = plan.steps.find((step) => step.kind === 'priority')
+  assert.ok(priority?.items.some((item) => item.id === '阿莫西林'))
+  assert.equal(priority?.items.some((item) => item.id === '蒙脱石散'), false)
+  assert.equal(priority?.detail.includes('空腹'), false)
+  assert.equal(priority?.detail.includes('餐前'), false)
+
+  const montmorilloniteStep = plan.steps.find(
+    (step) => step.kind === 'spacing' && step.hours === 2,
+  )
+  assert.ok(montmorilloniteStep?.items.some((item) => item.id === '蒙脱石散'))
+  assert.ok(montmorilloniteStep?.detail.includes('蒙脱石散'))
+  assert.equal(montmorilloniteStep?.detail.includes('饮食或补剂'), false)
+
+  const probioticStep = plan.steps.find(
+    (step) => step.kind === 'spacing' && step.hours === 3,
+  )
+  assert.ok(probioticStep?.items.some((item) => item.id === '益生菌制剂'))
+  assert.ok(probioticStep?.detail.includes('益生菌'))
+  assert.equal(probioticStep?.detail.includes('药品'), false)
 })
 
 test('华法林 + 布洛芬 + 鱼油 + 绿叶蔬菜：三重出血叠加与维K拮抗', () => {

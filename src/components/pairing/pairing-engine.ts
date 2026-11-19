@@ -825,6 +825,13 @@ function spacingMechanism(group: string | undefined, fallback: string): string {
   }
 }
 
+function describeItemKinds(items: ReportItem[]): '药品' | '饮食或补剂' | '物品' {
+  const hasDrug = items.some((item) => item.isDrug)
+  const hasNonDrug = items.some((item) => !item.isDrug)
+  if (hasDrug && hasNonDrug) return '物品'
+  return hasDrug ? '药品' : '饮食或补剂'
+}
+
 function buildSpacingPlan(
   spacing: Finding[],
   synergies: Finding[],
@@ -834,6 +841,7 @@ function buildSpacingPlan(
 
   const first = new Map<string, ReportItem>()
   const later = new Map<number, Map<string, ReportItem>>()
+  const hintsByHours = new Map<number, Set<string>>()
 
   for (const finding of spacing) {
     const focus = finding.items.find((item) => item.id === finding.focusId) ?? finding.items[0]
@@ -847,20 +855,28 @@ function buildSpacingPlan(
     const group = later.get(hours) ?? new Map<string, ReportItem>()
     for (const item of laterItems) group.set(item.id, item)
     later.set(hours, group)
+    if (finding.spacingOrderHint) {
+      const hints = hintsByHours.get(hours) ?? new Set<string>()
+      hints.add(finding.spacingOrderHint)
+      hintsByHours.set(hours, hints)
+    }
   }
 
-  const leftoverSynergy = new Map<string, ReportItem>()
+  const synergyItems = new Map<string, ReportItem>()
+  const synergyPartners = new Map<string, Set<string>>()
+  const inLater = (id: string) => [...later.values()].some((group) => group.has(id))
+
   for (const finding of synergies) {
     const pair = finding.items
     if (pair.length !== 2) {
-      for (const item of pair) leftoverSynergy.set(item.id, item)
+      for (const item of pair) synergyItems.set(item.id, item)
       continue
     }
     const [a, b] = pair
     const firstHit = first.has(a.id) ? a : first.has(b.id) ? b : undefined
     if (firstHit) {
       const other = firstHit.id === a.id ? b : a
-      if (![...later.values()].some((group) => group.has(other.id))) first.set(other.id, other)
+      if (!inLater(other.id) && !first.has(other.id)) first.set(other.id, other)
       continue
     }
 
@@ -877,26 +893,39 @@ function buildSpacingPlan(
     }
     if (laterHit) {
       const other = laterHit.item.id === a.id ? b : a
-      laterHit.group.set(other.id, other)
+      synergyItems.set(other.id, other)
+      const partners = synergyPartners.get(other.id) ?? new Set<string>()
+      partners.add(laterHit.item.name)
+      synergyPartners.set(other.id, partners)
       continue
     }
-    leftoverSynergy.set(a.id, a)
-    leftoverSynergy.set(b.id, b)
+    synergyItems.set(a.id, a)
+    synergyItems.set(b.id, b)
   }
 
+  for (const id of first.keys()) synergyItems.delete(id)
   for (const group of later.values()) {
-    for (const id of first.keys()) group.delete(id)
+    for (const id of group.keys()) {
+      if (first.has(id)) group.delete(id)
+      synergyItems.delete(id)
+    }
   }
-  for (const id of first.keys()) leftoverSynergy.delete(id)
 
   const steps: SpacingStep[] = []
   if (first.size > 0) {
+    const firstItems = [...first.values()]
+    const kinds = describeItemKinds(firstItems)
     steps.push({
       id: 'priority',
       kind: 'priority',
       label: '优先服用',
-      detail: '按说明书空腹或餐前服用，用清水送服',
-      items: sortReportItems([...first.values()], trayIndex),
+      detail:
+        kinds === '药品'
+          ? '先服以下药品，按说明书剂量用清水送服'
+          : kinds === '饮食或补剂'
+            ? '先服用以下饮食或补剂'
+            : '先服用以下物品，按说明书使用',
+      items: sortReportItems(firstItems, trayIndex),
     })
   }
 
@@ -904,26 +933,33 @@ function buildSpacingPlan(
   for (const hours of hourList) {
     const group = later.get(hours)
     if (!group || group.size === 0) continue
-    const hasSynergy = synergies.some((finding) =>
-      finding.items.some((item) => group.has(item.id)),
-    )
+    const laterItems = [...group.values()]
+    const hints = [...(hintsByHours.get(hours) ?? [])]
+    const detail =
+      hints.length === 1
+        ? hints[0]
+        : `间隔至少${hours}小时后再服用以下${describeItemKinds(laterItems)}`
     steps.push({
       id: `spacing-${hours}`,
       kind: 'spacing',
       label: `间隔 ≥${hours} 小时`,
-      detail: hasSynergy ? '再服用以下饮食或补剂；其中推荐搭配可同餐' : '再服用以下饮食或补剂',
-      items: sortReportItems([...group.values()], trayIndex),
+      detail,
+      items: sortReportItems(laterItems, trayIndex),
       hours,
     })
   }
 
-  if (leftoverSynergy.size > 0) {
+  if (synergyItems.size > 0) {
+    const partners = [...new Set([...synergyPartners.values()].flatMap((set) => [...set]))]
     steps.push({
       id: 'synergy',
       kind: 'synergy',
       label: '可同餐搭配',
-      detail: '这些组合有助于吸收，可按推荐方式随餐服用',
-      items: sortReportItems([...leftoverSynergy.values()], trayIndex),
+      detail:
+        partners.length > 0
+          ? `可与${partners.join('、')}同餐服用，按推荐方式搭配即可`
+          : '这些组合有助于吸收，可按推荐方式随餐服用',
+      items: sortReportItems([...synergyItems.values()], trayIndex),
     })
   }
 
