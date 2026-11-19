@@ -233,26 +233,31 @@
 
 .po-risk-danger {
   --risk: #b05848;
+  --risk-deep: #8f3a2d;
   --risk-bg: #f8e3df;
 }
 
 .po-risk-caution {
   --risk: #b07a36;
+  --risk-deep: #7a4c16;
   --risk-bg: #f8ecd8;
 }
 
 .po-risk-spacing {
   --risk: #3f7392;
+  --risk-deep: #2f5f7a;
   --risk-bg: #e3eff6;
 }
 
 .po-risk-synergy {
   --risk: #3f8f5f;
+  --risk-deep: #337a4e;
   --risk-bg: #e6f6ea;
 }
 
 .po-risk-safe {
   --risk: #7b8b86;
+  --risk-deep: #5f6c6a;
   --risk-bg: #eef2f1;
 }
 
@@ -362,9 +367,9 @@
 .po-case-chip.is-active {
   background: #fff;
   box-shadow:
-    0 0 0 1px var(--risk),
-    0 0 0 calc(3 * var(--u)) var(--risk-bg),
-    0 8px 16px -14px var(--risk);
+    0 0 0 1.5px rgba(26, 37, 35, 0.3),
+    0 0 0 calc(4 * var(--u)) rgba(26, 37, 35, 0.06),
+    0 8px 16px -14px rgba(18, 32, 30, 0.28);
 }
 
 .po-case-chip.is-muted {
@@ -420,16 +425,19 @@
   word-break: auto-phrase;
 }
 
-.po-case-dot {
+.po-case-risk {
   position: absolute;
-  right: calc(5 * var(--u));
-  bottom: calc(5 * var(--u));
-  width: calc(5 * var(--u));
-  height: calc(5 * var(--u));
+  top: calc(2 * var(--u));
+  left: calc(2 * var(--u));
+  padding: calc(1 * var(--u)) calc(4 * var(--u));
   border: 1px solid rgba(255, 255, 255, 0.9);
-  border-radius: 50%;
-  background: var(--risk);
-  box-shadow: 0 0 0 calc(1.5 * var(--u)) var(--risk-bg);
+  border-radius: calc(999 * var(--u));
+  background: var(--risk-bg);
+  color: var(--risk-deep);
+  font-size: calc(8 * var(--u));
+  font-weight: 600;
+  line-height: calc(11 * var(--u));
+  white-space: nowrap;
 }
 
 .po-case-remove {

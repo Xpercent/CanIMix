@@ -50,6 +50,14 @@ const RISK_ORDER: Record<RiskLevel, number> = {
   safe: 0,
 }
 
+const CASE_RISK_LABELS: Record<RiskLevel, string> = {
+  danger: '危险',
+  caution: '谨慎',
+  spacing: '间隔',
+  synergy: '协同',
+  safe: '',
+}
+
 const RISK_LABELS: Record<Finding['severity'], string> = {
   danger: '不建议同用',
   caution: '需谨慎',
@@ -615,6 +623,7 @@ function VerdictCard({
       <div className="po-case-strip" role="group" aria-label="本次检测物品">
         {items.map((item) => {
           const risk = itemRisk.get(item.id) ?? 'safe'
+          const riskLabel = CASE_RISK_LABELS[risk]
           const active = filterId === item.id
           const canFilter = items.length >= 3
           return (
@@ -630,6 +639,7 @@ function VerdictCard({
               <button
                 type="button"
                 aria-disabled={!canFilter}
+                aria-label={`${item.name}${riskLabel ? `，${riskLabel}` : ''}${canFilter ? '，轻点筛选相关结果' : ''}`}
                 aria-pressed={canFilter ? active : undefined}
                 className="po-case-hit"
                 onClick={() => onToggleFilter(item.id)}
@@ -639,7 +649,11 @@ function VerdictCard({
                   <img alt="" decoding="async" draggable={false} src={item.art} />
                 </span>
                 <span className="po-case-name">{item.shortName}</span>
-                {risk !== 'safe' && <span className="po-case-dot" aria-hidden="true" />}
+                {riskLabel && (
+                  <span className="po-case-risk" aria-hidden="true">
+                    {riskLabel}
+                  </span>
+                )}
               </button>
               {items.length > 2 && (
                 <button
