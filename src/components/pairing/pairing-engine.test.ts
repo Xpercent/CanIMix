@@ -38,6 +38,53 @@ test('头孢类 + 藿香正气水：双硫仑风险并透视酒精', () => {
   )
 })
 
+test('甲硝唑 + 藿香正气水：标题点名甲硝唑，不再误写头孢', () => {
+  const report = evaluatePairing(['甲硝唑', '藿香正气水'])
+  const finding = report.conflicts.find((item) => item.ruleId === 'tag-alcohol-disulfiram')
+
+  assert.ok(finding)
+  assert.equal(finding.title, '酒精配甲硝唑，可能双硫仑反应')
+  assert.equal(finding.title.includes('头孢'), false)
+  assert.ok(report.summary.includes('甲硝唑'))
+  assert.equal(report.summary.includes('头孢'), false)
+
+  const cephalosporin = evaluatePairing(['头孢类', '藿香正气水']).conflicts.find(
+    (item) => item.ruleId === 'tag-alcohol-disulfiram',
+  )
+  assert.equal(cephalosporin?.title, '酒精配头孢类抗生素，可能双硫仑反应')
+})
+
+test('玛巴洛沙韦与钙片/牛奶/酸奶/铝碳酸镁统一间隔 4 小时', () => {
+  for (const id of ['钙片', '牛奶', '酸奶', '铝碳酸镁']) {
+    const report = evaluatePairing(['玛巴洛沙韦', id])
+    const spacing = report.conflicts.find((item) => item.severity === 'spacing')
+
+    assert.ok(spacing, `${id} 应命中螯合间隔规则`)
+    assert.equal(spacing.spacingHours, 4, `${id} 应间隔 4 小时`)
+    assert.ok(spacing.action.includes('4小时'), `${id} 的行动建议应写 4 小时`)
+    assert.equal(report.spacingPlan?.totalHours, 4, `${id} 的错峰计划应为 4 小时`)
+  }
+})
+
+test('左甲状腺素与酸奶/钙片/牛奶统一间隔 4 小时', () => {
+  for (const id of ['酸奶', '钙片', '牛奶']) {
+    const report = evaluatePairing(['左甲状腺素', id])
+    const spacing = report.conflicts.find((item) => item.severity === 'spacing')
+
+    assert.ok(spacing, `${id} 应命中间隔规则`)
+    assert.equal(spacing.spacingHours, 4, `${id} 应间隔 4 小时`)
+    assert.equal(report.spacingPlan?.totalHours, 4, `${id} 的错峰计划应为 4 小时`)
+  }
+
+  const report = evaluatePairing(['左甲状腺素', '酸奶', '钙片', '牛奶'])
+  assert.equal(report.spacingPlan?.totalHours, 4)
+  assert.ok(
+    report.conflicts
+      .filter((item) => item.severity === 'spacing')
+      .every((item) => item.spacingHours === 4),
+  )
+})
+
 test('头孢类 + 藿香正气口服液：安全并给出不含酒精澄清', () => {
   const report = evaluatePairing(['头孢类', '藿香正气口服液'])
 
