@@ -72,8 +72,9 @@ function revealTarget(target: HTMLElement) {
   const margin = 14
   if (rect.top >= box.top + margin && rect.bottom <= box.bottom - margin) return
 
+  // 目标在滚动框里的相对位置 + 半个剩余高度 = 把它挪到正中间需要的位移
   scroller.scrollTo({
-    top: scroller.scrollTop + box.top + box.height / 2 - (rect.top + rect.height / 2),
+    top: scroller.scrollTop + (rect.top - box.top) - (box.height - rect.height) / 2,
     behavior: prefersReducedMotion() ? 'auto' : 'smooth',
   })
 }
