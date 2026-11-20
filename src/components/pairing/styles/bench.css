@@ -401,7 +401,7 @@
 }
 
 .po-deck.is-collapsed .po-slot-disc {
-  height: calc(32 * var(--u));
+  height: calc(38 * var(--u));
 }
 
 .po-deck.is-collapsed .po-slot-ordinal {

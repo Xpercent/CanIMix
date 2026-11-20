@@ -506,6 +506,9 @@
   font-size: calc(8.5 * var(--u));
   font-weight: 500;
   font-variant-numeric: tabular-nums;
+  /* 小字号数字的墨迹底边比中文高约 2u，只靠居中对齐会显得往上飘；
+     按比例下移，让两者的基线落在同一条线上 */
+  transform: translateY(calc(2 * var(--u)));
 }
 
 .po-grid-empty {
