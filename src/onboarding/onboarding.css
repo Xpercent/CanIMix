@@ -574,14 +574,14 @@
 .po-tour-action {
   position: absolute;
   z-index: 3;
-  padding: 6px 11px;
+  padding: 7px 12px;
   border-radius: 999px;
   background: #0e6b60;
   box-shadow:
     inset 0 1px 0 rgba(255, 255, 255, 0.18),
     0 8px 18px -10px rgba(14, 107, 96, 0.65);
   color: #ffffff;
-  font-size: 11px;
+  font-size: 12px;
   font-weight: 600;
   letter-spacing: 0.02em;
   white-space: nowrap;
@@ -616,7 +616,7 @@
 
 .po-tour-card-inner {
   position: relative;
-  padding: 21px 21px 17px;
+  padding: 22px 22px 18px;
   overflow: hidden;
   border-radius: 22px;
   background: linear-gradient(180deg, rgba(255, 255, 255, 0.97), rgba(249, 251, 250, 0.94));
@@ -639,6 +639,26 @@
 
 .po-tour.is-ready .po-tour-card[data-side="left"] .po-tour-card-inner {
   animation-name: po-tour-in-left;
+}
+
+.po-tour.is-leaving {
+  pointer-events: none;
+}
+
+.po-tour.is-leaving .po-tour-link,
+.po-tour.is-leaving .po-tour-action {
+  opacity: 0;
+  transition: opacity 180ms ease;
+}
+
+.po-tour.is-leaving .po-tour-spot {
+  animation: none;
+  opacity: 0;
+  transition: opacity 180ms ease;
+}
+
+.po-tour.is-ready.is-leaving .po-tour-card[data-side] .po-tour-card-inner {
+  animation: po-tour-out 240ms cubic-bezier(0.4, 0, 0.85, 0.5) both;
 }
 
 .po-tour-track {
@@ -673,9 +693,9 @@
   gap: 5px;
   color: var(--po-ink-500, #5f6c6a);
   font-family: "Geist Variable", -apple-system, sans-serif;
-  font-size: 9.5px;
+  font-size: 10.5px;
   font-weight: 600;
-  letter-spacing: 0.15em;
+  letter-spacing: 0.14em;
 }
 
 .po-tour-glyph {
@@ -695,7 +715,7 @@
 .po-tour-count {
   color: #99a4a2;
   font-family: "Geist Variable", -apple-system, sans-serif;
-  font-size: 10.5px;
+  font-size: 11.5px;
   font-variant-numeric: tabular-nums;
   font-weight: 600;
   letter-spacing: 0.06em;
@@ -709,28 +729,28 @@
 .po-tour-title {
   margin: 11px 0 0;
   color: #1a2523;
-  font-size: 19px;
+  font-size: 21px;
   font-weight: 650;
   letter-spacing: -0.014em;
-  line-height: 1.26;
+  line-height: 1.28;
 }
 
 .po-tour-body {
-  margin: 8px 0 0;
+  margin: 9px 0 0;
   color: #5f6c6a;
-  font-size: 13.5px;
-  line-height: 1.7;
+  font-size: 15px;
+  line-height: 1.62;
 }
 
 .po-tour-nudge {
-  margin: 11px 0 0;
-  padding: 8px 11px;
+  margin: 12px 0 0;
+  padding: 9px 12px;
   border-radius: 11px;
   background: rgba(198, 139, 78, 0.1);
   box-shadow: inset 0 0 0 1px rgba(198, 139, 78, 0.18);
   color: #8a5e2e;
-  font-size: 12px;
-  line-height: 1.45;
+  font-size: 13px;
+  line-height: 1.5;
   animation: po-nudge-in 320ms cubic-bezier(0.22, 1, 0.36, 1);
 }
 
@@ -749,14 +769,14 @@
   align-items: center;
   gap: 6px;
   color: #3f4c4a;
-  font-size: 11.5px;
+  font-size: 12.5px;
   font-weight: 550;
 }
 
 .po-tour-tap {
   display: grid;
-  width: 22px;
-  height: 22px;
+  width: 23px;
+  height: 23px;
   flex: 0 0 auto;
   place-items: center;
   border-radius: 50%;
@@ -794,7 +814,7 @@
 .po-tour-skip {
   padding: 5px 2px;
   color: #99a4a2;
-  font-size: 11.5px;
+  font-size: 12.5px;
   font-weight: 500;
   transition: color 160ms ease;
 }
@@ -1050,6 +1070,19 @@
     opacity: 1;
     filter: blur(0);
     transform: translate(0, 0) scale(1);
+  }
+}
+
+@keyframes po-tour-out {
+  from {
+    opacity: 1;
+    filter: blur(0);
+    transform: translateY(0) scale(1);
+  }
+  to {
+    opacity: 0;
+    filter: blur(3px);
+    transform: translateY(6px) scale(0.985);
   }
 }
 

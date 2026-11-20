@@ -9,6 +9,10 @@ export interface TourStep {
   target: string
   /** 可选：贴近高亮目标的一句动作提示，不读卡片也能看懂要点哪里 */
   actionLabel?: string
+  /** 可选：卡片整体上移的像素数，避免底部目标把卡片压到舞台底边 */
+  lift?: number
+  /** 可选：在上移基础上再抬高的卡片高度倍数 */
+  liftCards?: number
   /** 完成本步交互后直接结束引导，不再显示下一步 */
   endOnAccept?: boolean
   accepts: (event: PairingTourEvent) => boolean
@@ -19,7 +23,7 @@ const COLD_ITEM = '999感冒灵颗粒'
 const ALCOHOL = '酒精饮品'
 
 /** 收尾演示自动放上台面的三样肠胃用药 */
-export const DEMO_ITEMS = ['铝碳酸镁', '蒙脱石散', '多潘立酮'] as const
+export const DEMO_ITEMS = ['多潘立酮', '蒙脱石散', '铝碳酸镁'] as const
 
 function expectsCategory(targetId: string): (event: PairingTourEvent) => boolean {
   return (event) => event.type === 'category' && event.category === targetId
@@ -82,6 +86,8 @@ export const TOUR_STEPS: readonly TourStep[] = [
     hint: '点下方「开始检测」',
     target: '[data-pairing-start]',
     actionLabel: '点这里开始检测',
+    lift: 22,
+    liftCards: 0.5,
     accepts: (event) => event.type === 'sheet-open',
     nudge: (event) =>
       event.type === 'stack' && event.ids.length < 2
@@ -95,24 +101,30 @@ export const TOUR_STEPS: readonly TourStep[] = [
     hint: '点高亮处的「知道了」',
     target: '.po-sheet-primary',
     actionLabel: '看完点这里收起',
+    lift: 22,
+    liftCards: 0.5,
     accepts: (event) => event.type === 'sheet-close',
   },
   {
     id: 'demo-stage',
-    title: '最后帮你配好一组',
-    body: `已切到「肠胃消化」，并把${DEMO_ITEMS.join('、')}放上台面。点「开始检测」看看它们能不能同服。`,
+    title: '多类药物与食物，一起查',
+    body: '已切到「肠胃消化」，放上多潘立酮、蒙脱石散和铝碳酸镁。不止药品——12 个分类里的果蔬、饮品、保健品都能放上台面，两两自动比对。点「开始检测」。',
     hint: '点下方「开始检测」',
     target: '[data-pairing-start]',
     actionLabel: '点这里开始检测',
+    lift: 22,
+    liftCards: 0.5,
     accepts: (event) => event.type === 'sheet-open',
   },
   {
     id: 'demo-result',
-    title: '蒙脱石会吸走同服的药',
-    body: '这三样一起用，蒙脱石散应与其他口服药错开至少 2 小时。看完点「知道了」，引导就结束。',
+    title: '不同冲突，分级说明',
+    body: '上一组判为危险同用，这一组只需错开：蒙脱石散会吸走同服的药，至少间隔 2 小时。不同冲突会给出不同分级。看完点「知道了」，引导结束。',
     hint: '点高亮处的「知道了」结束引导',
     target: '.po-sheet-primary',
     actionLabel: '看完点这里结束',
+    lift: 22,
+    liftCards: 0.5,
     endOnAccept: true,
     accepts: (event) => event.type === 'sheet-close',
   },

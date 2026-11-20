@@ -10,6 +10,8 @@ interface TourLayout {
   cardY: number
   cardW: number
   cardH: number
+  /** 目标仍在手机视口内时才画连接线和高亮环 */
+  anchorVisible: boolean
   startX: number
   startY: number
   endX: number
@@ -28,6 +30,8 @@ interface TourLayerProps {
   stageRef: RefObject<HTMLElement | null>
   phoneRef: RefObject<HTMLElement | null>
   nudge: { text: string; nonce: number } | null
+  /** 结束或跳过引导时先播放退场动画，再真正卸载 */
+  exiting: boolean
   onSkip: () => void
 }
 
@@ -67,6 +71,7 @@ export function TourLayer({
   stageRef,
   phoneRef,
   nudge,
+  exiting,
   onSkip,
 }: TourLayerProps) {
   const cardRef = useRef<HTMLElement>(null)
@@ -75,18 +80,38 @@ export function TourLayer({
 
   useEffect(() => {
     let frame = 0
+    const hideAnchor = () =>
+      setLayout((previous) =>
+        previous?.anchorVisible ? { ...previous, anchorVisible: false } : previous,
+      )
     const measure = () => {
       frame = window.requestAnimationFrame(measure)
 
       const stage = stageRef.current
       const phone = phoneRef.current
+      if (!stage || !phone) return
       const target = document.querySelector<HTMLElement>(step.target)
-      if (!stage || !phone || !target) return
+      // 结果面板收起或目标被移除时，连线不应追着元素跑，立即隐藏
+      if (!target) {
+        hideAnchor()
+        return
+      }
 
       const stageRect = stage.getBoundingClientRect()
       const phoneRect = phone.getBoundingClientRect()
       const targetRect = target.getBoundingClientRect()
-      if (targetRect.width < 1 || targetRect.height < 1) return
+      const onPhone =
+        targetRect.width > 1 &&
+        targetRect.height > 1 &&
+        targetRect.bottom > phoneRect.top + 2 &&
+        targetRect.top < phoneRect.bottom - 2 &&
+        targetRect.right > phoneRect.left + 2 &&
+        targetRect.left < phoneRect.right - 2
+      // 面板开始收起时目标还在 DOM 里，但不应继续带动连线
+      if (!onPhone || target.closest('.is-closing')) {
+        hideAnchor()
+        return
+      }
 
       if (revealedFor.current !== step.id) {
         revealedFor.current = step.id
@@ -118,10 +143,12 @@ export function TourLayer({
           : phoneRect.left - stageRect.left - gap - cardW
       cardX = clamp(cardX, 14, stageRect.width - cardW - 14)
 
+      const cardMaxY = stageRect.height - cardH - 16
+      const lift = (step.lift ?? 0) + cardH * (step.liftCards ?? 0)
       const cardY = clamp(
-        targetCy - cardH / 2,
+        clamp(targetCy - cardH / 2, 16, cardMaxY) - lift,
         16,
-        stageRect.height - cardH - 16,
+        cardMaxY,
       )
       const startX = side === 'right' ? cardX : cardX + cardW
       const startY = clamp(targetCy, cardY + 30, cardY + cardH - 30)
@@ -132,6 +159,7 @@ export function TourLayer({
         cardY,
         cardW,
         cardH,
+        anchorVisible: true,
         startX,
         startY,
         endX: targetCx,
@@ -162,7 +190,7 @@ export function TourLayer({
 
     frame = window.requestAnimationFrame(measure)
     return () => window.cancelAnimationFrame(frame)
-  }, [step.id, step.target, stageRef, phoneRef])
+  }, [step.id, step.target, step.lift, step.liftCards, stageRef, phoneRef])
 
   // 连接线弯度不进 layout 比较，按当前 layout 直接算。
   const bend = layout
@@ -177,9 +205,9 @@ export function TourLayer({
   const total = steps.length
 
   return (
-    <div className={cn('po-tour', layout && 'is-ready')}>
+    <div className={cn('po-tour', layout && 'is-ready', exiting && 'is-leaving')}>
       <svg aria-hidden="true" className="po-tour-link">
-        {layout && (
+        {layout?.anchorVisible && (
           <>
             <path className="po-tour-link-glow" d={path} />
             <path className="po-tour-link-line" d={path} />
@@ -193,7 +221,7 @@ export function TourLayer({
         )}
       </svg>
 
-      {layout && (
+      {layout?.anchorVisible && (
         <>
           <span
             className="po-tour-spot"
@@ -290,7 +318,7 @@ export function TourLayer({
           <footer className="po-tour-foot">
             <span className="po-tour-hint">
               <span className="po-tour-tap" aria-hidden="true">
-                <MousePointerClick size={13} strokeWidth={1.9} />
+                <MousePointerClick size={14} strokeWidth={1.9} />
               </span>
               {step.hint}
             </span>

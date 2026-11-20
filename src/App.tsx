@@ -1,5 +1,4 @@
 import { useCallback, useEffect, useRef, useState, type CSSProperties } from 'react'
-import { ShieldCheck } from 'lucide-react'
 import { Iphone } from '@/components/ui/iphone'
 import { PairingApp, type PairingAppHandle } from '@/components/pairing/PairingApp'
 import { CATEGORIES, ITEM_BY_ID, PAIRING_ITEMS } from '@/components/pairing/pairing-data'
@@ -47,11 +46,14 @@ function App() {
   )
   const [appSession, setAppSession] = useState(0)
   const [tourIndex, setTourIndex] = useState(-1)
+  const [tourExiting, setTourExiting] = useState(false)
   const [nudge, setNudge] = useState<{ text: string; nonce: number } | null>(null)
 
   const stepRef = useRef(-1)
   const nudgeTimer = useRef<number | null>(null)
   const nudgeNonce = useRef(0)
+  const exitTimer = useRef<number | null>(null)
+  const exitingRef = useRef(false)
 
   useEffect(() => {
     stepRef.current = tourIndex
@@ -60,6 +62,7 @@ function App() {
   useEffect(() => {
     return () => {
       if (nudgeTimer.current !== null) window.clearTimeout(nudgeTimer.current)
+      if (exitTimer.current !== null) window.clearTimeout(exitTimer.current)
     }
   }, [])
 
@@ -79,8 +82,31 @@ function App() {
     setNudge(null)
   }, [])
 
+  const cancelTourExit = useCallback(() => {
+    if (exitTimer.current !== null) {
+      window.clearTimeout(exitTimer.current)
+      exitTimer.current = null
+    }
+    exitingRef.current = false
+    setTourExiting(false)
+  }, [])
+
+  const endTour = useCallback(() => {
+    if (exitingRef.current || stepRef.current < 0) return
+    exitingRef.current = true
+    clearNudge()
+    setTourExiting(true)
+    exitTimer.current = window.setTimeout(() => {
+      exitTimer.current = null
+      exitingRef.current = false
+      setTourExiting(false)
+      setTourIndex(-1)
+    }, 260)
+  }, [clearNudge])
+
   const handleTourEvent = useCallback(
     (event: PairingTourEvent) => {
+      if (exitingRef.current) return
       const index = stepRef.current
       if (index < 0) return
       const step = TOUR_STEPS[index]
@@ -99,7 +125,7 @@ function App() {
       if (step.accepts(event)) {
         clearNudge()
         if (step.endOnAccept) {
-          setTourIndex(-1)
+          endTour()
           return
         }
         if (TOUR_STEPS[index + 1]?.id === 'demo-stage') {
@@ -113,7 +139,7 @@ function App() {
       const message = step.nudge?.(event)
       if (message) showNudge(message)
     },
-    [clearNudge, showNudge],
+    [clearNudge, endTour, showNudge],
   )
 
   const startApp = useCallback(() => {
@@ -121,20 +147,17 @@ function App() {
     setTourIndex(0)
   }, [])
 
-  const finishTour = useCallback(() => {
-    clearNudge()
-    setTourIndex(-1)
-  }, [clearNudge])
-
   const replayGuide = useCallback(() => {
+    cancelTourExit()
     clearNudge()
     setAppSession((value) => value + 1)
     setPhase('splash')
     setTourIndex(-1)
-  }, [clearNudge])
+  }, [cancelTourExit, clearNudge])
 
   const toggleGuide = useCallback(() => {
     const next = !guideEnabled
+    cancelTourExit()
     setGuideEnabled(next)
     persistGuideEnabled(next)
     clearNudge()
@@ -146,7 +169,7 @@ function App() {
       setPhase('app')
       setTourIndex(-1)
     }
-  }, [clearNudge, guideEnabled])
+  }, [cancelTourExit, clearNudge, guideEnabled])
 
   const activeStep = tourIndex >= 0 ? TOUR_STEPS[tourIndex] ?? null : null
 
@@ -213,8 +236,9 @@ function App() {
       {activeStep && (
         <TourLayer
           key={activeStep.id}
+          exiting={tourExiting}
           nudge={nudge}
-          onSkip={finishTour}
+          onSkip={endTour}
           phoneRef={phoneRef}
           stageRef={stageRef}
           step={activeStep}
@@ -222,16 +246,6 @@ function App() {
           steps={TOUR_STEPS}
         />
       )}
-
-      <div className="po-stage-brand">
-        <span className="po-stage-brand-mark" aria-hidden="true">
-          <ShieldCheck size={14} strokeWidth={2} />
-        </span>
-        <span className="po-stage-brand-copy">
-          <b>同服检测</b>
-          <i>SAFETY CHECK · PAIRING LAB</i>
-        </span>
-      </div>
 
       {GUIDE_MASTER_ENABLED && (
         <div className="po-guide-chrome">
