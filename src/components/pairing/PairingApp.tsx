@@ -27,6 +27,8 @@ const NO_SLOT_INDEX = new Map<string, number>()
 export interface PairingAppHandle {
   /** 供引导层切换分类，模拟评委正在浏览更多类别。 */
   setCategory: (category: CategoryFilter) => void
+  /** 清空台面并直接放上指定物品，供收尾演示使用。 */
+  stageItems: (ids: readonly string[]) => void
 }
 
 interface PairingAppProps {
@@ -62,8 +64,6 @@ export function PairingApp({ onTourEvent, ref }: PairingAppProps = {}) {
     onTourEventRef.current = onTourEvent
   }, [onTourEvent])
 
-  useImperativeHandle(ref, () => ({ setCategory }), [])
-
   // 引导只观察真实交互，不做任何自动点击。
   useEffect(() => {
     onTourEventRef.current?.({ type: 'category', category })
@@ -92,6 +92,25 @@ export function PairingApp({ onTourEvent, ref }: PairingAppProps = {}) {
     stackRef.current = next
     setStack(next)
   }, [])
+
+  const stageItems = useCallback(
+    (ids: readonly string[]) => {
+      const next = ids.filter((id) => ITEM_BY_ID.has(id))
+      clearingRef.current = false
+      setClearing(false)
+      for (const timer of landingTimers.current.values()) window.clearTimeout(timer)
+      landingTimers.current.clear()
+      setFlights([])
+      setLandingIds(new Set())
+      setDeckCollapsed(false)
+      const scroller = appRef.current?.querySelector<HTMLElement>('.po-grid-scroll')
+      if (scroller) scroller.scrollTop = 0
+      updateStack(() => next)
+    },
+    [updateStack],
+  )
+
+  useImperativeHandle(ref, () => ({ setCategory, stageItems }), [stageItems])
 
   const showNotice = useCallback((text: string, tone: NoticeTone = 'info') => {
     if (noticeTimer.current !== null) window.clearTimeout(noticeTimer.current)

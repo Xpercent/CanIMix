@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState, type CSSProperties, type RefObject } from 'react'
-import { ArrowRight, MousePointerClick } from 'lucide-react'
+import { MousePointerClick } from 'lucide-react'
 import { cn } from '@/lib/utils'
 import { prefersReducedMotion } from '@/components/pairing/motion'
 import type { TourStep } from './tour-steps'
@@ -29,7 +29,6 @@ interface TourLayerProps {
   phoneRef: RefObject<HTMLElement | null>
   nudge: { text: string; nonce: number } | null
   onSkip: () => void
-  onFinish: () => void
 }
 
 const clamp = (value: number, min: number, max: number) =>
@@ -69,7 +68,6 @@ export function TourLayer({
   phoneRef,
   nudge,
   onSkip,
-  onFinish,
 }: TourLayerProps) {
   const cardRef = useRef<HTMLElement>(null)
   const revealedFor = useRef<string | null>(null)
@@ -283,20 +281,6 @@ export function TourLayer({
           <h2 className="po-tour-title">{step.title}</h2>
           <p className="po-tour-body">{step.body}</p>
 
-          {step.chips && (
-            <div className="po-tour-chips" aria-label="更多分类">
-              {step.chips.map((chip, index) => (
-                <span
-                  className="po-tour-chip"
-                  key={chip}
-                  style={{ '--i': index } as CSSProperties}
-                >
-                  {chip}
-                </span>
-              ))}
-            </div>
-          )}
-
           {nudge && (
             <p className="po-tour-nudge" key={nudge.nonce} role="status">
               {nudge.text}
@@ -305,12 +289,8 @@ export function TourLayer({
 
           <footer className="po-tour-foot">
             <span className="po-tour-hint">
-              <span className={cn('po-tour-tap', step.auto && 'is-live')} aria-hidden="true">
-                {step.auto ? (
-                  <span className="po-tour-live-dot" />
-                ) : (
-                  <MousePointerClick size={13} strokeWidth={1.9} />
-                )}
+              <span className="po-tour-tap" aria-hidden="true">
+                <MousePointerClick size={13} strokeWidth={1.9} />
               </span>
               {step.hint}
             </span>
@@ -325,16 +305,9 @@ export function TourLayer({
           </footer>
 
           <div className="po-tour-actions">
-            {step.finish ? (
-              <button className="po-tour-finish" onClick={onFinish} type="button">
-                <span>完成引导</span>
-                <ArrowRight size={14} strokeWidth={2.1} aria-hidden="true" />
-              </button>
-            ) : (
-              <button className="po-tour-skip" onClick={onSkip} type="button">
-                跳过引导
-              </button>
-            )}
+            <button className="po-tour-skip" onClick={onSkip} type="button">
+              跳过引导
+            </button>
           </div>
 
           <p className="po-sr-only" role="status" aria-live="polite">

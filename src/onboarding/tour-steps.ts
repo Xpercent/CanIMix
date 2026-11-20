@@ -7,20 +7,19 @@ export interface TourStep {
   hint: string
   /** 手机内需要高亮、并由评委真实点击的元素 */
   target: string
-  /** 可选：补充展示的品类标签，用来强化「覆盖很多种类」 */
-  chips?: readonly string[]
   /** 可选：贴近高亮目标的一句动作提示，不读卡片也能看懂要点哪里 */
   actionLabel?: string
-  /** 自动演示步骤：底部提示改用呼吸小圆点，而不是“点击”图标 */
-  auto?: boolean
-  /** 最后一步由卡片上的按钮收尾，不再等待手机内的点击 */
-  finish?: boolean
+  /** 完成本步交互后直接结束引导，不再显示下一步 */
+  endOnAccept?: boolean
   accepts: (event: PairingTourEvent) => boolean
   nudge?: (event: PairingTourEvent) => string | null
 }
 
 const COLD_ITEM = '999感冒灵颗粒'
 const ALCOHOL = '酒精饮品'
+
+/** 收尾演示自动放上台面的三样肠胃用药 */
+export const DEMO_ITEMS = ['铝碳酸镁', '蒙脱石散', '多潘立酮'] as const
 
 function expectsCategory(targetId: string): (event: PairingTourEvent) => boolean {
   return (event) => event.type === 'category' && event.category === targetId
@@ -99,14 +98,22 @@ export const TOUR_STEPS: readonly TourStep[] = [
     accepts: (event) => event.type === 'sheet-close',
   },
   {
-    id: 'finish',
-    title: '还有更多类别等你试',
-    body: '左侧菜单会自动翻看更多类别：12 个分类、94 种物品都能两两检测。看完点「完成引导」结束。',
-    hint: '自动翻看 · 点「完成引导」结束',
-    target: '.po-rail',
-    chips: ['心脑血管', '果蔬', '保健中药', '精神助眠', '日常餐食'],
-    finish: true,
-    auto: true,
-    accepts: () => false,
+    id: 'demo-stage',
+    title: '最后帮你配好一组',
+    body: `已切到「肠胃消化」，并把${DEMO_ITEMS.join('、')}放上台面。点「开始检测」看看它们能不能同服。`,
+    hint: '点下方「开始检测」',
+    target: '[data-pairing-start]',
+    actionLabel: '点这里开始检测',
+    accepts: (event) => event.type === 'sheet-open',
+  },
+  {
+    id: 'demo-result',
+    title: '蒙脱石会吸走同服的药',
+    body: '这三样一起用，蒙脱石散应与其他口服药错开至少 2 小时。看完点「知道了」，引导就结束。',
+    hint: '点高亮处的「知道了」结束引导',
+    target: '.po-sheet-primary',
+    actionLabel: '看完点这里结束',
+    endOnAccept: true,
+    accepts: (event) => event.type === 'sheet-close',
   },
 ]
