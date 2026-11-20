@@ -480,6 +480,9 @@
   color: var(--po-ink-700);
   font-size: calc(10 * var(--u));
   font-weight: 600;
+  /* 文字与数字共用同一条行盒高度，否则小字号的行盒更矮，
+     居中之后两者的基线会错开，数字看起来像浮着 */
+  line-height: calc(12 * var(--u));
   -webkit-backdrop-filter: blur(6px);
   backdrop-filter: blur(6px);
 }

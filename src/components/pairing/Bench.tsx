@@ -238,11 +238,8 @@ export function Bench({
             >
               <div className="po-slot-disc">
                 <div className={cn('po-slot-well', isNext && 'is-next')} aria-hidden="true">
-                  {isNext ? (
-                    <Plus className="po-slot-plus" size={13} strokeWidth={1.6} />
-                  ) : (
-                    <span className="po-slot-ordinal">{pad2(index + 1)}</span>
-                  )}
+                  <span className="po-slot-ordinal">{pad2(index + 1)}</span>
+                  <Plus className="po-slot-plus" size={13} strokeWidth={1.6} />
                 </div>
                 {item && (
                   <button
