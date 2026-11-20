@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
+import { useCallback, useEffect, useImperativeHandle, useMemo, useRef, useState, type Ref } from 'react'
 import { cn } from '@/lib/utils'
 import {
   CATEGORIES,
@@ -20,12 +20,24 @@ import { ResultSheet } from './ResultSheet'
 import { validateRulesData } from './pairing-engine'
 import { haptic } from './haptics'
 import { prefersReducedMotion } from './motion'
-import type { Notice, NoticeTone } from './types'
+import type { Notice, NoticeTone, PairingTourEvent } from './types'
 
 const NO_SLOT_INDEX = new Map<string, number>()
 
-export function PairingApp() {
+export interface PairingAppHandle {
+  /** 供引导层切换分类，模拟评委正在浏览更多类别。 */
+  setCategory: (category: CategoryFilter) => void
+}
+
+interface PairingAppProps {
+  onTourEvent?: (event: PairingTourEvent) => void
+  ref?: Ref<PairingAppHandle>
+}
+
+export function PairingApp({ onTourEvent, ref }: PairingAppProps = {}) {
   const appRef = useRef<HTMLDivElement>(null)
+  const onTourEventRef = useRef(onTourEvent)
+  const sheetWasOpen = useRef(false)
   const benchRef = useRef<BenchHandle>(null)
   const stackRef = useRef<string[]>([])
   const clearingRef = useRef(false)
@@ -45,6 +57,27 @@ export function PairingApp() {
   const [sheetOpen, setSheetOpen] = useState(false)
   const [sheetSession, setSheetSession] = useState(0)
   const [deckCollapsed, setDeckCollapsed] = useState(false)
+
+  useEffect(() => {
+    onTourEventRef.current = onTourEvent
+  }, [onTourEvent])
+
+  useImperativeHandle(ref, () => ({ setCategory }), [])
+
+  // 引导只观察真实交互，不做任何自动点击。
+  useEffect(() => {
+    onTourEventRef.current?.({ type: 'category', category })
+  }, [category])
+
+  useEffect(() => {
+    onTourEventRef.current?.({ type: 'stack', ids: stack })
+  }, [stack])
+
+  useEffect(() => {
+    if (sheetOpen === sheetWasOpen.current) return
+    sheetWasOpen.current = sheetOpen
+    onTourEventRef.current?.({ type: sheetOpen ? 'sheet-open' : 'sheet-close' })
+  }, [sheetOpen])
 
   useEffect(() => {
     if (!import.meta.env.DEV) return

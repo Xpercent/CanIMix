@@ -328,6 +328,7 @@ const ItemCard = memo(function ItemCard({
           : `将 ${item.name} 放入检测台`
       }
       className={cn('po-item-card', selected && 'is-stacked')}
+      data-item-id={item.id}
       data-selected={selected || undefined}
       onClick={(event) => onAdd(item, event)}
       style={style}
