@@ -4,6 +4,7 @@ import {
   useImperativeHandle,
   useLayoutEffect,
   useRef,
+  type CSSProperties,
   type Ref,
 } from 'react'
 import { Plus, X } from 'lucide-react'
@@ -46,13 +47,20 @@ interface BenchProps {
   hint: string
   notice: Notice | null
   landingIds: Set<string>
-  enteringIds: Set<string>
   shakeNonce: number
   testNonce: number
   onRemove: (id: string) => void
   onClear: () => void
 }
 
+/**
+ * 托盘分两层：
+ *   1. 凹槽层——固定 5 格，只画空位，永远不动；
+ *   2. 物品层——绝对定位，按 item.id 保持节点稳定，位置由索引算出来。
+ *
+ * 物品换位时节点不重建，位移动画只比较「上一轮的索引」和「这一轮的索引」，
+ * 用百分比换算，不缓存任何像素坐标——窗口缩放、台面收起都不会污染它。
+ */
 export function Bench({
   ref,
   items,
@@ -61,7 +69,6 @@ export function Bench({
   hint,
   notice,
   landingIds,
-  enteringIds,
   shakeNonce,
   testNonce,
   onRemove,
@@ -69,32 +76,23 @@ export function Bench({
 }: BenchProps & { ref?: Ref<BenchHandle> }) {
   const railRef = useRef<HTMLDivElement>(null)
   const flareRef = useRef<HTMLSpanElement>(null)
-  const slotRects = useRef<Map<string, DOMRect>>(new Map())
+  const prevIndex = useRef<Map<string, number>>(new Map())
   const exitAnimations = useRef<Map<string, Animation>>(new Map())
   const clearing = useRef(false)
-  const signature = items.map((item) => item.id).join('|')
 
-  // 记录当前落位，作为下一次 FLIP 的起点。
-  // 删除前必须重新采一次：台面收起/展开、窗口缩放都会整体位移，
-  // 拿着旧的竖向坐标做补间，物品就会像从上方重新掉进托盘。
-  const captureRects = useCallback(() => {
-    const rail = railRef.current
-    if (!rail) return
-    const next = new Map<string, DOMRect>()
-    for (const card of rail.querySelectorAll<HTMLElement>('[data-slot-item]')) {
-      const id = card.dataset.slotItem
-      const cell = card.closest<HTMLElement>('.po-slot-cell')
-      if (id && cell) next.set(id, cell.getBoundingClientRect())
-    }
-    slotRects.current = next
-  }, [])
+  const cardOf = useCallback(
+    (id: string) =>
+      railRef.current?.querySelector<HTMLElement>(
+        `[data-slot-item="${id}"] .po-slot-card`,
+      ) ?? null,
+    [],
+  )
 
   const exitItem = useCallback(
     (id: string) => {
       if (exitAnimations.current.has(id)) return
-      const card = railRef.current?.querySelector<HTMLElement>(`[data-slot-item="${id}"]`)
+      const card = cardOf(id)
       if (!card || prefersReducedMotion()) {
-        captureRects()
         onRemove(id)
         return
       }
@@ -107,21 +105,19 @@ export function Bench({
       exitAnimations.current.set(id, animation)
       animation.onfinish = () => {
         exitAnimations.current.delete(id)
-        captureRects()
         onRemove(id)
       }
       animation.oncancel = () => exitAnimations.current.delete(id)
     },
-    [captureRects, onRemove],
+    [cardOf, onRemove],
   )
 
   const exitAll = useCallback(() => {
     if (clearing.current) return
     const cards = railRef.current
-      ? Array.from(railRef.current.querySelectorAll<HTMLElement>('[data-slot-item]'))
+      ? Array.from(railRef.current.querySelectorAll<HTMLElement>('[data-slot-item] .po-slot-card'))
       : []
     if (cards.length === 0 || prefersReducedMotion()) {
-      captureRects()
       onClear()
       return
     }
@@ -137,50 +133,36 @@ export function Bench({
     )
     void Promise.allSettled(animations.map((animation) => animation.finished)).then(() => {
       clearing.current = false
-      captureRects()
       onClear()
     })
-  }, [captureRects, onClear])
+  }, [onClear])
 
   useImperativeHandle(ref, () => ({ exitItem, exitAll }), [exitItem, exitAll])
 
+  // 换位补间：位移量 = 索引差 × 一格宽度。物品宽度恰好等于一格，
+  // 所以直接用自身宽度的百分比表达，无需测量像素。
   useLayoutEffect(() => {
-    const rail = railRef.current
-    if (!rail) return
-
-    const cards = Array.from(rail.querySelectorAll<HTMLElement>('[data-slot-item]'))
-    const previous = slotRects.current
-    const measured = new Map<string, DOMRect>()
-    for (const card of cards) {
-      const id = card.dataset.slotItem
-      // 槽位格子不做动画，量它才能得到最终落位，避免把上一轮 FLIP 位移量进来
-      const cell = card.closest<HTMLElement>('.po-slot-cell')
-      if (id && cell) measured.set(id, cell.getBoundingClientRect())
-    }
+    const next = new Map<string, number>()
+    items.forEach((item, index) => next.set(item.id, index))
 
     if (!prefersReducedMotion()) {
-      for (const card of cards) {
-        const id = card.dataset.slotItem
-        const before = id ? previous.get(id) : undefined
-        const after = id ? measured.get(id) : undefined
-        if (!before || !after) continue
-        // 只补横向位移：托盘只在槽位间横移，纵向变化来自台面收起或窗口缩放，
-        // 那种位移应该瞬间生效，不能拿来补间
-        const deltaX = before.left - after.left
-        if (Math.abs(deltaX) > 0.5) {
-          card.animate(
-            [
-              { transform: `translate(${deltaX}px, 0px)` },
-              { transform: 'translate(0px, 0px)' },
-            ],
-            { duration: SLOT_FLIP_MS, easing: SLOT_FLIP_EASING },
-          )
-        }
+      for (const [id, index] of next) {
+        const before = prevIndex.current.get(id)
+        if (before === undefined || before === index) continue
+        const node = railRef.current?.querySelector<HTMLElement>(`[data-slot-item="${id}"]`)
+        if (!node) continue
+        node.animate(
+          [
+            { transform: `translateX(${(before - index) * 100}%)` },
+            { transform: 'translateX(0%)' },
+          ],
+          { duration: SLOT_FLIP_MS, easing: SLOT_FLIP_EASING },
+        )
       }
     }
 
-    slotRects.current = measured
-  }, [signature])
+    prevIndex.current = next
+  }, [items])
 
   useEffect(() => {
     if (!shakeNonce) return
@@ -246,55 +228,51 @@ export function Bench({
       </div>
 
       <div className="po-slot-rail" ref={railRef}>
-        {Array.from({ length: MAX_SLOTS }, (_, index) => {
-          const item = items[index]
-          const isNext = !item && index === count
-          return (
+        {Array.from({ length: MAX_SLOTS }, (_, index) => (
+          <div className="po-slot-cell" data-slot-cell={index} key={index}>
+            <div className="po-slot-disc">
+              <div className={cn('po-slot-well', index === count && 'is-next')} aria-hidden="true">
+                <span className="po-slot-ordinal">{pad2(index + 1)}</span>
+                <Plus className="po-slot-plus" size={13} strokeWidth={1.6} />
+              </div>
+            </div>
+            <span className="po-slot-label is-empty" aria-hidden="true" />
+          </div>
+        ))}
+
+        <div className="po-slot-items">
+          {items.map((item, index) => (
             <div
-              className="po-slot-cell"
-              data-slot-cell={index}
-              data-slot-index={index}
-              key={index}
+              className="po-slot-item"
+              data-slot-item={item.id}
+              key={item.id}
+              style={{ '--slot': index } as CSSProperties}
             >
               <div className="po-slot-disc">
-                <div className={cn('po-slot-well', isNext && 'is-next')} aria-hidden="true">
-                  <span className="po-slot-ordinal">{pad2(index + 1)}</span>
-                  <Plus className="po-slot-plus" size={13} strokeWidth={1.6} />
-                </div>
-                {item && (
-                  <button
-                    type="button"
-                    aria-label={`移出 ${item.name}，第 ${index + 1} 位`}
-                    className={cn(
-                      'po-slot-card',
-                      enteringIds.has(item.id) && 'is-entering',
-                      landingIds.has(item.id) && 'is-landing',
-                    )}
-                    data-slot-item={item.id}
-                    key={item.id}
-                    onClick={() => exitItem(item.id)}
-                    title="轻点移出"
-                  >
-                    <span className="po-slot-halo" aria-hidden="true" />
-                    <img
-                      alt=""
-                      className="po-slot-art"
-                      decoding="async"
-                      draggable={false}
-                      src={item.art}
-                    />
-                    <span className="po-slot-x" aria-hidden="true">
-                      <X size={8} strokeWidth={2.4} />
-                    </span>
-                  </button>
-                )}
+                <button
+                  type="button"
+                  aria-label={`移出 ${item.name}，第 ${index + 1} 位`}
+                  className={cn('po-slot-card', landingIds.has(item.id) && 'is-landing')}
+                  onClick={() => exitItem(item.id)}
+                  title="轻点移出"
+                >
+                  <span className="po-slot-halo" aria-hidden="true" />
+                  <img
+                    alt=""
+                    className="po-slot-art"
+                    decoding="async"
+                    draggable={false}
+                    src={item.art}
+                  />
+                  <span className="po-slot-x" aria-hidden="true">
+                    <X size={8} strokeWidth={2.4} />
+                  </span>
+                </button>
               </div>
-              <span className={cn('po-slot-label', !item && 'is-empty')}>
-                {item ? item.shortName : ''}
-              </span>
+              <span className="po-slot-label">{item.shortName}</span>
             </div>
-          )
-        })}
+          ))}
+        </div>
       </div>
 
       <div className="po-bench-hint">

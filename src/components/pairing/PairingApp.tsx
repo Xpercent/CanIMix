@@ -31,7 +31,6 @@ export function PairingApp() {
   const clearingRef = useRef(false)
   const noticeTimer = useRef<number | null>(null)
   const landingTimers = useRef<Map<string, number>>(new Map())
-  const enteringTimers = useRef<Map<string, number>>(new Map())
   const nonce = useRef(0)
 
   const [stack, setStack] = useState<string[]>([])
@@ -40,7 +39,6 @@ export function PairingApp() {
   const [notice, setNotice] = useState<Notice | null>(null)
   const [flights, setFlights] = useState<FlightState[]>([])
   const [landingIds, setLandingIds] = useState<Set<string>>(new Set())
-  const [enteringIds, setEnteringIds] = useState<Set<string>>(new Set())
   const [shakeNonce, setShakeNonce] = useState(0)
   const [testNonce, setTestNonce] = useState(0)
   const [clearing, setClearing] = useState(false)
@@ -73,14 +71,11 @@ export function PairingApp() {
   }, [])
 
   useEffect(() => {
-    const landing = landingTimers.current
-    const entering = enteringTimers.current
+    const timers = landingTimers.current
     return () => {
       if (noticeTimer.current !== null) window.clearTimeout(noticeTimer.current)
-      for (const timer of landing.values()) window.clearTimeout(timer)
-      for (const timer of entering.values()) window.clearTimeout(timer)
-      landing.clear()
-      entering.clear()
+      for (const timer of timers.values()) window.clearTimeout(timer)
+      timers.clear()
     }
   }, [])
 
@@ -193,45 +188,14 @@ export function PairingApp() {
     [availableCategories, counts, matchedItems.length],
   )
 
-  // 只有真正新加入的物品才播入场动画：移除中间项时后面的物品会跨槽位重挂 DOM，
-  // 若无条件播动画，它们会像被重新放上托盘一样闪一下
-  const markEntering = useCallback((id: string) => {
-    setEnteringIds((previous) => {
-      if (previous.has(id)) return previous
-      const next = new Set(previous)
-      next.add(id)
-      return next
-    })
-    const existing = enteringTimers.current.get(id)
-    if (existing !== undefined) window.clearTimeout(existing)
-    const timer = window.setTimeout(() => {
-      setEnteringIds((previous) => {
-        if (!previous.has(id)) return previous
-        const next = new Set(previous)
-        next.delete(id)
-        return next
-      })
-      enteringTimers.current.delete(id)
-    }, 320)
-    enteringTimers.current.set(id, timer)
-  }, [])
 
   const removeItem = useCallback(
     (id: string) => {
       const timer = landingTimers.current.get(id)
       if (timer !== undefined) window.clearTimeout(timer)
       landingTimers.current.delete(id)
-      const enteringTimer = enteringTimers.current.get(id)
-      if (enteringTimer !== undefined) window.clearTimeout(enteringTimer)
-      enteringTimers.current.delete(id)
       updateStack((previous) => previous.filter((itemId) => itemId !== id))
       setLandingIds((previous) => {
-        if (!previous.has(id)) return previous
-        const next = new Set(previous)
-        next.delete(id)
-        return next
-      })
-      setEnteringIds((previous) => {
         if (!previous.has(id)) return previous
         const next = new Set(previous)
         next.delete(id)
@@ -307,7 +271,6 @@ export function PairingApp() {
       }
 
       updateStack((previous) => [...previous, item.id])
-      markEntering(item.id)
 
       if (flightStarted) {
         setLandingIds((previous) => {
@@ -331,7 +294,7 @@ export function PairingApp() {
 
       haptic(current.length + 1 === 2 ? 'ready' : 'add')
     },
-    [markEntering, requestRemove, showNotice, updateStack],
+    [requestRemove, showNotice, updateStack],
   )
 
   const removeFlight = useCallback((key: number) => {
@@ -343,12 +306,9 @@ export function PairingApp() {
     setClearing(false)
     updateStack(() => [])
     setLandingIds(new Set())
-    setEnteringIds(new Set())
     setFlights([])
     for (const timer of landingTimers.current.values()) window.clearTimeout(timer)
     landingTimers.current.clear()
-    for (const timer of enteringTimers.current.values()) window.clearTimeout(timer)
-    enteringTimers.current.clear()
   }, [updateStack])
 
   const clearStack = useCallback(() => {
@@ -402,7 +362,6 @@ export function PairingApp() {
           <Bench
             ref={benchRef}
             count={count}
-            enteringIds={enteringIds}
             hint={hint}
             items={stackItems}
             landingIds={landingIds}

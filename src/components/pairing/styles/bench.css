@@ -134,6 +134,26 @@
   align-items: center;
 }
 
+/* 物品层：节点按 id 常驻，位置由索引算，换位只改 --slot */
+.po-slot-items {
+  position: absolute;
+  inset: 0;
+  z-index: 2;
+  pointer-events: none;
+}
+
+.po-slot-item {
+  position: absolute;
+  top: 0;
+  left: calc(var(--slot, 0) * 20%);
+  display: flex;
+  width: 20%;
+  flex-direction: column;
+  align-items: center;
+  pointer-events: auto;
+  will-change: transform;
+}
+
 /* 圆盘只过渡高度，宽度由 aspect-ratio 推出来：
    窗口缩放时宽高永远同步，不会被拉成椭圆 */
 .po-slot-disc {
@@ -236,15 +256,11 @@
     inset 0 1px 0 rgba(255, 255, 255, 0.95),
     0 1px 2px rgba(18, 32, 30, 0.05),
     0 10px 18px -12px rgba(18, 32, 30, 0.26);
+  /* 物品节点按 id 常驻，只有新加入时才挂载，所以这里等于「入场」动画 */
+  animation: po-slot-card-in 280ms cubic-bezier(0.22, 0.9, 0.3, 1.08);
   transition:
     transform 160ms cubic-bezier(0.22, 0.9, 0.3, 1),
     box-shadow 180ms ease;
-}
-
-/* 入场动画只在「新加入」时挂：物品跨槽位前移时 React 会重挂节点，
-   若无条件播放动画，其它物品会像被重新放上托盘一样闪一下 */
-.po-slot-card.is-entering {
-  animation: po-slot-card-in 280ms cubic-bezier(0.22, 0.9, 0.3, 1.08);
 }
 
 .po-slot-card:active {
