@@ -329,8 +329,8 @@ export function PairingApp({ onTourEvent, ref }: PairingAppProps = {}) {
               },
               endX: targetRect.left - appRect.left + targetRect.width / 2,
               endY: targetRect.top - appRect.top + targetRect.height / 2,
-              // 圆盘内药图占直径的 0.69，落点尺寸跟着圆盘走，收起时也不会跳
-              endSize: targetRect.width * 0.69,
+              // 圆盘内药图占直径的 0.80，落点尺寸跟着圆盘走，收起时也不会跳
+              endSize: targetRect.width * 0.80,
             }
             setFlights((previous) => [...previous, flight])
             flightStarted = true
