@@ -332,7 +332,8 @@
 
 @media (hover: hover) {
   .po-item-card:hover {
-    background: linear-gradient(180deg, #ffffff, #fbfcfb);
+    /* 只换成纯色：rgba 与渐变之间无法插值，移开时渐变层会先消失闪一下灰底 */
+    background: #ffffff;
     box-shadow:
       inset 0 1px 0 rgba(255, 255, 255, 0.95),
       0 0 0 1px rgba(26, 37, 35, 0.055),

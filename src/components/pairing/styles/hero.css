@@ -50,14 +50,23 @@
   display: flex;
   flex: 0 0 auto;
   flex-direction: column;
-  justify-content: space-between;
-  height: calc(56 * var(--u));
+  justify-content: flex-start;
+  /* 眉标 + 主标题抱成一团：6 + 10 + 4 + 26 = 46 */
+  height: calc(46 * var(--u));
   padding: calc(6 * var(--u)) calc(20 * var(--u)) 0;
   overflow: hidden;
   transition:
     height 340ms cubic-bezier(0.32, 0.72, 0.24, 1),
     padding 340ms cubic-bezier(0.32, 0.72, 0.24, 1),
     opacity 200ms ease;
+}
+
+.po-title-row {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: calc(8 * var(--u));
+  margin-top: calc(4 * var(--u));
 }
 
 .po-eyebrow {
@@ -82,13 +91,6 @@
 
 .po-eyebrow-divider {
   opacity: 0.55;
-}
-
-.po-title-row {
-  display: flex;
-  align-items: baseline;
-  justify-content: space-between;
-  gap: calc(8 * var(--u));
 }
 
 .po-title {

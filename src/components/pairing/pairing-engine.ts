@@ -340,7 +340,7 @@ export function evaluatePairing(
       items: items.map(toReportItem),
       verdict: 'safe',
       verdictTitle: '至少选择 2 项',
-      summary: items.length === 0 ? '先装入需要一起使用的物品。' : '再装入 1 项即可开始检测。',
+      summary: items.length === 0 ? '先从下方挑选需要一起使用的物品。' : '再从下方添加 1 项即可检测。',
       conflicts: [],
       safetyNotes: [],
       synergies: [],

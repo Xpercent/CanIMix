@@ -324,7 +324,7 @@ const ItemCard = memo(function ItemCard({
       type="button"
       aria-label={
         selected
-          ? `${item.name}，已入栈，第 ${slotNumber} 位，再次点击移出`
+          ? `${item.name}，已放入检测台，第 ${slotNumber} 位，再次点击移出`
           : `将 ${item.name} 放入检测台`
       }
       className={cn('po-item-card', selected && 'is-stacked')}

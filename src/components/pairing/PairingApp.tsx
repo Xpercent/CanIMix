@@ -231,7 +231,7 @@ export function PairingApp() {
       if (current.length >= MAX_SLOTS) {
         haptic('full')
         setShakeNonce((value) => value + 1)
-        showNotice('5 个槽位已满 · 先移出一项再装入', 'warn')
+        showNotice('台面已满 · 先移出一项再添加', 'warn')
         return
       }
 
@@ -334,15 +334,15 @@ export function PairingApp() {
 
   const count = stack.length
   const metaState =
-    count === 0 ? '待装入' : count === 1 ? '还差 1 项' : count >= MAX_SLOTS ? '满栈' : '就绪'
+    count === 0 ? '待挑选' : count === 1 ? '还差 1 项' : count >= MAX_SLOTS ? '已满' : '就绪'
   const hint =
     count === 0
       ? '从下方挑选需要一起使用的物品'
       : count === 1
-        ? '再装入 1 项即可开始检测'
+        ? '再从下方添加 1 项即可检测'
         : count >= MAX_SLOTS
-          ? '台面已满 · 轻点圆盘移出'
-          : '轻点圆盘移出 · 或继续装入'
+          ? '台面已满 · 轻点圆盘可移出'
+          : '轻点圆盘可移出'
 
   return (
     <div className="pairing-app" ref={appRef}>
