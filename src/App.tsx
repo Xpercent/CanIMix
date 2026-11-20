@@ -5,6 +5,7 @@ import { CATEGORIES, ITEM_BY_ID, PAIRING_ITEMS } from '@/components/pairing/pair
 import type { PairingTourEvent } from '@/components/pairing/types'
 import '@/components/pairing/pairing.css'
 import { cn } from '@/lib/utils'
+import { useMediaQuery } from '@/lib/use-media-query'
 import {
   GUIDE_MASTER_ENABLED,
   persistGuideEnabled,
@@ -35,10 +36,17 @@ const STAGE_SPECIMENS: readonly StageSpecimen[] = [
   { id: '钙片', x: '77%', y: '48%', size: 60, delay: '-5.4s', rotate: -5, inner: true },
 ]
 
+/**
+ * 手机竖屏：不再套 iPhone 外框，直接把 App 铺满屏幕，像真机上打开一样。
+ * 横屏和桌面宽屏仍然保留设备展示，评委看到的是「展台」。
+ */
+const HANDSET_QUERY = '(max-width: 640px) and (orientation: portrait)'
+
 function App() {
   const stageRef = useRef<HTMLElement>(null)
   const phoneRef = useRef<HTMLDivElement>(null)
   const pairingRef = useRef<PairingAppHandle>(null)
+  const isHandset = useMediaQuery(HANDSET_QUERY)
 
   const [guideEnabled, setGuideEnabled] = useState(readGuideEnabled)
   const [phase, setPhase] = useState<'splash' | 'app'>(() =>
@@ -174,52 +182,59 @@ function App() {
   const activeStep = tourIndex >= 0 ? TOUR_STEPS[tourIndex] ?? null : null
 
   return (
-    <main className={cn('po-stage', activeStep && 'is-touring')} ref={stageRef}>
-      <div aria-hidden="true" className="po-backdrop">
-        <span className="po-backdrop-aurora po-backdrop-aurora-a" />
-        <span className="po-backdrop-aurora po-backdrop-aurora-b" />
-        <span className="po-backdrop-grid" />
-        <span className="po-backdrop-rings">
-          <span className="po-backdrop-ring po-backdrop-ring-a" />
-          <span className="po-backdrop-ring po-backdrop-ring-b" />
-          <span className="po-backdrop-ring po-backdrop-ring-c" />
-          <span className="po-backdrop-orbit" />
-        </span>
-        {STAGE_SPECIMENS.map((specimen) => (
-          <span
-            className={cn('po-backdrop-specimen', specimen.inner && 'is-inner')}
-            key={specimen.id}
-            style={
-              {
-                left: specimen.x,
-                top: specimen.y,
-                '--s': `${specimen.size}px`,
-                '--delay': specimen.delay,
-                '--rot': `${specimen.rotate}deg`,
-              } as CSSProperties
-            }
-          >
-            <img
-              alt=""
-              decoding="async"
-              draggable={false}
-              src={ITEM_BY_ID.get(specimen.id)?.art}
-            />
+    <main
+      className={cn('po-stage', activeStep && 'is-touring', isHandset && 'is-handset')}
+      ref={stageRef}
+    >
+      {!isHandset && (
+        <div aria-hidden="true" className="po-backdrop">
+          <span className="po-backdrop-aurora po-backdrop-aurora-a" />
+          <span className="po-backdrop-aurora po-backdrop-aurora-b" />
+          <span className="po-backdrop-grid" />
+          <span className="po-backdrop-rings">
+            <span className="po-backdrop-ring po-backdrop-ring-a" />
+            <span className="po-backdrop-ring po-backdrop-ring-b" />
+            <span className="po-backdrop-ring po-backdrop-ring-c" />
+            <span className="po-backdrop-orbit" />
           </span>
-        ))}
-        <span className="po-backdrop-alert is-warn" style={{ left: '20%', top: '66%' }}>
-          !
-        </span>
-        <span className="po-backdrop-alert" style={{ left: '83.5%', top: '25.8%' }}>
-          ?
-        </span>
-        <span className="po-backdrop-spine">同服检测</span>
-        <span className="po-backdrop-spine po-backdrop-spine-en">
-          DRUG × FOOD × SUPPLEMENT
-        </span>
-        <span className="po-backdrop-grain" />
-      </div>
+          {STAGE_SPECIMENS.map((specimen) => (
+            <span
+              className={cn('po-backdrop-specimen', specimen.inner && 'is-inner')}
+              key={specimen.id}
+              style={
+                {
+                  left: specimen.x,
+                  top: specimen.y,
+                  '--s': `${specimen.size}px`,
+                  '--delay': specimen.delay,
+                  '--rot': `${specimen.rotate}deg`,
+                } as CSSProperties
+              }
+            >
+              <img
+                alt=""
+                decoding="async"
+                draggable={false}
+                src={ITEM_BY_ID.get(specimen.id)?.art}
+              />
+            </span>
+          ))}
+          <span className="po-backdrop-alert is-warn" style={{ left: '20%', top: '66%' }}>
+            !
+          </span>
+          <span className="po-backdrop-alert" style={{ left: '83.5%', top: '25.8%' }}>
+            ?
+          </span>
+          <span className="po-backdrop-spine">同服检测</span>
+          <span className="po-backdrop-spine po-backdrop-spine-en">
+            DRUG × FOOD × SUPPLEMENT
+          </span>
+          <span className="po-backdrop-grain" />
+        </div>
+      )}
 
+      {/* 机身始终挂在同一棵树上，只是竖屏时用 CSS 把它收掉，
+          这样旋转屏幕不会重建 App、也不会丢掉已放上台面的物品 */}
       <div className="po-phone-holder" ref={phoneRef}>
         <Iphone className="po-phone h-[min(calc(100svh-3rem),calc((100vw-3rem)/0.492))] w-auto max-w-none [--border:oklch(0.34_0_0)] [--card:oklch(0.18_0_0)]">
           <div className="po-viewport">
@@ -236,6 +251,7 @@ function App() {
       {activeStep && (
         <TourLayer
           key={activeStep.id}
+          compact={isHandset}
           exiting={tourExiting}
           nudge={nudge}
           onSkip={endTour}
@@ -247,7 +263,7 @@ function App() {
         />
       )}
 
-      {GUIDE_MASTER_ENABLED && (
+      {GUIDE_MASTER_ENABLED && !isHandset && (
         <div className="po-guide-chrome">
           <span className="po-guide-chrome-label">评委引导</span>
           <button

@@ -428,6 +428,85 @@
   }
 }
 
+/* ── Handset: 手机竖屏不套机身，直接铺满屏幕 ───────────────────
+   机身只留一棵 DOM，竖屏时用 CSS 收掉外框和灵动岛，
+   屏幕本身铺满视口，顶部让白瓷台面顶到屏幕边缘，
+   刘海/状态栏用安全区让开。 */
+
+.po-stage.is-handset {
+  display: block;
+  width: 100%;
+  height: 100vh;
+  height: 100dvh;
+  min-height: 100vh;
+  min-height: 100dvh;
+  padding: 0;
+  background: #f1f3f2;
+}
+
+.po-stage.is-handset::before {
+  display: none;
+}
+
+.po-stage.is-handset .po-phone-holder {
+  position: absolute;
+  inset: 0;
+  display: block;
+}
+
+.po-stage.is-handset .po-phone-holder::before,
+.po-stage.is-handset .po-phone-holder::after {
+  display: none;
+}
+
+.po-stage.is-handset .po-phone {
+  width: 100%;
+  height: 100%;
+  max-width: none;
+  aspect-ratio: auto;
+  filter: none;
+}
+
+.po-stage.is-handset .po-phone [data-slot="iphone-frame"],
+.po-stage.is-handset .po-phone [data-slot="iphone-island"] {
+  display: none;
+}
+
+.po-stage.is-handset .po-phone [data-slot="iphone-screen"] {
+  inset: 0;
+  border-radius: 0;
+  background: #f1f3f2;
+}
+
+.po-stage.is-handset .po-status,
+.po-stage.is-handset .po-home,
+.po-stage.is-handset .po-guide-chrome,
+.po-stage.is-handset .po-stage-caption,
+.po-stage.is-handset .po-stage-meta {
+  display: none;
+}
+
+/* 台面自己顶到屏幕顶端，白色一直铺到刘海后面 */
+.po-stage.is-handset .po-deck {
+  padding-top: calc(env(safe-area-inset-top) + 14 * var(--u));
+}
+
+.po-stage.is-handset .po-console {
+  padding-bottom: calc(env(safe-area-inset-bottom) + 12 * var(--u));
+}
+
+.po-stage.is-handset .po-splash-body {
+  padding-top: calc(env(safe-area-inset-top) + 14 * var(--u));
+  /* 小屏（SE 这类）内容会比屏幕高，允许滚动而不是把流程图裁掉 */
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  -webkit-overflow-scrolling: touch;
+}
+
+.po-stage.is-handset .po-splash-foot {
+  padding-bottom: calc(env(safe-area-inset-bottom) + 22 * var(--u));
+}
+
 @media (max-width: 900px) {
   .po-stage-meta {
     display: none;

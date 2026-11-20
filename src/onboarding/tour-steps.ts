@@ -4,6 +4,8 @@ export interface TourStep {
   id: string
   title: string
   body: string
+  /** 手机竖屏用的一句话版本文案：屏幕窄，长句会糊成一堵墙 */
+  bodyShort?: string
   hint: string
   /** 手机内需要高亮、并由评委真实点击的元素 */
   target: string
@@ -40,6 +42,7 @@ export const TOUR_STEPS: readonly TourStep[] = [
   {
     id: 'pick-cold',
     title: '从分类开始挑',
+    bodyShort: '点左侧「感冒过敏」，看看货架上有什么。',
     body: '左侧 12 个分类，药品、保健品、果蔬和饮品都在一起。先点「感冒过敏」，看看货架上有什么。',
     hint: '在手机上点击高亮处',
     target: '[data-rail-id="cold"]',
@@ -49,6 +52,7 @@ export const TOUR_STEPS: readonly TourStep[] = [
   {
     id: 'first-item',
     title: '把东西放上检测台',
+    bodyShort: '点「999感冒灵」，把它放上台面。',
     body: '点「999感冒灵」——它和不少常见饮品都合不来。台面最多叠放 5 项，随时可以点圆盘移出。',
     hint: '点高亮处的物品卡片',
     target: `[data-item-id="${COLD_ITEM}"]`,
@@ -57,6 +61,7 @@ export const TOUR_STEPS: readonly TourStep[] = [
   {
     id: 'pick-drinks',
     title: '换一类：日常饮品',
+    bodyShort: '会打架的不只有药。点「饮品」继续。',
     body: '会打架的不只有药。咖啡、酒、牛奶这些喝的东西，也会影响药效。点左侧「饮品」继续。',
     hint: '点左侧「饮品」分类',
     target: '[data-rail-id="drinks"]',
@@ -66,6 +71,7 @@ export const TOUR_STEPS: readonly TourStep[] = [
   {
     id: 'add-alcohol',
     title: '再加一项：酒精饮品',
+    bodyShort: '感冒药加酒精，会加重嗜睡。加上「酒精饮品」。',
     body: '感冒药里的镇静成分遇上酒精，会放大嗜睡和呼吸抑制。点「酒精饮品」，把第二项放上台面。',
     hint: '点高亮处的「酒精饮品」',
     target: `[data-item-id="${ALCOHOL}"]`,
@@ -82,6 +88,7 @@ export const TOUR_STEPS: readonly TourStep[] = [
   {
     id: 'start-test',
     title: '开始检测',
+    bodyShort: '两件物品就位，点「开始检测」。',
     body: '两件物品就位，下方按钮已经亮起。点「开始检测」，看看它们能不能一起用。',
     hint: '点下方「开始检测」',
     target: '[data-pairing-start]',
@@ -97,6 +104,7 @@ export const TOUR_STEPS: readonly TourStep[] = [
   {
     id: 'read-result',
     title: '结论按风险分级',
+    bodyShort: '红色是危险组合，绿色安全。看完点「知道了」。',
     body: '红色代表危险组合，黄色需要留意，绿色是安全或协同。往下滑还能看到作用机制和错开服用时间；看完点「知道了」收起。',
     hint: '点高亮处的「知道了」',
     target: '.po-sheet-primary',
@@ -108,6 +116,7 @@ export const TOUR_STEPS: readonly TourStep[] = [
   {
     id: 'demo-stage',
     title: '多类药物与食物，一起查',
+    bodyShort: '三类肠胃药已放好，点「开始检测」看结论。',
     body: '已切到「肠胃消化」，放上多潘立酮、蒙脱石散和铝碳酸镁。不止药品——12 个分类里的果蔬、饮品、保健品都能放上台面，两两自动比对。点「开始检测」。',
     hint: '点下方「开始检测」',
     target: '[data-pairing-start]',
@@ -119,6 +128,7 @@ export const TOUR_STEPS: readonly TourStep[] = [
   {
     id: 'demo-result',
     title: '不同冲突，分级说明',
+    bodyShort: '这一组只需错开 2 小时。看完点「知道了」结束。',
     body: '上一组判为危险同用，这一组只需错开：蒙脱石散会吸走同服的药，至少间隔 2 小时。不同冲突会给出不同分级。看完点「知道了」，引导结束。',
     hint: '点高亮处的「知道了」结束引导',
     target: '.po-sheet-primary',
