@@ -99,9 +99,10 @@ const SHORT_NAMES: Record<string, string> = {
   复方短效口服避孕药: '短效避孕药',
 }
 
+// 图标全部内联进主包：93 个独立 SVG 在弱网下会排队请求，导致图标逐个迟到
 const artModules = import.meta.glob('../../assets/items/**/*.svg', {
   eager: true,
-  query: '?url',
+  query: '?inline',
   import: 'default',
 }) as Record<string, string>
 
