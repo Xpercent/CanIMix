@@ -46,6 +46,7 @@ interface BenchProps {
   hint: string
   notice: Notice | null
   landingIds: Set<string>
+  enteringIds: Set<string>
   shakeNonce: number
   testNonce: number
   onRemove: (id: string) => void
@@ -60,6 +61,7 @@ export function Bench({
   hint,
   notice,
   landingIds,
+  enteringIds,
   shakeNonce,
   testNonce,
   onRemove,
@@ -246,7 +248,11 @@ export function Bench({
                   <button
                     type="button"
                     aria-label={`移出 ${item.name}，第 ${index + 1} 位`}
-                    className={cn('po-slot-card', landingIds.has(item.id) && 'is-landing')}
+                    className={cn(
+                      'po-slot-card',
+                      enteringIds.has(item.id) && 'is-entering',
+                      landingIds.has(item.id) && 'is-landing',
+                    )}
                     data-slot-item={item.id}
                     key={item.id}
                     onClick={() => exitItem(item.id)}
