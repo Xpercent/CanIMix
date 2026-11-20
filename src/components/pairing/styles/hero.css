@@ -1,11 +1,24 @@
-/* ── Hero: header + bench ────────────────────────────────────── */
+/* ── Deck: 顶部一体化「白瓷台面」 ─────────────────────────────── */
+
+.po-deck {
+  position: relative;
+  z-index: 30;
+  flex: 0 0 auto;
+  overflow: hidden;
+  /* 只在最底部收一个柔和的下圆角，上边界交给屏幕顶端 */
+  border-radius: 0 0 calc(26 * var(--u)) calc(26 * var(--u));
+  background: #ffffff;
+  box-shadow:
+    0 4px 10px -8px rgba(18, 32, 30, 0.09),
+    0 16px 30px -24px rgba(18, 32, 30, 0.13),
+    0 32px 56px -46px rgba(18, 32, 30, 0.11);
+}
 
 .po-hero {
   position: relative;
   display: flex;
   flex: 0 0 auto;
   flex-direction: column;
-  height: calc(248 * var(--u));
 }
 
 .po-hero-glow {
@@ -13,35 +26,22 @@
   z-index: 0;
   border-radius: 50%;
   pointer-events: none;
-  filter: blur(calc(28 * var(--u)));
+  filter: blur(calc(26 * var(--u)));
   transition: opacity 600ms ease, transform 800ms ease;
 }
 
 .po-hero-glow-cool {
-  top: calc(68 * var(--u));
-  left: calc(28 * var(--u));
-  width: calc(240 * var(--u));
-  height: calc(150 * var(--u));
-  background: radial-gradient(closest-side, rgba(26, 146, 130, 0.18), transparent 74%);
-  opacity: 0.55;
-}
-
-.po-hero-glow-warm {
-  top: calc(126 * var(--u));
-  right: calc(4 * var(--u));
-  width: calc(160 * var(--u));
-  height: calc(110 * var(--u));
-  background: radial-gradient(closest-side, rgba(198, 139, 78, 0.1), transparent 74%);
+  top: calc(56 * var(--u));
+  left: calc(24 * var(--u));
+  width: calc(250 * var(--u));
+  height: calc(140 * var(--u));
+  background: radial-gradient(closest-side, rgba(26, 146, 130, 0.14), transparent 76%);
   opacity: 0.4;
 }
 
 .po-hero.is-ready .po-hero-glow-cool {
-  opacity: 0.9;
-  transform: scale(1.03);
-}
-
-.po-hero.is-full .po-hero-glow-warm {
   opacity: 0.72;
+  transform: scale(1.03);
 }
 
 .po-hero-head {
@@ -51,8 +51,13 @@
   flex: 0 0 auto;
   flex-direction: column;
   justify-content: space-between;
-  height: calc(54 * var(--u));
-  padding: calc(6 * var(--u)) calc(16 * var(--u));
+  height: calc(56 * var(--u));
+  padding: calc(6 * var(--u)) calc(20 * var(--u)) 0;
+  overflow: hidden;
+  transition:
+    height 340ms cubic-bezier(0.32, 0.72, 0.24, 1),
+    padding 340ms cubic-bezier(0.32, 0.72, 0.24, 1),
+    opacity 200ms ease;
 }
 
 .po-eyebrow {
@@ -95,3 +100,19 @@
   line-height: calc(26 * var(--u));
 }
 
+/* 下滚时标题让位，台面收成一条细窄的吸顶托盘 */
+.po-deck.is-collapsed .po-hero-head {
+  height: 0;
+  padding-top: 0;
+  opacity: 0;
+}
+
+.po-deck.is-collapsed .po-hero-glow-cool {
+  opacity: 0;
+}
+
+/* 缩放窗口期间不做补间，避免台面在拖动中滞后变形 */
+.pairing-app.is-resizing .po-deck,
+.pairing-app.is-resizing .po-deck * {
+  transition: none !important;
+}

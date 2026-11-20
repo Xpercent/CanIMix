@@ -44,6 +44,7 @@ export function PairingApp() {
   const [clearing, setClearing] = useState(false)
   const [sheetOpen, setSheetOpen] = useState(false)
   const [sheetSession, setSheetSession] = useState(0)
+  const [deckCollapsed, setDeckCollapsed] = useState(false)
 
   useEffect(() => {
     if (!import.meta.env.DEV) return
@@ -75,6 +76,48 @@ export function PairingApp() {
       if (noticeTimer.current !== null) window.clearTimeout(noticeTimer.current)
       for (const timer of timers.values()) window.clearTimeout(timer)
       timers.clear()
+    }
+  }, [])
+
+  // 白瓷台面随列表下滚收起：只留五个小圆点吸顶，回滚即展开
+  useEffect(() => {
+    const scroller = appRef.current?.querySelector<HTMLElement>('.po-grid-scroll')
+    if (!scroller) return
+
+    let frame = 0
+    const measure = () => {
+      frame = 0
+      const top = scroller.scrollTop
+      setDeckCollapsed((previous) => (previous ? top > 16 : top > 48))
+    }
+    const onScroll = () => {
+      if (frame === 0) frame = window.requestAnimationFrame(measure)
+    }
+
+    scroller.addEventListener('scroll', onScroll, { passive: true })
+    return () => {
+      scroller.removeEventListener('scroll', onScroll)
+      if (frame !== 0) window.cancelAnimationFrame(frame)
+    }
+  }, [])
+
+  // 尺寸变化时先关掉过渡：所有尺寸都按 --u 重算，不需要补间，
+  // 否则拖动窗口会把圆盘和台面拖成一段滞后的变形动画
+  useEffect(() => {
+    const app = appRef.current
+    if (!app) return
+
+    let timer = 0
+    const observer = new ResizeObserver(() => {
+      app.classList.add('is-resizing')
+      window.clearTimeout(timer)
+      timer = window.setTimeout(() => app.classList.remove('is-resizing'), 200)
+    })
+    observer.observe(app)
+
+    return () => {
+      observer.disconnect()
+      window.clearTimeout(timer)
     }
   }, [])
 
@@ -198,12 +241,12 @@ export function PairingApp() {
 
       if (app && sourceEl && !prefersReducedMotion()) {
         const cell = app.querySelector<HTMLElement>(`[data-slot-cell="${slotIndex}"]`)
-        if (cell) {
+        const disc = cell?.querySelector<HTMLElement>('.po-slot-disc')
+        if (cell && disc) {
           const appRect = app.getBoundingClientRect()
           const sourceRect = sourceEl.getBoundingClientRect()
-          const targetRect = cell.getBoundingClientRect()
+          const targetRect = disc.getBoundingClientRect()
           if (sourceRect.width > 0 && targetRect.width > 0) {
-            const ratio = appRect.width / 393
             nonce.current += 1
             const flight: FlightState = {
               key: nonce.current,
@@ -216,8 +259,9 @@ export function PairingApp() {
                 h: sourceRect.height,
               },
               endX: targetRect.left - appRect.left + targetRect.width / 2,
-              endY: targetRect.top - appRect.top + targetRect.height * 0.477,
-              endSize: 48 * ratio,
+              endY: targetRect.top - appRect.top + targetRect.height / 2,
+              // 圆盘内药图占直径的 0.69，落点尺寸跟着圆盘走，收起时也不会跳
+              endSize: targetRect.width * 0.69,
             }
             setFlights((previous) => [...previous, flight])
             flightStarted = true
@@ -297,37 +341,38 @@ export function PairingApp() {
       : count === 1
         ? '再装入 1 项即可开始检测'
         : count >= MAX_SLOTS
-          ? '台面已满 · 轻点任一槽位移出'
-          : ''
+          ? '台面已满 · 轻点圆盘移出'
+          : '轻点圆盘移出 · 或继续装入'
 
   return (
     <div className="pairing-app" ref={appRef}>
-      <StatusBar />
+      <div className={cn('po-deck', deckCollapsed && 'is-collapsed')}>
+        <StatusBar />
 
-      <section
-        className={cn(
-          'po-hero',
-          count >= 2 && 'is-ready',
-          count >= MAX_SLOTS && 'is-full',
-        )}
-      >
-        <span className="po-hero-glow po-hero-glow-cool" aria-hidden="true" />
-        <span className="po-hero-glow po-hero-glow-warm" aria-hidden="true" />
-        <HeroHeader />
-        <Bench
-          ref={benchRef}
-          count={count}
-          hint={hint}
-          items={stackItems}
-          landingIds={landingIds}
-          metaState={metaState}
-          notice={notice}
-          onClear={finishClear}
-          onRemove={removeItem}
-          shakeNonce={shakeNonce}
-          testNonce={testNonce}
-        />
-      </section>
+        <section
+          className={cn(
+            'po-hero',
+            count >= 2 && 'is-ready',
+            count >= MAX_SLOTS && 'is-full',
+          )}
+        >
+          <span className="po-hero-glow po-hero-glow-cool" aria-hidden="true" />
+          <HeroHeader />
+          <Bench
+            ref={benchRef}
+            count={count}
+            hint={hint}
+            items={stackItems}
+            landingIds={landingIds}
+            metaState={metaState}
+            notice={notice}
+            onClear={finishClear}
+            onRemove={removeItem}
+            shakeNonce={shakeNonce}
+            testNonce={testNonce}
+          />
+        </section>
+      </div>
 
       <LibraryPanel
         activeCategory={effectiveCategory}

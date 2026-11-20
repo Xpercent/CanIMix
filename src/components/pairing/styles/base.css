@@ -17,8 +17,8 @@
     "HarmonyOS Sans SC", "Noto Sans SC", "Geist Variable", sans-serif;
   --font-num: "Geist Variable", "SF Pro Display", -apple-system, sans-serif;
 
-  --po-canvas: #f1f3f2;
-  --po-canvas-deep: #e7ebe9;
+  --po-canvas: #f4f6f5;
+  --po-canvas-deep: #eaeeec;
   --po-surface: #fbfcfb;
   --po-surface-hi: #ffffff;
   --po-groove: #e5e9e7;
@@ -50,9 +50,8 @@
   height: 100%;
   overflow: hidden;
   color: var(--po-ink-900);
-  background:
-    radial-gradient(90% 38% at 50% 0%, rgba(255, 255, 255, 0.6), transparent 64%),
-    var(--po-canvas);
+  /* 上半是白瓷台面（.po-deck），这里是它底下的浅灰绿药库区 */
+  background: var(--po-canvas);
   font-family: var(--font-ui);
   font-feature-settings: "tnum";
   color-scheme: light;

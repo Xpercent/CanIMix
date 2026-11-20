@@ -10,7 +10,7 @@
   gap: calc(8 * var(--u));
   padding: calc(10 * var(--u)) calc(16 * var(--u)) calc(12 * var(--u));
   border-radius: calc(28 * var(--u)) calc(28 * var(--u)) 0 0;
-  background: linear-gradient(180deg, rgba(251, 252, 251, 0.7), #f4f7f5 58%, #f1f3f2);
+  background: linear-gradient(180deg, rgba(250, 252, 251, 0.72), #f5f7f6 58%, var(--po-canvas));
   box-shadow:
     0 -1px 0 rgba(255, 255, 255, 0.7),
     0 -12px 32px -22px rgba(18, 32, 30, 0.2);

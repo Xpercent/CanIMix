@@ -1,29 +1,17 @@
-/* ── Bench ─────────────────────────────────────────────────── */
+/* ── Bench: 白瓷台面上的五枚圆盘 ──────────────────────────────── */
 
 .po-bench {
   position: relative;
   z-index: 1;
-  height: calc(164 * var(--u));
-  margin: calc(8 * var(--u)) calc(16 * var(--u)) 0;
-  padding: calc(10 * var(--u)) calc(14 * var(--u)) calc(14 * var(--u));
-  overflow: hidden;
-  border-radius: calc(24 * var(--u));
-  background: linear-gradient(180deg, rgba(255, 255, 255, 0.94), rgba(248, 250, 249, 0.82));
-  box-shadow:
-    inset 0 1px 0 rgba(255, 255, 255, 0.95),
-    inset 0 0 0 1px rgba(26, 37, 35, 0.045),
-    0 2px 4px rgba(18, 32, 30, 0.04),
-    0 18px 40px -24px rgba(18, 32, 30, 0.2),
-    0 44px 80px -56px rgba(18, 32, 30, 0.22);
+  padding: 0 calc(18 * var(--u)) calc(14 * var(--u));
 }
 
 .po-bench-flare {
   position: absolute;
   inset: 0;
   z-index: 0;
-  border-radius: inherit;
   pointer-events: none;
-  background: radial-gradient(circle at 76% 44%, rgba(26, 146, 130, 0.35), transparent 58%);
+  background: radial-gradient(circle at 76% 52%, rgba(26, 146, 130, 0.28), transparent 62%);
   opacity: 0;
 }
 
@@ -34,6 +22,11 @@
   height: calc(18 * var(--u));
   align-items: center;
   justify-content: space-between;
+  padding: 0 calc(2 * var(--u));
+  overflow: hidden;
+  transition:
+    height 340ms cubic-bezier(0.32, 0.72, 0.24, 1),
+    opacity 200ms ease;
 }
 
 .po-bench-id {
@@ -120,124 +113,118 @@
   color: var(--po-ink-700);
 }
 
+/* 圆盘阵列：全宽铺开，五枚等距，没有矩形托槽 */
+
 .po-slot-rail {
   position: relative;
   z-index: 1;
   display: grid;
-  height: calc(92 * var(--u));
-  margin-top: calc(10 * var(--u));
-  padding: calc(3 * var(--u));
-  border-radius: calc(19 * var(--u));
-  background: linear-gradient(180deg, #f5f8f7, #f3f6f5);
-  box-shadow:
-    inset 0 1px 3px rgba(18, 32, 30, 0.055),
-    inset 0 0 0 1px rgba(26, 37, 35, 0.04),
-    inset 0 -1px 0 rgba(255, 255, 255, 0.72);
+  margin-top: calc(12 * var(--u));
+  align-items: start;
   grid-template-columns: repeat(5, minmax(0, 1fr));
-  gap: calc(5 * var(--u));
+  transition: margin-top 340ms cubic-bezier(0.32, 0.72, 0.24, 1);
 }
 
 .po-slot-cell {
-  position: relative;
+  display: flex;
   min-width: 0;
-  height: 100%;
+  flex-direction: column;
+  align-items: center;
 }
 
-.po-slot-empty {
+/* 圆盘只过渡高度，宽度由 aspect-ratio 推出来：
+   窗口缩放时宽高永远同步，不会被拉成椭圆 */
+.po-slot-disc {
   position: relative;
-  width: 100%;
-  height: 100%;
-  overflow: hidden;
-  border-radius: calc(16 * var(--u));
-  background: linear-gradient(180deg, #e8ecea, #f0f3f1);
-  box-shadow: var(--well);
+  height: calc(58 * var(--u));
+  flex: none;
+  aspect-ratio: 1 / 1;
+  border-radius: 50%;
+  transition: height 340ms cubic-bezier(0.32, 0.72, 0.24, 1);
 }
 
-.po-slot-empty::before {
-  content: "";
+/* 空槽：一枚浅浅的凹面，只有内影，不画边框 */
+
+.po-slot-well {
   position: absolute;
   inset: 0;
-  background: repeating-linear-gradient(
-    135deg,
-    transparent 0 6px,
-    rgba(26, 37, 35, 0.018) 6px 7px
-  );
-  opacity: 0.8;
-  pointer-events: none;
+  display: grid;
+  place-items: center;
+  border-radius: 50%;
+  background: radial-gradient(circle at 50% 38%, #fafbfa, #eef2f0 78%);
+  box-shadow:
+    inset 0 1px 2px rgba(18, 32, 30, 0.055),
+    inset 0 0 0 1px rgba(26, 37, 35, 0.055);
 }
 
-.po-slot-empty.is-next::after {
+.po-slot-well.is-next {
+  background: radial-gradient(circle at 50% 38%, #ffffff, #f3f7f5 78%);
+}
+
+.po-slot-well.is-next::after {
   content: "";
   position: absolute;
-  inset: 0;
-  border: 1px dashed rgba(14, 107, 96, 0.34);
-  border-radius: inherit;
+  inset: calc(-4 * var(--u));
+  border: 1px dashed rgba(14, 107, 96, 0.3);
+  border-radius: 50%;
   pointer-events: none;
 }
 
 .po-slot-ordinal {
-  position: absolute;
-  top: calc(6 * var(--u));
-  left: calc(6 * var(--u));
-  z-index: 2;
   color: var(--po-ink-300);
   font-family: var(--font-num);
-  font-size: calc(8 * var(--u));
+  font-size: calc(9 * var(--u));
   font-weight: 600;
   letter-spacing: 0.06em;
   line-height: 1;
+  opacity: 0.72;
   font-variant-numeric: tabular-nums;
 }
 
 .po-slot-plus {
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  width: calc(12 * var(--u));
-  height: calc(12 * var(--u));
+  width: calc(13 * var(--u));
+  height: calc(13 * var(--u));
   color: var(--po-primary);
-  opacity: 0.62;
-  transform: translate(-50%, -50%);
+  opacity: 0.58;
 }
+
+/* 已装入：白瓷圆片 + 极细内环 + 弥散落影 */
 
 .po-slot-card {
   position: absolute;
   inset: 0;
   z-index: 1;
-  width: 100%;
-  height: 100%;
-  overflow: hidden;
-  border-radius: calc(16 * var(--u));
-  background: linear-gradient(180deg, #ffffff, #fcfdfc);
-  box-shadow: var(--sh-slot), inset 0 1px 0 rgba(255, 255, 255, 0.95);
+  display: grid;
+  place-items: center;
+  border-radius: 50%;
+  background: linear-gradient(180deg, #ffffff, #fdfefd);
+  box-shadow:
+    inset 0 0 0 1px rgba(26, 37, 35, 0.055),
+    inset 0 1px 0 rgba(255, 255, 255, 0.95),
+    0 1px 2px rgba(18, 32, 30, 0.05),
+    0 10px 18px -12px rgba(18, 32, 30, 0.26);
   animation: po-slot-card-in 280ms cubic-bezier(0.22, 0.9, 0.3, 1.08);
-  transition: transform 160ms cubic-bezier(0.22, 0.9, 0.3, 1);
+  transition:
+    transform 160ms cubic-bezier(0.22, 0.9, 0.3, 1),
+    box-shadow 180ms ease;
 }
 
 .po-slot-card:active {
-  transform: scale(0.97);
-}
-
-.po-slot-card .po-slot-ordinal {
-  color: var(--po-primary);
+  transform: scale(0.96);
 }
 
 .po-slot-halo {
   position: absolute;
-  top: calc(13 * var(--u));
-  left: 50%;
-  display: grid;
-  width: calc(56 * var(--u));
-  height: calc(56 * var(--u));
-  place-items: center;
+  inset: 0;
   border-radius: 50%;
-  background: radial-gradient(circle at 50% 42%, #fffdf7, rgba(255, 253, 247, 0) 70%);
-  transform: translateX(-50%);
+  background: radial-gradient(circle at 50% 38%, #fffdf7, rgba(255, 253, 247, 0) 72%);
 }
 
+/* 药图取圆盘直径的 69%，跟着圆盘一起缩放，不单独设宽高 */
 .po-slot-art {
-  width: calc(48 * var(--u));
-  height: calc(48 * var(--u));
+  position: relative;
+  width: 69%;
+  height: 69%;
   object-fit: contain;
   filter: drop-shadow(0 1px 1px rgba(26, 37, 35, 0.1));
 }
@@ -246,35 +233,49 @@
   opacity: 0;
 }
 
-.po-slot-name {
-  position: absolute;
-  right: calc(3 * var(--u));
-  bottom: calc(8 * var(--u));
-  left: calc(3 * var(--u));
+/* 名称落在圆盘下方，像标本标签 */
+
+.po-slot-label {
   display: -webkit-box;
+  width: 100%;
+  height: calc(24 * var(--u));
+  margin-top: calc(7 * var(--u));
   overflow: hidden;
   color: var(--po-ink-700);
-  font-size: calc(10 * var(--u));
+  font-size: calc(9.5 * var(--u));
   font-weight: 500;
-  line-height: calc(12.5 * var(--u));
+  line-height: calc(12 * var(--u));
   word-break: auto-phrase;
   text-align: center;
   text-wrap: balance;
   -webkit-box-orient: vertical;
   -webkit-line-clamp: 2;
+  transition:
+    height 340ms cubic-bezier(0.32, 0.72, 0.24, 1),
+    margin 340ms cubic-bezier(0.32, 0.72, 0.24, 1),
+    opacity 200ms ease;
+}
+
+.po-slot-label.is-empty {
+  opacity: 0;
 }
 
 .po-slot-x {
   position: absolute;
-  top: calc(3.5 * var(--u));
-  right: calc(4 * var(--u));
+  top: calc(-2 * var(--u));
+  right: calc(-2 * var(--u));
   z-index: 3;
   display: grid;
-  width: calc(13 * var(--u));
-  height: calc(13 * var(--u));
+  width: calc(16 * var(--u));
+  height: calc(16 * var(--u));
   place-items: center;
+  border-radius: 50%;
+  background: #ffffff;
+  box-shadow:
+    0 1px 2px rgba(18, 32, 30, 0.12),
+    inset 0 0 0 1px rgba(26, 37, 35, 0.06);
   color: var(--po-ink-300);
-  opacity: 0.62;
+  opacity: 0.38;
   transition: opacity 150ms ease, color 150ms ease;
 }
 
@@ -283,10 +284,16 @@
   height: calc(7.5 * var(--u));
 }
 
+@media (hover: none) {
+  .po-slot-x {
+    opacity: 0.6;
+  }
+}
+
 .po-slot-card:hover .po-slot-x,
 .po-slot-card:active .po-slot-x,
 .po-slot-card:focus-visible .po-slot-x {
-  color: var(--po-ink-500);
+  color: var(--po-ink-700);
   opacity: 1;
 }
 
@@ -294,8 +301,9 @@
   position: relative;
   z-index: 1;
   display: flex;
-  height: calc(16 * var(--u));
+  height: calc(15 * var(--u));
   margin-top: calc(4 * var(--u));
+  padding: 0 calc(2 * var(--u));
   align-items: center;
   overflow: hidden;
   color: var(--po-ink-500);
@@ -303,6 +311,10 @@
   font-weight: 400;
   line-height: calc(14 * var(--u));
   white-space: nowrap;
+  transition:
+    height 340ms cubic-bezier(0.32, 0.72, 0.24, 1),
+    margin 340ms cubic-bezier(0.32, 0.72, 0.24, 1),
+    opacity 200ms ease;
 }
 
 .po-hint-default {
@@ -335,3 +347,42 @@
   background: var(--po-amber);
 }
 
+/* ── 台面收起：只剩五枚小圆点吸顶 ─────────────────────────────── */
+
+.po-deck.is-collapsed .po-bench-meta {
+  height: 0;
+  opacity: 0;
+}
+
+.po-deck.is-collapsed .po-slot-rail {
+  margin-top: calc(6 * var(--u));
+}
+
+.po-deck.is-collapsed .po-slot-disc {
+  height: calc(32 * var(--u));
+}
+
+.po-deck.is-collapsed .po-slot-ordinal {
+  font-size: calc(7 * var(--u));
+}
+
+.po-deck.is-collapsed .po-slot-plus {
+  width: calc(9 * var(--u));
+  height: calc(9 * var(--u));
+}
+
+.po-deck.is-collapsed .po-slot-x {
+  display: none;
+}
+
+.po-deck.is-collapsed .po-slot-label {
+  height: 0;
+  margin-top: 0;
+  opacity: 0;
+}
+
+.po-deck.is-collapsed .po-bench-hint {
+  height: 0;
+  margin-top: 0;
+  opacity: 0;
+}

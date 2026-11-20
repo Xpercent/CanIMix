@@ -226,6 +226,7 @@ export function Bench({
       <div className="po-slot-rail" ref={railRef}>
         {Array.from({ length: MAX_SLOTS }, (_, index) => {
           const item = items[index]
+          const isNext = !item && index === count
           return (
             <div
               className="po-slot-cell"
@@ -233,27 +234,25 @@ export function Bench({
               data-slot-index={index}
               key={index}
             >
-              <div
-                className={cn('po-slot-empty', !item && index === count && 'is-next')}
-                aria-hidden="true"
-              >
-                <span className="po-slot-ordinal">{pad2(index + 1)}</span>
-                {!item && index === count && (
-                  <Plus className="po-slot-plus" size={12} strokeWidth={1.5} />
-                )}
-              </div>
-              {item && (
-                <button
-                  type="button"
-                  aria-label={`移出 ${item.name}，第 ${index + 1} 位`}
-                  className={cn('po-slot-card', landingIds.has(item.id) && 'is-landing')}
-                  data-slot-item={item.id}
-                  key={item.id}
-                  onClick={() => exitItem(item.id)}
-                  title="轻点移出"
-                >
-                  <span className="po-slot-ordinal">{pad2(index + 1)}</span>
-                  <span className="po-slot-halo" aria-hidden="true">
+              <div className="po-slot-disc">
+                <div className={cn('po-slot-well', isNext && 'is-next')} aria-hidden="true">
+                  {isNext ? (
+                    <Plus className="po-slot-plus" size={13} strokeWidth={1.6} />
+                  ) : (
+                    <span className="po-slot-ordinal">{pad2(index + 1)}</span>
+                  )}
+                </div>
+                {item && (
+                  <button
+                    type="button"
+                    aria-label={`移出 ${item.name}，第 ${index + 1} 位`}
+                    className={cn('po-slot-card', landingIds.has(item.id) && 'is-landing')}
+                    data-slot-item={item.id}
+                    key={item.id}
+                    onClick={() => exitItem(item.id)}
+                    title="轻点移出"
+                  >
+                    <span className="po-slot-halo" aria-hidden="true" />
                     <img
                       alt=""
                       className="po-slot-art"
@@ -261,13 +260,15 @@ export function Bench({
                       draggable={false}
                       src={item.art}
                     />
-                  </span>
-                  <span className="po-slot-name">{item.shortName}</span>
-                  <span className="po-slot-x" aria-hidden="true">
-                    <X size={8} strokeWidth={2.4} />
-                  </span>
-                </button>
-              )}
+                    <span className="po-slot-x" aria-hidden="true">
+                      <X size={8} strokeWidth={2.4} />
+                    </span>
+                  </button>
+                )}
+              </div>
+              <span className={cn('po-slot-label', !item && 'is-empty')}>
+                {item ? item.shortName : ''}
+              </span>
             </div>
           )
         })}
