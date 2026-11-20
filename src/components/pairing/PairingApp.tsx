@@ -88,7 +88,15 @@ export function PairingApp() {
     const measure = () => {
       frame = 0
       const top = scroller.scrollTop
-      setDeckCollapsed((previous) => (previous ? top > 16 : top > 48))
+      setDeckCollapsed((previous) => {
+        if (previous) return top > 16
+        if (top <= 48) return false
+        // 台面收起会把列表区撑高，可滚动余量随之变小。内容本来就不多时
+        // （比如分类页只有四行），收起后 scrollTop 会被夹回 0，于是又展开，
+        // 展开后又能滚——来回疯狂切换。只有余量足够时才允许收起。
+        const room = scroller.scrollHeight - scroller.clientHeight
+        return room > scroller.clientHeight * 0.55
+      })
     }
     const onScroll = () => {
       if (frame === 0) frame = window.requestAnimationFrame(measure)
@@ -175,6 +183,14 @@ export function PairingApp() {
         : matchedItems.filter((item) => item.categoryId === effectiveCategory),
     [effectiveCategory, matchedItems],
   )
+
+  // 搜索或切分类后内容变少时，收起状态没有意义（也滚不动），直接展开
+  useEffect(() => {
+    const scroller = appRef.current?.querySelector<HTMLElement>('.po-grid-scroll')
+    if (!scroller) return
+    const room = scroller.scrollHeight - scroller.clientHeight
+    if (room <= scroller.clientHeight * 0.55) setDeckCollapsed(false)
+  }, [visibleItems.length])
 
   const railEntries = useMemo<RailEntry[]>(
     () => [
