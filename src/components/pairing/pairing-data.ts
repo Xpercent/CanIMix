@@ -1,4 +1,5 @@
 import itemsFile from '../../data/items.json'
+import { hasCjk, normalizePinyinQuery, pinyinHaystack } from './pinyin'
 
 export type CategoryId =
   | 'cold'
@@ -31,7 +32,6 @@ export interface PairingItem {
   categoryId: CategoryId
   art: string
   icon: string
-  keywords: string[]
   is_drug: boolean
   ingredients: string[]
   tags: string[]
@@ -139,7 +139,6 @@ export const PAIRING_ITEMS: readonly PairingItem[] = RAW_ITEMS.flatMap((raw, ind
       categoryId,
       art: resolveArt(raw.icon),
       icon: raw.icon,
-      keywords: [raw.category, ...raw.ingredients, ...raw.tags],
       is_drug: raw.is_drug,
       ingredients: raw.ingredients,
       tags: raw.tags,
@@ -158,22 +157,28 @@ export function normalizeSearch(value: string): string {
     .replace(/[\s\-_·，,。.、/\\()（）]/g, '')
 }
 
+function nameText(item: PairingItem): string {
+  return [item.name, item.displayName, item.shortName].join(' ')
+}
+
+function searchableText(item: PairingItem): string {
+  return `${nameText(item)} ${item.tags.join(' ')}`
+}
+
 const SEARCH_HAYSTACKS = new Map<string, string>(
-  PAIRING_ITEMS.map((item) => {
-    const category = CATEGORY_BY_ID.get(item.categoryId)
-    const text = [
-      item.name,
-      item.displayName,
-      item.shortName,
-      ...item.keywords,
-      category?.fullName ?? '',
-    ].join(' ')
-    return [item.id, normalizeSearch(text)] as const
-  }),
+  PAIRING_ITEMS.map((item) => [item.id, normalizeSearch(searchableText(item))] as const),
+)
+
+const SEARCH_PINYIN = new Map<string, string>(
+  PAIRING_ITEMS.map((item) => [item.id, pinyinHaystack(nameText(item))] as const),
 )
 
 export function itemMatchesQuery(item: PairingItem, query: string): boolean {
   const needle = normalizeSearch(query)
   if (!needle) return true
-  return SEARCH_HAYSTACKS.get(item.id)?.includes(needle) ?? false
+  if (SEARCH_HAYSTACKS.get(item.id)?.includes(needle)) return true
+  if (hasCjk(query)) return false
+  const pinyinNeedle = normalizePinyinQuery(query)
+  if (!pinyinNeedle) return false
+  return SEARCH_PINYIN.get(item.id)?.includes(pinyinNeedle) ?? false
 }

@@ -42,7 +42,7 @@ const RISK_ORDER: Record<RiskLevel, number> = {
 
 function buildShareText(report: PairingReport, items: PairingItem[]): string {
   const lines = [
-    '【能一起用吗？· 配伍检测】',
+    '【一起吃安全吗？· 同服检测】',
     `结论：${report.verdictTitle}`,
     `物品：${items.map((item) => item.name).join(' + ')}`,
     report.summary,
@@ -220,7 +220,7 @@ export function ResultSheet({ items, onClose }: ResultSheetProps) {
     }
     try {
       if (nav.share) {
-        await nav.share({ title: '能一起用吗？· 配伍检测', text })
+        await nav.share({ title: '一起吃安全吗？· 同服检测', text })
         return
       }
       if (navigator.clipboard?.writeText) {
@@ -306,9 +306,9 @@ export function ResultSheet({ items, onClose }: ResultSheetProps) {
           </div>
           <div className="po-sheet-headrow">
             <div className="po-sheet-heading">
-              <span className="po-sheet-eyebrow">PAIRING BENCH · RESULT</span>
+              <span className="po-sheet-eyebrow">SAFETY CHECK · REPORT</span>
               <h2 className="po-sheet-title" id="po-result-title">
-                配伍检测结果
+                冲突检测结果
               </h2>
             </div>
           </div>
@@ -356,7 +356,7 @@ export function ResultSheet({ items, onClose }: ResultSheetProps) {
                 <ShieldCheck size={24} strokeWidth={1.7} aria-hidden="true" />
                 <h3>「{filterName}」未发现已知冲突</h3>
                 <p>
-                  与其余已选物品的 {visibleSafePairs.length} 组两两搭配均未命中现有配伍规则，可按说明书使用。
+                  与其余已选物品的 {visibleSafePairs.length} 组两两搭配均未命中现有冲突规则，可按说明书使用。
                 </p>
                 <button type="button" onClick={() => setFilterPick(null)}>
                   查看全部结果
@@ -444,7 +444,7 @@ export function ResultSheet({ items, onClose }: ResultSheetProps) {
             )}
 
             <p className="po-disclaimer">
-              检测结果基于常见药理与饮食配伍规律，仅供用药参考，不替代执业医师或药师的个体化诊断。孕产妇、儿童及慢病患者请遵医嘱。
+              检测结果基于常见药理与饮食相互作用规律，仅供用药参考，不替代执业医师或药师的个体化诊断。孕产妇、儿童及慢病患者请遵医嘱。
             </p>
           </div>
         </div>

@@ -12,7 +12,6 @@ import { ChevronDown, Search, X } from 'lucide-react'
 import { cn } from '@/lib/utils'
 import {
   CATEGORIES,
-  normalizeSearch,
   type CategoryFilter,
   type PairingItem,
 } from './pairing-data'
@@ -135,7 +134,7 @@ export function LibraryPanel({
         <Search className="po-search-icon" size={14} strokeWidth={1.8} aria-hidden="true" />
         <input
           ref={inputRef}
-          aria-label="搜索药品、食物或饮品"
+          aria-label="搜索药品、食物或饮品，支持拼音"
           autoComplete="off"
           className="po-search-input"
           enterKeyHint="search"
@@ -146,7 +145,7 @@ export function LibraryPanel({
           onKeyDown={(event) => {
             if (event.key === 'Enter') dismissKeyboard()
           }}
-          placeholder="搜索药品、食物或饮品"
+          placeholder="搜索药品、食物或饮品（拼音）"
           spellCheck={false}
           type="search"
           value={query}
@@ -308,16 +307,6 @@ function useSlotBadge(slotNumber: number | null) {
   return { ...state, finishExit }
 }
 
-function matchedHiddenIngredients(item: PairingItem, query: string): string[] {
-  const needle = normalizeSearch(query)
-  if (!needle) return []
-  const name = normalizeSearch(item.name)
-  return item.ingredients.filter((ingredient) => {
-    const normalized = normalizeSearch(ingredient)
-    return normalized.includes(needle) && !name.includes(normalized)
-  })
-}
-
 const ItemCard = memo(function ItemCard({
   item,
   query,
@@ -328,7 +317,6 @@ const ItemCard = memo(function ItemCard({
   const slotNumber = slotIndex === undefined ? null : slotIndex + 1
   const selected = slotNumber !== null
   const badge = useSlotBadge(slotNumber)
-  const matchIngredients = matchedHiddenIngredients(item, query)
   const style = { '--i': Math.min(index, 8) } as CSSProperties
 
   return (
@@ -339,11 +327,7 @@ const ItemCard = memo(function ItemCard({
           ? `${item.name}，已入栈，第 ${slotNumber} 位，再次点击移出`
           : `将 ${item.name} 放入检测台`
       }
-      className={cn(
-        'po-item-card',
-        selected && 'is-stacked',
-        matchIngredients.length > 0 && 'has-match',
-      )}
+      className={cn('po-item-card', selected && 'is-stacked')}
       data-selected={selected || undefined}
       onClick={(event) => onAdd(item, event)}
       style={style}
@@ -361,11 +345,6 @@ const ItemCard = memo(function ItemCard({
       <span className="po-item-name">
         <HighlightedName query={query} text={item.displayName} />
       </span>
-      {matchIngredients.length > 0 && (
-        <span className="po-item-match">
-          含 {matchIngredients.join('、')}
-        </span>
-      )}
       {badge.mounted && badge.number !== null && (
         <svg
           className={cn('po-item-badge', badge.exiting && 'is-exiting')}

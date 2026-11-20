@@ -11,12 +11,12 @@ export function HeroHeader() {
             strokeWidth="1"
           />
         </svg>
-        <span>PAIRING BENCH</span>
+        <span>SAFETY CHECK</span>
         <span className="po-eyebrow-divider">·</span>
-        <span>配伍检测</span>
+        <span>同服检测</span>
       </div>
       <div className="po-title-row">
-        <h1 className="po-title">能一起用吗？</h1>
+        <h1 className="po-title">一起吃安全吗？</h1>
       </div>
     </header>
   )

@@ -17,7 +17,7 @@ export const CASE_RISK_LABELS: Record<RiskLevel, string> = {
 }
 
 const SEVERITY_KICKERS: Record<Finding['severity'], string> = {
-  danger: '配伍冲突',
+  danger: '严重冲突',
   caution: '谨慎联用',
   spacing: '错峰服用',
   safe_note: '安全澄清',
