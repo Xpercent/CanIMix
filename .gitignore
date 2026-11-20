@@ -14,6 +14,7 @@ dist-ssr
 
 # 参考稿
 /ref
+/artificial
 
 # Editor directories and files
 .vscode/*
