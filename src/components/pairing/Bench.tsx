@@ -74,11 +74,27 @@ export function Bench({
   const clearing = useRef(false)
   const signature = items.map((item) => item.id).join('|')
 
+  // 记录当前落位，作为下一次 FLIP 的起点。
+  // 删除前必须重新采一次：台面收起/展开、窗口缩放都会整体位移，
+  // 拿着旧的竖向坐标做补间，物品就会像从上方重新掉进托盘。
+  const captureRects = useCallback(() => {
+    const rail = railRef.current
+    if (!rail) return
+    const next = new Map<string, DOMRect>()
+    for (const card of rail.querySelectorAll<HTMLElement>('[data-slot-item]')) {
+      const id = card.dataset.slotItem
+      const cell = card.closest<HTMLElement>('.po-slot-cell')
+      if (id && cell) next.set(id, cell.getBoundingClientRect())
+    }
+    slotRects.current = next
+  }, [])
+
   const exitItem = useCallback(
     (id: string) => {
       if (exitAnimations.current.has(id)) return
       const card = railRef.current?.querySelector<HTMLElement>(`[data-slot-item="${id}"]`)
       if (!card || prefersReducedMotion()) {
+        captureRects()
         onRemove(id)
         return
       }
@@ -91,11 +107,12 @@ export function Bench({
       exitAnimations.current.set(id, animation)
       animation.onfinish = () => {
         exitAnimations.current.delete(id)
+        captureRects()
         onRemove(id)
       }
       animation.oncancel = () => exitAnimations.current.delete(id)
     },
-    [onRemove],
+    [captureRects, onRemove],
   )
 
   const exitAll = useCallback(() => {
@@ -104,6 +121,7 @@ export function Bench({
       ? Array.from(railRef.current.querySelectorAll<HTMLElement>('[data-slot-item]'))
       : []
     if (cards.length === 0 || prefersReducedMotion()) {
+      captureRects()
       onClear()
       return
     }
@@ -119,9 +137,10 @@ export function Bench({
     )
     void Promise.allSettled(animations.map((animation) => animation.finished)).then(() => {
       clearing.current = false
+      captureRects()
       onClear()
     })
-  }, [onClear])
+  }, [captureRects, onClear])
 
   useImperativeHandle(ref, () => ({ exitItem, exitAll }), [exitItem, exitAll])
 
@@ -145,12 +164,13 @@ export function Bench({
         const before = id ? previous.get(id) : undefined
         const after = id ? measured.get(id) : undefined
         if (!before || !after) continue
+        // 只补横向位移：托盘只在槽位间横移，纵向变化来自台面收起或窗口缩放，
+        // 那种位移应该瞬间生效，不能拿来补间
         const deltaX = before.left - after.left
-        const deltaY = before.top - after.top
-        if (Math.abs(deltaX) > 0.5 || Math.abs(deltaY) > 0.5) {
+        if (Math.abs(deltaX) > 0.5) {
           card.animate(
             [
-              { transform: `translate(${deltaX}px, ${deltaY}px)` },
+              { transform: `translate(${deltaX}px, 0px)` },
               { transform: 'translate(0px, 0px)' },
             ],
             { duration: SLOT_FLIP_MS, easing: SLOT_FLIP_EASING },

@@ -385,7 +385,7 @@
   background: var(--po-amber);
 }
 
-/* ── 台面收起：只剩五枚小圆点吸顶 ─────────────────────────────── */
+/* ── 台面收起：标题与元信息让位，托盘本体保持原尺寸 ───────────── */
 
 .po-deck.is-collapsed .po-bench {
   padding-top: calc(6 * var(--u));
@@ -398,14 +398,6 @@
 
 .po-deck.is-collapsed .po-slot-rail {
   margin-top: calc(6 * var(--u));
-}
-
-.po-deck.is-collapsed .po-slot-disc {
-  height: calc(38 * var(--u));
-}
-
-.po-deck.is-collapsed .po-slot-ordinal {
-  font-size: calc(7 * var(--u));
 }
 
 .po-deck.is-collapsed .po-slot-x {

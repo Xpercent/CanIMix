@@ -1612,3 +1612,46 @@
     opacity: 0;
   }
 }
+/* ── 图标尺寸 ──────────────────────────────────────────────────
+   lucide 图标默认吃的是固定 px（size 属性），而这里的容器全按 --u 缩放。
+   窗口一大容器翻倍、图标不变，就会缩成一个小点，所以统一改成随 --u 走。 */
+
+.po-finding-sev svg {
+  width: calc(14 * var(--u));
+  height: calc(14 * var(--u));
+}
+
+.po-peer-link svg {
+  width: calc(13 * var(--u));
+  height: calc(13 * var(--u));
+}
+
+.po-details-chevron svg {
+  width: calc(13 * var(--u));
+  height: calc(13 * var(--u));
+}
+
+.po-compound-row svg {
+  width: calc(13 * var(--u));
+  height: calc(13 * var(--u));
+}
+
+.po-filter-text svg {
+  width: calc(13 * var(--u));
+  height: calc(13 * var(--u));
+}
+
+.po-plan-icon svg {
+  width: calc(17 * var(--u));
+  height: calc(17 * var(--u));
+}
+
+.po-safe-check svg {
+  width: calc(11 * var(--u));
+  height: calc(11 * var(--u));
+}
+
+.po-case-active-mark svg {
+  width: calc(9 * var(--u));
+  height: calc(9 * var(--u));
+}
